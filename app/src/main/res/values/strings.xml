@@ -21,9 +21,7 @@
     <string name="settings_language_summary">Select language</string>
     <string name="settings_language_title">Language Options</string>
 
-    <string name="settings_website">Website</string>
-    <string name="settings_website_summary">Access website: www.bing.com</string>
+    <string name="settings_webclient">Website</string>
+    <string name="settings_webclient_summary">Access the web client via another device: www.bing.com</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

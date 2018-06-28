@@ -28,11 +28,9 @@
         </ListPreference>
 
         <PreferenceScreen
-            android:title="@string/settings_website"
-            android:summary="@string/settings_website_summary">
+            android:title="@string/settings_webclient"
+            android:summary="@string/settings_webclient_summary">
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="http://www.bing.com/" />
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
