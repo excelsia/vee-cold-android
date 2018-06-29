@@ -85,7 +85,7 @@ public class ColdWalletActivity extends AppCompatActivity {
             else {
                 Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
             }
-            qrCode.setImageBitmap(Tools.generateQRCode(qrContents, 400));
+            //qrCode.setImageBitmap(Tools.generateQRCode(qrContents, 400));
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);

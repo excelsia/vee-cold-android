@@ -42,4 +42,8 @@ public class Tools {
         }
         return qrCode;
     }
+
+    public static String generatePubKeyAddrMsg (String domain, String address, String publicKey) {
+        return domain + "/#cold/export?address=" + address + "&publicKey=" + publicKey;
+    }
 }
