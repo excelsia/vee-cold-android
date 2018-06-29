@@ -5,5 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScannerActivity">
-
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_scanner_layout="@layout/barcode_scanner">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 </android.support.constraint.ConstraintLayout>

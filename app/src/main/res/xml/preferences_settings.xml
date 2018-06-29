@@ -30,7 +30,6 @@
         <PreferenceScreen
             android:title="@string/settings_webclient"
             android:summary="@string/settings_webclient_summary">
-
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

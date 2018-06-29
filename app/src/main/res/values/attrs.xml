@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScannerViewFinderView">
+        <attr name="scannerBoundColor" format="color" />
+        <attr name="scannerBoundWidth" format="dimension" />
+        <attr name="scannerBoundCornerColor" format="color" />
+        <attr name="scannerBoundCornerWidth" format="dimension" />
+        <attr name="scannerBoundCornerHeight" format="dimension" />
+        <attr name="scannerLaserResId" format="integer" />
+        <attr name="scannerTipText" format="string" />
+        <attr name="scannerTipTextSize" format="dimension" />
+        <attr name="scannerTipTextColor" format="string" />
+        <attr name="scannerTipTextMargin" format="dimension" />
+        <attr name="tipTextGravityBottom" format="boolean" />
+    </declare-styleable>
+</resources>
