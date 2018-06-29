@@ -19,4 +19,6 @@ public class WalletFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_wallet, container, false);
     }
+
+
 }

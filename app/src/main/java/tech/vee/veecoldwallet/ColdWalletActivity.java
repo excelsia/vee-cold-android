@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -22,13 +23,14 @@ import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.CameraPreview;
 
 public class ColdWalletActivity extends AppCompatActivity {
-    // Variables related to QR Scanner
-    private static final int REQUEST_CAMERA = 1;
 
-    // Variables related to QR Scanner
     private WalletFragment wallet;
     private SettingsFragment settings;
     private FragmentManager fragmentManager;
+
+
+    // Variables related to QR Scanner
+    private String qrContents;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -63,18 +65,6 @@ public class ColdWalletActivity extends AppCompatActivity {
 
     public void onClickImportBtn(View v)
     {
-        /*
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setPrompt("Scan QR Code");
-        integrator.setTimeout(10000);
-        integrator.setCameraId(0);
-        integrator.setBeepEnabled(false);
-        integrator.setBarcodeImageEnabled(false);
-        integrator.initiateScan();
-        */
-
-
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(ScannerActivity.class);
         integrator.setBeepEnabled(false);
@@ -85,13 +75,17 @@ public class ColdWalletActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        ImageView qrCode = (ImageView) findViewById(R.id.qr_code);
+
         if(result != null) {
-            if(result.getContents() == null) {
+            qrContents = result.getContents();
+            if(qrContents == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
             }
+            qrCode.setImageBitmap(Tools.generateQRCode(qrContents, 400));
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);

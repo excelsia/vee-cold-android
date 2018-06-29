@@ -30,7 +30,7 @@ public class ScannerViewFinderView extends ViewfinderView {
     private boolean tipTextGravityBottom; // tip text gravity
     private Bitmap scannerLaserBitmap; // laser bitmap
     private int scannerLaserTop; // laser top position
-    private final static int LASER_MOVE_DISTANCE_PER_UNIT_TIME = 13;
+    private final static int LASER_MOVE_DISTANCE_PER_UNIT_TIME = 26;
     private int LASER_MOVE_DIRECTION = 1;
 
     public ScannerViewFinderView(Context context, @Nullable AttributeSet attrs) {
@@ -99,7 +99,7 @@ public class ScannerViewFinderView extends ViewfinderView {
                 int laserHeight = scannerLaserBitmap.getHeight();
                 int laserWidth = scannerLaserBitmap.getWidth();
                 scannerLaserBitmap = Bitmap.createScaledBitmap(scannerLaserBitmap,laserWidth,
-                        laserHeight/3, false);
+                        laserHeight/4, false);
             }
             if (scannerLaserBitmap != null) {
                 int laserHeight = scannerLaserBitmap.getHeight();

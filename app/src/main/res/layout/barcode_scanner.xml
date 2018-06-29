@@ -26,6 +26,6 @@
         app:scannerTipText="@string/scanner_tip"
         app:scannerTipTextSize="12sp"
         app:scannerTipTextColor="@color/white"
-        app:scannerTipTextMargin="20dp"
+        app:scannerTipTextMargin="15dp"
         app:tipTextGravityBottom="true"/>
 </merge>
