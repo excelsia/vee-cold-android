@@ -1,4 +1,4 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.QRCode;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -15,6 +15,8 @@ import com.journeyapps.barcodescanner.ViewfinderView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tech.vee.veecoldwallet.R;
 
 public class ScannerViewFinderView extends ViewfinderView {
     private int scannerBoundColor; // viewfinder color

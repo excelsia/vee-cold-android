@@ -1,13 +1,16 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.AccountUtil;
+import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class WalletFragment extends Fragment {
     String addr;
@@ -32,9 +35,9 @@ public class WalletFragment extends Fragment {
         priKey = "EXSu2hma58fD662tcTY8Jy4xnrPjEMy9xk5Sd6uwiuws";
         domain = "https://vee.tech";
         qrCode = (ImageView)view.findViewById(R.id.qr_code);
-        qrContents = Tools.generatePubKeyAddrMsg(domain, addr, pubKey);
+        qrContents = AccountUtil.generatePubKeyAddrMsg(domain, addr, pubKey);
         Toast.makeText(getActivity(),qrContents, Toast.LENGTH_LONG).show();
-        qrCode.setImageBitmap(Tools.generateQRCode(qrContents, 400));
+        qrCode.setImageBitmap(QRCodeUtil.generateQRCode(qrContents, 400));
         return view;
     }
 

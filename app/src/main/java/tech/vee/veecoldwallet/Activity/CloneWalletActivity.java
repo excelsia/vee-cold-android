@@ -1,7 +1,9 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import tech.vee.veecoldwallet.R;
 
 public class CloneWalletActivity extends AppCompatActivity {
 

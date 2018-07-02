@@ -1,4 +1,4 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Util;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-public class Tools {
+public class PermissionUtil {
     private static String tag = "Winston";
     public static boolean permissionGranted(Activity activity){
         if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
@@ -29,21 +29,5 @@ public class Tools {
                     Manifest.permission.CAMERA}, 0000);
         }
 
-    }
-
-    public static Bitmap generateQRCode(String message, int width) {
-        Bitmap qrCode;
-        try {
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            qrCode = barcodeEncoder.encodeBitmap(message, BarcodeFormat.QR_CODE, width, width);
-        }
-        catch(Exception e){
-            qrCode = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
-        }
-        return qrCode;
-    }
-
-    public static String generatePubKeyAddrMsg (String domain, String address, String publicKey) {
-        return domain + "/#cold/export?address=" + address + "&publicKey=" + publicKey;
     }
 }

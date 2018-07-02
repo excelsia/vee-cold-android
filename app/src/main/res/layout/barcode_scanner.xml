@@ -9,7 +9,7 @@
         app:zxing_framing_rect_height="235dp"
         app:zxing_framing_rect_width="235dp" />
 
-    <tech.vee.veecoldwallet.ScannerViewFinderView
+    <tech.vee.veecoldwallet.QRCode.ScannerViewFinderView
         android:id="@+id/zxing_viewfinder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

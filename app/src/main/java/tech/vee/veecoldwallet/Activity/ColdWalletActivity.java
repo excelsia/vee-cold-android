@@ -1,17 +1,12 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,7 +15,10 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.CameraPreview;
+
+import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Fragment.SettingsFragment;
+import tech.vee.veecoldwallet.Fragment.WalletFragment;
 
 public class ColdWalletActivity extends AppCompatActivity {
 
@@ -85,7 +83,7 @@ public class ColdWalletActivity extends AppCompatActivity {
             else {
                 Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
             }
-            //qrCode.setImageBitmap(Tools.generateQRCode(qrContents, 400));
+            //qrCode.setImageBitmap(PermissionUtil.generateQRCode(qrContents, 400));
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);

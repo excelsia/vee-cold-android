@@ -1,9 +1,11 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Fragment;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
+
+import tech.vee.veecoldwallet.R;
 
 
 public class SettingsFragment extends PreferenceFragment {

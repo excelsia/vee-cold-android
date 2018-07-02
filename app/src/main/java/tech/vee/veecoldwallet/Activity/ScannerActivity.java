@@ -1,4 +1,4 @@
-package tech.vee.veecoldwallet;
+package tech.vee.veecoldwallet.Activity;
 
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
+
+import tech.vee.veecoldwallet.R;
 
 public class ScannerActivity extends AppCompatActivity implements DecoratedBarcodeView.TorchListener {
     DecoratedBarcodeView scannerView;
