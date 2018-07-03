@@ -70,7 +70,7 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 
     public void onTorchOn() {
         torch.setTag("ON");
-        torch.setColorFilter(getResources().getColor(R.color.scanner_corner_color));
+        torch.setColorFilter(getResources().getColor(R.color.orange));
 
     }
 

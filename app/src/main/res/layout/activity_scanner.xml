@@ -9,7 +9,7 @@
         android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_scanner_layout="@layout/barcode_scanner">
+        app:zxing_scanner_layout="@layout/custom_barcode_scanner">
     </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
     <ImageView

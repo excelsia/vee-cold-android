@@ -7,5 +7,5 @@
     <color name="black">#000000</color>
     <color name="yellow">#FAFAD2</color>
     <color name="transparent">#33FFFFFF</color>
-    <color name="scanner_corner_color">#FF8737</color>
+    <color name="orange">#FF8737</color>
 </resources>

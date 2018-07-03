@@ -28,4 +28,10 @@
     <!-- Strings related to Scanner -->
     <string name="scanner_tip">Align QR code within frame to scan</string>
 
+    <!-- Strings related to Clone Wallet -->
+    <string name="export_wallet">Export wallet</string>
+    <string name="import_wallet">Import wallet</string>
+
+
+
 </resources>

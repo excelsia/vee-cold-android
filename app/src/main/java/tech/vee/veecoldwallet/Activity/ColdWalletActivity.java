@@ -89,7 +89,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                         "\n\nPublic Key: " + account.getPubKey() +
                         "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
                 qrCode = (ImageView)findViewById(R.id.qr_code);
-                exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 400);
+                exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
                 qrCode.setImageBitmap(exportQRCode);
             }
         }

@@ -19,7 +19,7 @@
         app:zxing_viewfinder_mask="@color/zxing_custom_viewfinder_mask"
         app:scannerBoundColor="@color/white"
         app:scannerBoundWidth="0.5dp"
-        app:scannerBoundCornerColor="@color/scanner_corner_color"
+        app:scannerBoundCornerColor="@color/orange"
         app:scannerBoundCornerWidth="1.5dp"
         app:scannerBoundCornerHeight="12dp"
         app:scannerLaserResId="@drawable/scanner_laser"

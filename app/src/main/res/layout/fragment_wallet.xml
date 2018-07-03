@@ -20,12 +20,12 @@
             android:text="@string/title_wallet"/>
 
         <Button
+            android:id="@+id/importQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:layout_gravity="center"
-            android:text="@string/wallet_import_key"
-            android:onClick="onClickImportBtn"/>
+            android:text="@string/wallet_import_key" />
 
         <ImageView
             android:id="@+id/qr_code"

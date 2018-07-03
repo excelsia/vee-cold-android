@@ -10,8 +10,8 @@ import tech.vee.veecoldwallet.Account.VEEAccount;
 
 public class QRCodeUtil {
     private static final String TAG = "Winston";
-    private static final String DOMAIN = "https://vee.tech";
-
+    //private static final String DOMAIN = "https://vee.tech";
+    private static final String DOMAIN = "http://localhost:8080";
     public static Bitmap generateQRCode(String message, int width) {
         Bitmap qrCode;
         try {
