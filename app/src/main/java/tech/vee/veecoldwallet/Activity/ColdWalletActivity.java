@@ -3,6 +3,7 @@ package tech.vee.veecoldwallet.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,19 +17,20 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import tech.vee.veecoldwallet.Account.VEEAccount;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Fragment.SettingsFragment;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
+import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class ColdWalletActivity extends AppCompatActivity {
-
     private WalletFragment wallet;
     private SettingsFragment settings;
     private FragmentManager fragmentManager;
 
-
-    // Variables related to QR Scanner
     private String qrContents;
+    private ImageView qrCode;
+    private Bitmap exportQRCode;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -73,17 +75,23 @@ public class ColdWalletActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        ImageView qrCode = (ImageView) findViewById(R.id.qr_code);
+        qrContents = result.getContents();
 
         if(result != null) {
-            qrContents = result.getContents();
             if(qrContents == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
+                String priKey = QRCodeUtil.parsePriKey(qrContents);
+                VEEAccount account = new VEEAccount(false, priKey);
+                Toast.makeText(this, "Private Key: " + account.getPriKey() +
+                        "\n\nPublic Key: " + account.getPubKey() +
+                        "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
+                qrCode = (ImageView)findViewById(R.id.qr_code);
+                exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 400);
+                qrCode.setImageBitmap(exportQRCode);
             }
-            //qrCode.setImageBitmap(PermissionUtil.generateQRCode(qrContents, 400));
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);
