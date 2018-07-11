@@ -21,6 +21,7 @@ import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
     private Button importQRCode;
+    private Button signTx;
     private ImageView qrCode;
     private String qrContents;
     private Bitmap exportQRCode;
@@ -36,7 +37,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
         qrCode = (ImageView)view.findViewById(R.id.qr_code);
         importQRCode = (Button)view.findViewById(R.id.importQRCode);
+        signTx = (Button)view.findViewById(R.id.signTx);
         importQRCode.setOnClickListener(this);
+        signTx.setOnClickListener(this);
         //addr = "3N3LRioDiFkPrQvbuRP3tBUmYDq5Ro4g8ho";
         //pubKey = "Foh3cBN2Mmgy2oCC27KJ32LiJVfNfuYdBUqev14toa9B";
         //priKey = "EXSu2hma58fD662tcTY8Jy4xnrPjEMy9xk5Sd6uwiuws";

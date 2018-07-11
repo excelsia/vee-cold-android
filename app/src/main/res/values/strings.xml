@@ -7,6 +7,8 @@
 
     <!-- Strings related to Wallet -->
     <string name="wallet_import_key">Import private key</string>
+    <string name="wallet_sign_tx">Sign transaction</string>
+
 
     <!-- Strings related to Settings -->
     <string name="settings_account">Account</string>

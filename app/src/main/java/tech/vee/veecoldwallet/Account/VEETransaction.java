@@ -1,5 +1,8 @@
 package tech.vee.veecoldwallet.Account;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,6 +39,9 @@ public class VEETransaction {
     private static final int KBYTE = 1024;
     private static final byte TRANSFER = 4;
     private static final byte V2 = 2;
+    private static ByteBuffer buffer;
+    private static byte chainId;
+    private static String recipient;
 
     /** VEETransaction ID. */
     public final String id;
@@ -78,6 +84,7 @@ public class VEETransaction {
         this.bytes = null;
     }
 
+    @NonNull
     public static VEETransaction makeTransferTx(PublicKeyAccount sender, String recipient, long amount, String assetId,
                                                 long fee, String feeAssetId, String attachment, BigInteger timestamp)
     {
@@ -140,6 +147,7 @@ public class VEETransaction {
         }
     }
 
+    @NonNull
     private String sign(PrivateKeyAccount account, byte[] bytes){
         return Base58.encode(cipher.calculateSignature(account.getPrivateKey(), bytes));
     }
@@ -150,10 +158,12 @@ public class VEETransaction {
         return bytes;
     }
 
+    @NonNull
     private static String hash(byte[] bytes) {
         return Base58.encode(Hash.hash(bytes, 0, bytes.length, Hash.BLAKE2B256));
     }
 
+    @org.jetbrains.annotations.Contract(pure = true)
     private static String normalize(String assetId) {
         return assetId == null || assetId.isEmpty() ? Asset.WAVES : assetId;
     }
@@ -162,6 +172,7 @@ public class VEETransaction {
         return WAVES.equals(normalize(assetId));
     }
 
+    @Nullable
     private static String toJsonObject(String assetId) {
         return isWaves(assetId) ? null : assetId;
     }
@@ -189,6 +200,7 @@ public class VEETransaction {
     }
 
     private static String putRecipient(ByteBuffer buffer, byte chainId, String recipient) {
+
         if (recipient.length() <= 30) {
             // assume an alias
             buffer.put((byte) 0x02).put(chainId).putShort((short) recipient.length()).put(recipient.getBytes(UTF8));
