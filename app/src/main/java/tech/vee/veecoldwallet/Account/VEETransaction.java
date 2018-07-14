@@ -14,6 +14,7 @@ import com.wavesplatform.wavesj.Asset;
 import com.wavesplatform.wavesj.Base58;
 import com.wavesplatform.wavesj.PrivateKeyAccount;
 import com.wavesplatform.wavesj.PublicKeyAccount;
+import com.wavesplatform.wavesj.Transaction;
 
 import org.whispersystems.curve25519.Curve25519;
 
@@ -37,11 +38,11 @@ public class VEETransaction {
     private static final Curve25519 cipher = Curve25519.getInstance(Curve25519.BEST);
 
     private static final int KBYTE = 1024;
-    private static final byte TRANSFER = 4;
     private static final byte V2 = 2;
-    private static ByteBuffer buffer;
-    private static byte chainId;
-    private static String recipient;
+
+    private static final byte TRANSFER = 4;
+    private static final byte LEASE = 8;
+    private static final byte LEASE_CANCEL = 9;
 
     /** VEETransaction ID. */
     public final String id;
@@ -111,6 +112,37 @@ public class VEETransaction {
                 "attachment", Base58.encode(attachmentBytes));
     }
 
+    public static VEETransaction makeLeaseTx(PublicKeyAccount sender, String recipient, long amount, long fee, BigInteger timestamp) {
+        ByteBuffer buf = ByteBuffer.allocate(KBYTE);
+        buf.put(LEASE).put(sender.getPublicKey());
+        recipient = putRecipient(buf, sender.getChainId(), recipient);
+        buf.putLong(amount).putLong(fee);
+        putBigInteger(buf, timestamp);
+        return new VEETransaction(sender, buf,"/transactions/broadcast",
+                "type", LEASE,
+                "version", V2,
+                "senderPublicKey", Base58.encode(sender.getPublicKey()),
+                "recipient", recipient,
+                "amount", amount,
+                "fee", fee,
+                "timestamp", timestamp);
+    }
+
+    public static VEETransaction makeLeaseCancelTx(PublicKeyAccount sender, byte chainId, String leaseId, long fee, BigInteger timestamp) {
+        ByteBuffer buf = ByteBuffer.allocate(KBYTE);
+        buf.put(LEASE_CANCEL).put(chainId).put(sender.getPublicKey()).putLong(fee);
+        putBigInteger(buf, timestamp);
+        buf.put(Base58.decode(leaseId));
+        return new VEETransaction(sender, buf,"/transactions/broadcast",
+                "type", LEASE_CANCEL,
+                "version", V2,
+                "chainId", chainId,
+                "senderPublicKey", Base58.encode(sender.getPublicKey()),
+                "leaseId", leaseId,
+                "fee", fee,
+                "timestamp", timestamp);
+    }
+
     static class Deserializer extends JsonDeserializer<VEETransaction> {
         @Override
         public VEETransaction deserialize(JsonParser p, DeserializationContext context) throws IOException {
@@ -124,7 +156,7 @@ public class VEETransaction {
     }
 
     /**
-     * Returns JSON-encoded transaction data.
+     * Returns JSON-encoded transaction data containing the timestamp and signature.
      * @return a JSON string
      */
     public String getJson() {
@@ -139,6 +171,27 @@ public class VEETransaction {
             toJson.put("signature", proofs.get(0));
         }
 
+        try {
+            return new ObjectMapper().writeValueAsString(toJson);
+        } catch (JsonProcessingException e) {
+            // not expected to ever happen
+            return null;
+        }
+    }
+
+
+    /**
+     * Returns JSON-encoded transaction data.
+     * @return a JSON string
+     */
+    public String getFullJson() {
+        HashMap<String, Object> toJson = new HashMap<String, Object>(data);
+        toJson.put("id", id);
+        toJson.put("proofs", proofs);
+        if (proofs.size() == 1) {
+            // assume proof0 is a signature
+            toJson.put("signature", proofs.get(0));
+        }
         try {
             return new ObjectMapper().writeValueAsString(toJson);
         } catch (JsonProcessingException e) {
