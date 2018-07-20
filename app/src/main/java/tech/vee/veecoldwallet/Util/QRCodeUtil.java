@@ -2,9 +2,14 @@ package tech.vee.veecoldwallet.Util;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import java.io.IOException;
 
 import tech.vee.veecoldwallet.Account.VEEAccount;
 
@@ -12,6 +17,7 @@ public class QRCodeUtil {
     private static final String TAG = "Winston";
     //private static final String DOMAIN = "https://vee.tech";
     private static final String DOMAIN = "http://localhost:8080";
+
     public static Bitmap generateQRCode(String message, int width) {
         Bitmap qrCode;
         try {

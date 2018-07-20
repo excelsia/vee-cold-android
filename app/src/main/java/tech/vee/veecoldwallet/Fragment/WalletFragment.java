@@ -14,9 +14,12 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.HashMap;
+
 import tech.vee.veecoldwallet.Account.VEEAccount;
 import tech.vee.veecoldwallet.Activity.ScannerActivity;
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
@@ -25,6 +28,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private ImageView qrCode;
     private String qrContents;
     private Bitmap exportQRCode;
+    private HashMap<String,Object> jsonMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,18 +66,27 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         qrContents = result.getContents();
 
         if(result != null) {
-            if(qrContents == null) {
+            if (qrContents == null) {
                 Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
             }
+
             else {
-                //Toast.makeText(this, "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
-                String priKey = QRCodeUtil.parsePriKey(qrContents);
-                VEEAccount account = new VEEAccount(false, priKey);
-                Toast.makeText(getActivity(), "Private Key: " + account.getPriKey() +
-                        "\n\nPublic Key: " + account.getPubKey() +
-                        "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
-                exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-                qrCode.setImageBitmap(exportQRCode);
+                jsonMap = JsonUtil.getJsonAsMap(qrContents);
+                Toast.makeText(this.getActivity(), "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(),qrContents,Toast.LENGTH_LONG).show();
+                if (jsonMap != null) {
+                    Toast.makeText(getActivity(), "Json string detected!", Toast.LENGTH_LONG).show();
+                }
+
+                else{
+                    String priKey = QRCodeUtil.parsePriKey(qrContents);
+                    VEEAccount account = new VEEAccount(false, priKey);
+                    //Toast.makeText(getActivity(), "Private Key: " + account.getPriKey() +
+                    //        "\n\nPublic Key: " + account.getPubKey() +
+                    //        "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
+                    exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
+                    qrCode.setImageBitmap(exportQRCode);
+                }
             }
         }
         else {
