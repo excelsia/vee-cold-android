@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import tech.vee.veecoldwallet.Util.JsonUtil;
 
@@ -121,20 +120,22 @@ public class VEETransaction {
     public static VEETransaction makeTransferTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
         HashMap<String, Object> varMap;
         String senderPublicKey = "", recipient = "", attachment = "", assetId = "", feeAssetId = "";
-        long amount = 0, fee = 0;
-        BigInteger timestamp;
+        long amount = 0, fee = 0, val;
+        BigInteger timestamp = BigInteger.ZERO;
         String[] keys = {"senderPublicKey", "recipient", "attachment",
-                "assetId", "feeAssetId", "amount", "fee"};
+                "assetId", "feeAssetId", "amount", "fee", "timestamp"};
         PrivateKeyAccount priKeyAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
-            senderPublicKey = (String)jsonMap.get("senderPublicKey");
-            recipient = (String)jsonMap.get("recipient");
-            attachment = (String)jsonMap.get("attachment");
-            assetId = (String)jsonMap.get("assetId");
-            feeAssetId = (String)jsonMap.get("feeAssetId");
+            senderPublicKey = (String) jsonMap.get("senderPublicKey");
+            recipient = (String) jsonMap.get("recipient");
+            attachment = (String) jsonMap.get("attachment");
+            assetId = (String) jsonMap.get("assetId");
+            feeAssetId = (String) jsonMap.get("feeAssetId");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
+            timestamp = BigInteger.valueOf(val);
         }
         else {
             Log.d(TAG, "Map does not contain all keys");
@@ -148,8 +149,6 @@ public class VEETransaction {
         }
 
         if (priKeyAcc != null) {
-            timestamp = BigInteger.valueOf(System.currentTimeMillis());
-            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
             return makeTransferTx(priKeyAcc, recipient, amount, assetId, fee, feeAssetId, attachment, timestamp);
         }
         else {
@@ -179,16 +178,18 @@ public class VEETransaction {
     public static VEETransaction makeLeaseTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
         HashMap<String, Object> varMap;
         String senderPublicKey = "", recipient = "";
-        long amount = 0, fee = 0;
-        BigInteger timestamp;
-        String[] keys = {"senderPublicKey", "recipient", "amount", "fee"};
+        long amount = 0, fee = 0, val;
+        BigInteger timestamp = BigInteger.ZERO;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
         PrivateKeyAccount priKeyAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
-            senderPublicKey = (String)jsonMap.get("senderPublicKey");
-            recipient = (String)jsonMap.get("recipient");
+            senderPublicKey = (String) jsonMap.get("senderPublicKey");
+            recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
+            timestamp = BigInteger.valueOf(val);
         }
         else {
             Log.d(TAG, "Map does not contain all keys");
@@ -202,8 +203,6 @@ public class VEETransaction {
         }
 
         if (priKeyAcc != null) {
-            timestamp = BigInteger.valueOf(System.currentTimeMillis());
-            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
             return makeLeaseTx(priKeyAcc, recipient, amount, fee, timestamp);
         }
         else {
