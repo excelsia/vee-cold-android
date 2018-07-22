@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,9 @@ import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
-    private Button importQRCode;
+    private Button importQrCode;
     private Button signTx;
-    private ImageView qrCode;
-    private String qrContents;
-    private Bitmap exportQRCode;
-    private HashMap<String,Object> jsonMap;
+    private ImageView qrCodeView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,10 +37,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
-        qrCode = (ImageView)view.findViewById(R.id.qr_code);
-        importQRCode = (Button)view.findViewById(R.id.importQRCode);
+        qrCodeView = (ImageView)view.findViewById(R.id.qr_code);
+        importQrCode = (Button)view.findViewById(R.id.importQRCode);
         signTx = (Button)view.findViewById(R.id.signTx);
-        importQRCode.setOnClickListener(this);
+        importQrCode.setOnClickListener(this);
         signTx.setOnClickListener(this);
         //addr = "3N3LRioDiFkPrQvbuRP3tBUmYDq5Ro4g8ho";
         //pubKey = "Foh3cBN2Mmgy2oCC27KJ32LiJVfNfuYdBUqev14toa9B";
@@ -53,6 +51,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        //Toast.makeText(getActivity(),"Button Clicked!",Toast.LENGTH_LONG).show();
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setCaptureActivity(ScannerActivity.class);
         integrator.setBeepEnabled(false);
@@ -60,37 +59,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         integrator.initiateScan();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        qrContents = result.getContents();
-
-        if(result != null) {
-            if (qrContents == null) {
-                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
-            }
-
-            else {
-                jsonMap = JsonUtil.getJsonAsMap(qrContents);
-                Toast.makeText(this.getActivity(), "Scanned: " + qrContents, Toast.LENGTH_LONG).show();
-                //Toast.makeText(getActivity(),qrContents,Toast.LENGTH_LONG).show();
-                if (jsonMap != null) {
-                    Toast.makeText(getActivity(), "Json string detected!", Toast.LENGTH_LONG).show();
-                }
-
-                else{
-                    String priKey = QRCodeUtil.parsePriKey(qrContents);
-                    VEEAccount account = new VEEAccount(false, priKey);
-                    //Toast.makeText(getActivity(), "Private Key: " + account.getPriKey() +
-                    //        "\n\nPublic Key: " + account.getPubKey() +
-                    //        "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
-                    exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-                    qrCode.setImageBitmap(exportQRCode);
-                }
-            }
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    public ImageView getQrCodeView(){
+        return qrCodeView;
     }
+
 }

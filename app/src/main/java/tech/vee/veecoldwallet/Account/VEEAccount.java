@@ -230,10 +230,6 @@ public class VEEAccount {
         }
     }
 
-    public Boolean getHasSeed() {
-        return hasSeed;
-    }
-
     public String getPriKey() {
         return priKey;
     }
@@ -258,6 +254,11 @@ public class VEEAccount {
         return false;
     }
 
+    public boolean isAccount(String pubKey){
+        if (getPubKey().equals(pubKey)) return true;
+        return false;
+    }
+
     private boolean validatePriKey(String priKey){
         int length;
 
@@ -272,4 +273,11 @@ public class VEEAccount {
         // Check if private key is 32 bytes
         return length == 32;
     }
+
+    @Override
+    public String toString(){
+        return "Private Key: " + getPriKey() + "\nPublic Key: " + getPubKey()
+                + "\nAddress: " + getAddress();
+    }
+
 }

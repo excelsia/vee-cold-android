@@ -2,6 +2,7 @@ package tech.vee.veecoldwallet.Account;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,7 +15,6 @@ import com.wavesplatform.wavesj.Asset;
 import com.wavesplatform.wavesj.Base58;
 import com.wavesplatform.wavesj.PrivateKeyAccount;
 import com.wavesplatform.wavesj.PublicKeyAccount;
-import com.wavesplatform.wavesj.Transaction;
 
 import org.whispersystems.curve25519.Curve25519;
 
@@ -22,14 +22,19 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import tech.vee.veecoldwallet.Util.JsonUtil;
 
 @JsonDeserialize(using = VEETransaction.Deserializer.class)
 public class VEETransaction {
     public static final String WAVES = "WAVES";
+    public static final String TAG = "Winston";
 
     private final static Charset UTF8 = Charset.forName("UTF-8");
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -112,6 +117,48 @@ public class VEETransaction {
                 "attachment", Base58.encode(attachmentBytes));
     }
 
+    @NonNull
+    public static VEETransaction makeTransferTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
+        HashMap<String, Object> varMap;
+        String senderPublicKey = "", recipient = "", attachment = "", assetId = "", feeAssetId = "";
+        long amount = 0, fee = 0;
+        BigInteger timestamp;
+        String[] keys = {"senderPublicKey", "recipient", "attachment",
+                "assetId", "feeAssetId", "amount", "fee"};
+        PrivateKeyAccount priKeyAcc = null;
+
+        if (JsonUtil.containsKeys(jsonMap, keys)){
+            senderPublicKey = (String)jsonMap.get("senderPublicKey");
+            recipient = (String)jsonMap.get("recipient");
+            attachment = (String)jsonMap.get("attachment");
+            assetId = (String)jsonMap.get("assetId");
+            feeAssetId = (String)jsonMap.get("feeAssetId");
+            amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
+            fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+        }
+        else {
+            Log.d(TAG, "Map does not contain all keys");
+        }
+
+        for(VEEAccount account:accounts){
+            if(account.isAccount(senderPublicKey)){
+                Log.d(TAG, "Private key: " + account.getPriKey());
+                priKeyAcc = PrivateKeyAccount.fromPrivateKey(account.getPriKey(), (byte)0);
+            }
+        }
+
+        if (priKeyAcc != null) {
+            timestamp = BigInteger.valueOf(System.currentTimeMillis());
+            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
+            return makeTransferTx(priKeyAcc, recipient, amount, assetId, fee, feeAssetId, attachment, timestamp);
+        }
+        else {
+            Log.d(TAG,"Private key account is null");
+            return null;
+        }
+    }
+
+    @NonNull
     public static VEETransaction makeLeaseTx(PublicKeyAccount sender, String recipient, long amount, long fee, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
         buf.put(LEASE).put(sender.getPublicKey());
@@ -126,6 +173,43 @@ public class VEETransaction {
                 "amount", amount,
                 "fee", fee,
                 "timestamp", timestamp);
+    }
+
+    @NonNull
+    public static VEETransaction makeLeaseTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
+        HashMap<String, Object> varMap;
+        String senderPublicKey = "", recipient = "";
+        long amount = 0, fee = 0;
+        BigInteger timestamp;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee"};
+        PrivateKeyAccount priKeyAcc = null;
+
+        if (JsonUtil.containsKeys(jsonMap, keys)){
+            senderPublicKey = (String)jsonMap.get("senderPublicKey");
+            recipient = (String)jsonMap.get("recipient");
+            amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
+            fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+        }
+        else {
+            Log.d(TAG, "Map does not contain all keys");
+        }
+
+        for(VEEAccount account:accounts){
+            if(account.isAccount(senderPublicKey)){
+                Log.d(TAG, "Private key: " + account.getPriKey());
+                priKeyAcc = PrivateKeyAccount.fromPrivateKey(account.getPriKey(), (byte)0);
+            }
+        }
+
+        if (priKeyAcc != null) {
+            timestamp = BigInteger.valueOf(System.currentTimeMillis());
+            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
+            return makeLeaseTx(priKeyAcc, recipient, amount, fee, timestamp);
+        }
+        else {
+            Log.d(TAG,"Private key account is null");
+            return null;
+        }
     }
 
     public static VEETransaction makeLeaseCancelTx(PublicKeyAccount sender, byte chainId, String leaseId, long fee, BigInteger timestamp) {
@@ -162,9 +246,9 @@ public class VEETransaction {
     public String getJson() {
         HashMap<String, Object> toJson = new HashMap<>();
 
-        if (data.containsKey("timestamp")){
+        /* if (data.containsKey("timestamp")){
             toJson.put("timestamp", data.get("timestamp"));
-        }
+        } */
 
         if (proofs.size() == 1) {
             // assume proof0 is a signature
@@ -216,7 +300,6 @@ public class VEETransaction {
         return Base58.encode(Hash.hash(bytes, 0, bytes.length, Hash.BLAKE2B256));
     }
 
-    @org.jetbrains.annotations.Contract(pure = true)
     private static String normalize(String assetId) {
         return assetId == null || assetId.isEmpty() ? Asset.WAVES : assetId;
     }

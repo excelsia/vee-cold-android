@@ -4,12 +4,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.io.IOException;
+import java.util.HashMap;
 
 import tech.vee.veecoldwallet.Account.VEEAccount;
 
@@ -60,5 +58,20 @@ public class QRCodeUtil {
             return "";
         }
 
+    }
+
+    public static int processQrContents(String qrContents) {
+        HashMap<String,Object> map = new HashMap<>();
+        String priKey;
+
+        if (qrContents == null) return 0;
+
+        map = JsonUtil.getJsonAsMap(qrContents);
+        if (map != null) return 1;
+
+        priKey = QRCodeUtil.parsePriKey(qrContents);
+        if (priKey != "") return 2;
+
+        return 3;
     }
 }
