@@ -105,7 +105,7 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 case 1:
                     HashMap<String, Object> jsonMap = JsonUtil.getJsonAsMap(qrContents);
-                    Toast.makeText(this, jsonMap.toString(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, jsonMap.toString(), Toast.LENGTH_LONG).show();
 
                     byte txType = -1;
                     VEETransaction transaction = null;

@@ -118,7 +118,6 @@ public class VEETransaction {
 
     @NonNull
     public static VEETransaction makeTransferTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
-        HashMap<String, Object> varMap;
         String senderPublicKey = "", recipient = "", attachment = "", assetId = "", feeAssetId = "";
         long amount = 0, fee = 0, val;
         BigInteger timestamp = BigInteger.ZERO;
@@ -176,7 +175,6 @@ public class VEETransaction {
 
     @NonNull
     public static VEETransaction makeLeaseTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
-        HashMap<String, Object> varMap;
         String senderPublicKey = "", recipient = "";
         long amount = 0, fee = 0, val;
         BigInteger timestamp = BigInteger.ZERO;
