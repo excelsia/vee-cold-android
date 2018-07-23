@@ -2,14 +2,14 @@ package tech.vee.veecoldwallet.Util;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.HashMap;
 
-import tech.vee.veecoldwallet.Account.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class QRCodeUtil {
     private static final String TAG = "Winston";
@@ -32,8 +32,8 @@ public class QRCodeUtil {
         return DOMAIN + "/#cold/export?address=" + account.getAddress() + "&publicKey=" + account.getPubKey();
     }
 
-    public static String generatePriKeyStr(VEEAccount account) {
-        return DOMAIN + "/#cold/export?privateKey=" + account.getPriKey();
+    public static String generateSeedStr(VEEWallet wallet) {
+        return DOMAIN + "/#cold/export?seed=" + wallet.getSeed();
     }
 
     public static Bitmap exportPubKeyAddr(VEEAccount account, int width){
@@ -42,14 +42,14 @@ public class QRCodeUtil {
         return generateQRCode(message, width);
     }
 
-    public static Bitmap exportPriKey(VEEAccount account, int width){
+    public static Bitmap exportSeed(VEEWallet wallet, int width){
         String message;
-        message = generatePriKeyStr(account);
+        message = generateSeedStr(wallet);
         return generateQRCode(message, width);
     }
 
-    public static String parsePriKey(String message) {
-        if(message.contains("/#cold/export?privateKey=")) {
+    public static String parseSeed(String message) {
+        if(message.contains("/#cold/export?seed=")) {
             String[] tokens = message.split("=");
             return tokens[1];
         }
@@ -57,7 +57,6 @@ public class QRCodeUtil {
             Log.d(TAG, "Format incorrect!");
             return "";
         }
-
     }
 
     public static int processQrContents(String qrContents) {
@@ -69,7 +68,7 @@ public class QRCodeUtil {
         map = JsonUtil.getJsonAsMap(qrContents);
         if (map != null) return 1;
 
-        priKey = QRCodeUtil.parsePriKey(qrContents);
+        priKey = QRCodeUtil.parseSeed(qrContents);
         if (priKey != "") return 2;
 
         return 3;

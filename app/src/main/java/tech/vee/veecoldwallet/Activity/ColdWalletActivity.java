@@ -10,38 +10,43 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.wavesplatform.wavesj.Base58;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import tech.vee.veecoldwallet.Account.VEEAccount;
-import tech.vee.veecoldwallet.Account.VEETransaction;
+import tech.vee.veecoldwallet.Wallet.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Fragment.SettingsFragment;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
+import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ColdWalletActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
 
-    private WalletFragment wallet;
-    private SettingsFragment settings;
+    private WalletFragment walletFrag;
+    private SettingsFragment settingsFrag;
     private FragmentManager fragmentManager;
 
     private String qrContents;
     private ImageView qrCode;
     private Bitmap exportQRCode;
 
+    private VEEWallet wallet;
     private ArrayList<VEEAccount> accounts;
     private VEEAccount account;
+
+    public VEEWallet getWallet() { return wallet; }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -50,10 +55,10 @@ public class ColdWalletActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_wallet:
-                    switchToFragment(wallet);
+                    switchToFragment(walletFrag);
                     return true;
                 case R.id.navigation_settings:
-                    switchToFragment(settings);
+                    switchToFragment(settingsFrag);
                     return true;
             }
             return false;
@@ -65,16 +70,13 @@ public class ColdWalletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        wallet = new WalletFragment();
-        settings = new SettingsFragment();
+        walletFrag = new WalletFragment();
+        settingsFrag = new SettingsFragment();
         fragmentManager = null;
 
-        account = new VEEAccount(false, "EXSu2hma58fD662tcTY8Jy4xnrPjEMy9xk5Sd6uwiuws");
-        Log.d(TAG, "Public key: " + account.getPubKey());
         accounts = new ArrayList<>();
-        accounts.add(account);
 
-        switchToFragment(wallet);
+        switchToFragment(walletFrag);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -95,7 +97,7 @@ public class ColdWalletActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
-        qrCode = wallet.getQrCodeView();
+        qrCode = walletFrag.getQrCodeView();
 
         if(result != null) {
             switch (QRCodeUtil.processQrContents(qrContents)) {
@@ -128,13 +130,24 @@ public class ColdWalletActivity extends AppCompatActivity {
                     break;
 
                 case 2:
-                    String priKey = QRCodeUtil.parsePriKey(qrContents);
-                    VEEAccount account = new VEEAccount(false, priKey);
-                    Toast.makeText(this, "Private Key: " + account.getPriKey() +
-                            "\n\nPublic Key: " + account.getPubKey() +
-                            "\n\nAddress: " + account.getAddress(), Toast.LENGTH_LONG).show();
-                    exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-                    qrCode.setImageBitmap(exportQRCode);
+                    String seed = QRCodeUtil.parseSeed(qrContents);
+
+                    if(VEEAccount.validateSeedPhrase(seed)) {
+                        wallet = VEEWallet.recover(seed);
+
+                        List<String> accountSeeds;
+                        accountSeeds = wallet.getAccountSeeds();
+                        account = new VEEAccount(accountSeeds.get(0));
+                        accounts.add(account);
+
+                        Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
+
+                        exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
+                        qrCode.setImageBitmap(exportQRCode);
+                    }
+                    else {
+                        Log.d(TAG,"Invalid account seed!");
+                    }
                     break;
 
                 case 3:

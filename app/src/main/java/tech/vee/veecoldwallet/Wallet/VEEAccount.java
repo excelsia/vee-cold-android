@@ -1,20 +1,28 @@
-package tech.vee.veecoldwallet.Account;
+package tech.vee.veecoldwallet.Wallet;
 
 import android.util.Log;
 
-import com.wavesplatform.wavesj.Account;
 import com.wavesplatform.wavesj.Base58;
 import com.wavesplatform.wavesj.PrivateKeyAccount;
 
+import org.whispersystems.curve25519.java.curve_sigs;
+
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import tech.vee.veecoldwallet.Util.HashUtil;
+
 public class VEEAccount {
-    Boolean hasSeed;
-    String seed;        // 15 word seed phrase
+    String accountSeed;        // 15 word seed phrase
+    String seed;
+    int nonce;
     String priKey;      // private key (base64)
     String pubKey;      // public key (base58)
     String address;
     String TAG = "Winston";
+
+    private static final byte CHAIN_ID = 'T';
+    private static final byte ADDR_VERSION = 1;
 
     private static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
@@ -203,53 +211,47 @@ public class VEEAccount {
             "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
     };
 
-    // Create new account using valid seed phrase or private key
-    public VEEAccount(Boolean hasSeed, String string) {
-        PrivateKeyAccount priKeyAccount;
+    // Create new account using valid seed phrase
+    public VEEAccount(String accountSeed) {
+        this.accountSeed = accountSeed;
+        nonce = Integer.parseInt(accountSeed.substring(0, 1));
+        seed = accountSeed.substring(1);
 
-        // Check if seed phrase is valid
-        if(hasSeed && validateSeedPhrase(string)) {
-            seed = string;
-            priKeyAccount = PrivateKeyAccount.fromSeed(string, 0, (byte)'T');
-            priKey = Base58.encode(priKeyAccount.getPrivateKey());
-            pubKey = Base58.encode(priKeyAccount.getPublicKey());
-            address = priKeyAccount.getAddress();
-        }
+        byte[] privateKey = generatePriKey(seed, nonce);
+        priKey = Base58.encode(privateKey);
 
-        // Check if private key is valid
-        else if(!hasSeed && validatePriKey(string)) {
-            seed = "";
-            priKey = string;
-            priKeyAccount = PrivateKeyAccount.fromPrivateKey(priKey, (byte)'T');
-            pubKey = Base58.encode(priKeyAccount.getPublicKey());
-            address = priKeyAccount.getAddress();
-        }
+        byte[] publicKey;
+        publicKey = generatePubKey(privateKey);
+        pubKey = Base58.encode(publicKey);
 
-        else {
-            Log.d(TAG,"Invalid parameters in VEEAccount constructor");
-        }
+        address = Base58.encode(generateAddress(publicKey));
     }
 
     public String getPriKey() {
         return priKey;
     }
-
     public String getPubKey() {
         return pubKey;
     }
-
     public String getAddress() {
         return address;
     }
-
+    public String getAccountSeed() {
+        return accountSeed;
+    }
     public String getSeed() {
         return seed;
     }
+    public int getNonce() {
+        return nonce;
+    }
 
-    public boolean validateSeedPhrase(String seed){
-        String[] words = seed.split(" ");
-        if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words)) && words.length == 15) {
-            return true;
+    public static boolean validateSeedPhrase(String seed){
+        if (seed != null) {
+            String[] words = seed.split(" ");
+            if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words))) {
+                return true;
+            }
         }
         return false;
     }
@@ -259,25 +261,40 @@ public class VEEAccount {
         return false;
     }
 
-    private boolean validatePriKey(String priKey){
-        int length;
-
-        // Check if private key contains invalid chars
-        try {
-            length = Base58.decode(priKey).length;
-        }
-        catch(IllegalArgumentException e){
-            return false;
-        }
-
-        // Check if private key is 32 bytes
-        return length == 32;
-    }
-
     @Override
     public String toString(){
-        return "Private Key: " + getPriKey() + "\nPublic Key: " + getPubKey()
-                + "\nAddress: " + getAddress();
+        return "Nonce: " + nonce + "\nSeed: " + seed + "\nPrivate Key: "
+                + priKey + "\nPublic Key: " + pubKey + "\nAddress: " + address;
     }
 
+    private static byte[] generatePriKey(String seed, int nonce) {
+        // account seed from seed & nonce
+        ByteBuffer buf = ByteBuffer.allocate(seed.getBytes().length + 4);
+        buf.putInt(nonce).put(seed.getBytes());
+        byte[] accountSeed = HashUtil.secureHash(buf.array(), 0, buf.array().length);
+
+        // private key from account seed & chainId
+        byte[] hashedSeed = HashUtil.hash(accountSeed, 0, accountSeed.length, HashUtil.SHA256);
+        byte[] privateKey = Arrays.copyOf(hashedSeed, 32);
+        privateKey[0]  &= 248;
+        privateKey[31] &= 127;
+        privateKey[31] |= 64;
+
+        return privateKey;
+    }
+
+    private static byte[] generatePubKey(byte[] privateKey) {
+        byte[] publicKey = new byte[32];
+        curve_sigs.curve25519_keygen(publicKey, privateKey);
+        return publicKey;
+    }
+
+    private static byte[] generateAddress(byte[] publicKey) {
+        ByteBuffer buf = ByteBuffer.allocate(26);
+        byte[] hash = HashUtil.secureHash(publicKey, 0, publicKey.length);
+        buf.put(ADDR_VERSION).put(CHAIN_ID).put(hash, 0, 20);
+        byte[] checksum = HashUtil.secureHash(buf.array(), 0, 22);
+        buf.put(checksum, 0, 4);
+        return buf.array();
+    }
 }

@@ -8,19 +8,25 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.QRCodeUtil;
+import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
     ListPreference listPreference;
     PreferenceScreen preferenceScreen;
+    VEEWallet wallet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +42,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference){
         // custom dialog
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_dialog_clone);
-        dialog.setTitle("Clone Wallet");
+        ColdWalletActivity activity = (ColdWalletActivity) getActivity();
+        wallet = activity.getWallet();
+
+        if(wallet != null){
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(R.layout.custom_dialog_clone);
+            ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_seed);
+            qrCode.setImageBitmap(QRCodeUtil.exportSeed(wallet,800));
+            dialog.setTitle("Clone Wallet");
+            dialog.show();
+        }
+
 
         /*
         // set the custom dialog components - text, image and button
@@ -56,7 +71,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             }
         });
         */
-        dialog.show();
         return true;
     }
 

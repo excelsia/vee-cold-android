@@ -26,17 +26,6 @@
         <activity android:name=".Activity.ScannerActivity" />
 
         <activity
-            android:name=".Activity.CloneWalletActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-            <intent-filter>
-                <action android:name="tech.vee.veecoldwallet.CloneWalletActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"

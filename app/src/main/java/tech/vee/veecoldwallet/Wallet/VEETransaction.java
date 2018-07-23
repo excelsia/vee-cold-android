@@ -1,4 +1,4 @@
-package tech.vee.veecoldwallet.Account;
+package tech.vee.veecoldwallet.Wallet;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tech.vee.veecoldwallet.Util.HashUtil;
 import tech.vee.veecoldwallet.Util.JsonUtil;
 
 @JsonDeserialize(using = VEETransaction.Deserializer.class)
@@ -294,7 +295,7 @@ public class VEETransaction {
 
     @NonNull
     private static String hash(byte[] bytes) {
-        return Base58.encode(Hash.hash(bytes, 0, bytes.length, Hash.BLAKE2B256));
+        return Base58.encode(HashUtil.hash(bytes, 0, bytes.length, HashUtil.BLAKE2B256));
     }
 
     private static String normalize(String assetId) {

@@ -6,7 +6,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Wallet -->
-    <string name="wallet_import_key">Import private key</string>
+    <string name="wallet_import_key">Import seed</string>
     <string name="wallet_sign_tx">Sign transaction</string>
 
 
@@ -14,8 +14,8 @@
     <string name="settings_account">Account</string>
     <string name="settings_additional">Additional Settings</string>
 
-    <string name="settings_clone">Clone Wallet</string>
-    <string name="settings_clone_summary">Backup private keys in another device</string>
+    <string name="settings_clone">Export Seed</string>
+    <string name="settings_clone_summary">Backup Wallet in another device</string>
 
     <string name="settings_connectivity">Internet Connectivity</string>
     <string name="settings_connectivity_summary">Check internet connection status</string>
@@ -24,16 +24,13 @@
     <string name="settings_language_summary">Select language</string>
     <string name="settings_language_title">Language Options</string>
 
-    <string name="settings_webclient">Website</string>
-    <string name="settings_webclient_summary">Access the web client via another device: www.bing.com</string>
+    <string name="settings_webclient">About Us</string>
+    <string name="settings_webclient_summary">Learn more about VEE</string>
 
     <!-- Strings related to Scanner -->
     <string name="scanner_tip">Align QR code within frame to scan</string>
 
     <!-- Strings related to Clone Wallet -->
-    <string name="export_wallet">Export wallet</string>
-    <string name="import_wallet">Import wallet</string>
-
-
+    <string name="export_seed">Wallet Seed</string>
 
 </resources>

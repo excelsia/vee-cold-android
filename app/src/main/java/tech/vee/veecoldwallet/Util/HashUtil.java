@@ -1,14 +1,14 @@
-package tech.vee.veecoldwallet.Account;
+package tech.vee.veecoldwallet.Util;
 
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.Blake2bDigest;
 import org.bouncycastle.crypto.digests.KeccakDigest;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 
-public class Hash {
-   public static final ThreadLocal<Digest> BLAKE2B256 = new ThreadLocal<Digest>();
-   public static final ThreadLocal<Digest> KECCAK256 = new ThreadLocal<Digest>();
-   public static final ThreadLocal<Digest> SHA256 = new ThreadLocal<Digest>();
+public class HashUtil {
+    public static final ThreadLocal<Digest> BLAKE2B256 = new ThreadLocal<Digest>();
+    public static final ThreadLocal<Digest> KECCAK256 = new ThreadLocal<Digest>();
+    public static final ThreadLocal<Digest> SHA256 = new ThreadLocal<Digest>();
 
     private static Digest digest(ThreadLocal<Digest> cache) {
         Digest d = cache.get();
@@ -34,7 +34,7 @@ public class Hash {
     }
 
     public static byte[] secureHash(byte[] message, int ofs, int len) {
-        byte[] blake2b = hash(message, ofs, len, Hash.BLAKE2B256);
-        return hash(blake2b, 0, blake2b.length, Hash.KECCAK256);
+        byte[] blake2b = hash(message, ofs, len, HashUtil.BLAKE2B256);
+        return hash(blake2b, 0, blake2b.length, HashUtil.KECCAK256);
     }
 }

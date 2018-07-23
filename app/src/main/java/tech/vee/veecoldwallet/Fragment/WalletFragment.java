@@ -1,27 +1,17 @@
 package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
-import java.util.HashMap;
-
-import tech.vee.veecoldwallet.Account.VEEAccount;
 import tech.vee.veecoldwallet.Activity.ScannerActivity;
 import tech.vee.veecoldwallet.R;
-import tech.vee.veecoldwallet.Util.JsonUtil;
-import tech.vee.veecoldwallet.Util.QRCodeUtil;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
     private Button importQrCode;

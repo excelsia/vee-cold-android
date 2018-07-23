@@ -3,27 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="2">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="10dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="20dp"
-        android:text="@string/export_wallet"/>
+        android:text="@string/export_seed"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="10dp"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:text="@string/import_wallet"/>
+    <ImageView
+        android:id="@+id/export_seed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
