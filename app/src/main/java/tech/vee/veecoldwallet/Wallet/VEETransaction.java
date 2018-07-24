@@ -136,6 +136,7 @@ public class VEETransaction {
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
             val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
             timestamp = BigInteger.valueOf(val);
+            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
         }
         else {
             Log.d(TAG, "Map does not contain all keys");
@@ -152,7 +153,7 @@ public class VEETransaction {
             return makeTransferTx(priKeyAcc, recipient, amount, assetId, fee, feeAssetId, attachment, timestamp);
         }
         else {
-            Log.d(TAG,"Private key account is null");
+            Log.d(TAG,"Private key cannot be found");
             return null;
         }
     }
@@ -189,6 +190,7 @@ public class VEETransaction {
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
             val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
             timestamp = BigInteger.valueOf(val);
+            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
         }
         else {
             Log.d(TAG, "Map does not contain all keys");
@@ -205,7 +207,7 @@ public class VEETransaction {
             return makeLeaseTx(priKeyAcc, recipient, amount, fee, timestamp);
         }
         else {
-            Log.d(TAG,"Private key account is null");
+            Log.d(TAG,"Private key cannot be found");
             return null;
         }
     }
