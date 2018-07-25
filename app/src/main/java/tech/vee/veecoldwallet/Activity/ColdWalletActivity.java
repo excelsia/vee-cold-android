@@ -21,6 +21,7 @@ import com.wavesplatform.wavesj.Base58;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
@@ -133,17 +134,25 @@ public class ColdWalletActivity extends AppCompatActivity {
                     String seed = QRCodeUtil.parseSeed(qrContents);
 
                     if(VEEAccount.validateSeedPhrase(seed)) {
-                        wallet = VEEWallet.recover(seed);
+                        wallet = VEEWallet.recover(seed, 1);
 
-                        List<String> accountSeeds;
-                        accountSeeds = wallet.getAccountSeeds();
-                        account = new VEEAccount(accountSeeds.get(0));
-                        accounts.add(account);
+                        if (wallet != null){
+                            Set<String> accountSeeds;
+                            accountSeeds = wallet.getAccountSeeds();
+                            long i = 0;
 
-                        Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
+                            for(String accountSeed: accountSeeds){
+                                account = new VEEAccount(accountSeed, i);
+                                accounts.add(account);
+                                Log.d(TAG, account.toString());
+                                i++;
+                            }
 
-                        exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-                        qrCode.setImageBitmap(exportQRCode);
+                            //Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
+
+                            exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
+                            qrCode.setImageBitmap(exportQRCode);
+                        }
                     }
                     else {
                         Log.d(TAG,"Invalid account seed!");

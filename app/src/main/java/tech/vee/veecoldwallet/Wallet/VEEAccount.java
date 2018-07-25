@@ -2,6 +2,7 @@ package tech.vee.veecoldwallet.Wallet;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.wavesplatform.wavesj.Base58;
 import com.wavesplatform.wavesj.PrivateKeyAccount;
 
@@ -14,8 +15,7 @@ import tech.vee.veecoldwallet.Util.HashUtil;
 
 public class VEEAccount {
     String accountSeed;        // 15 word seed phrase
-    String seed;
-    int nonce;
+    long nonce;
     String priKey;      // private key (base64)
     String pubKey;      // public key (base58)
     String address;
@@ -212,12 +212,10 @@ public class VEEAccount {
     };
 
     // Create new account using valid seed phrase
-    public VEEAccount(String accountSeed) {
+    public VEEAccount(String accountSeed, long nonce) {
         this.accountSeed = accountSeed;
-        nonce = Integer.parseInt(accountSeed.substring(0, 1));
-        seed = accountSeed.substring(1);
-
-        byte[] privateKey = generatePriKey(seed, nonce);
+        this.nonce = nonce;
+        byte[] privateKey = generatePriKey(accountSeed);
         priKey = Base58.encode(privateKey);
 
         byte[] publicKey;
@@ -227,6 +225,8 @@ public class VEEAccount {
         address = Base58.encode(generateAddress(publicKey));
     }
 
+    public String getAccountSeed() { return accountSeed; }
+    public long getNonce() { return nonce; }
     public String getPriKey() {
         return priKey;
     }
@@ -235,15 +235,6 @@ public class VEEAccount {
     }
     public String getAddress() {
         return address;
-    }
-    public String getAccountSeed() {
-        return accountSeed;
-    }
-    public String getSeed() {
-        return seed;
-    }
-    public int getNonce() {
-        return nonce;
     }
 
     public static boolean validateSeedPhrase(String seed){
@@ -263,18 +254,14 @@ public class VEEAccount {
 
     @Override
     public String toString(){
-        return "Nonce: " + nonce + "\nSeed: " + seed + "\nPrivate Key: "
+        return "Nonce: " + nonce + "\nAccount seed: " + accountSeed + "\nPrivate Key: "
                 + priKey + "\nPublic Key: " + pubKey + "\nAddress: " + address;
     }
 
-    private static byte[] generatePriKey(String seed, int nonce) {
-        // account seed from seed & nonce
-        ByteBuffer buf = ByteBuffer.allocate(seed.getBytes().length + 4);
-        buf.putInt(nonce).put(seed.getBytes());
-        byte[] accountSeed = HashUtil.secureHash(buf.array(), 0, buf.array().length);
-
-        // private key from account seed & chainId
-        byte[] hashedSeed = HashUtil.hash(accountSeed, 0, accountSeed.length, HashUtil.SHA256);
+    private static byte[] generatePriKey(String accountSeed) {
+        // private key from account seed
+        byte[] accountSeedByte = Base58.decode(accountSeed);
+        byte[] hashedSeed = HashUtil.hash(accountSeedByte, 0, accountSeedByte.length, HashUtil.SHA256);
         byte[] privateKey = Arrays.copyOf(hashedSeed, 32);
         privateKey[0]  &= 248;
         privateKey[31] &= 127;
