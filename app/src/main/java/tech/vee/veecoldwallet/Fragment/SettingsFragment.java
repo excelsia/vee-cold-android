@@ -49,7 +49,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             final Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.custom_dialog_clone);
             ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_seed);
+            TextView seed = (TextView) dialog.findViewById(R.id.export_seed_string);
             qrCode.setImageBitmap(QRCodeUtil.exportSeed(wallet,800));
+            seed.setText(wallet.getSeed());
             dialog.setTitle("Clone Wallet");
             dialog.show();
         }

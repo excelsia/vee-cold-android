@@ -135,21 +135,13 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                     if(VEEAccount.validateSeedPhrase(seed)) {
                         wallet = VEEWallet.recover(seed, 1);
+                        wallet.append(3);
+                        Log.d(TAG, wallet.getJson());
 
                         if (wallet != null){
-                            Set<String> accountSeeds;
-                            accountSeeds = wallet.getAccountSeeds();
-                            long i = 0;
-
-                            for(String accountSeed: accountSeeds){
-                                account = new VEEAccount(accountSeed, i);
-                                accounts.add(account);
-                                Log.d(TAG, account.toString());
-                                i++;
-                            }
-
+                            accounts = wallet.generateAccounts();
+                            account = accounts.get(0);
                             //Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
-
                             exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
                             qrCode.setImageBitmap(exportQRCode);
                         }

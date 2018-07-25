@@ -227,6 +227,44 @@ public class VEETransaction {
                 "timestamp", timestamp);
     }
 
+    /*
+    @NonNull
+    public static VEETransaction makeLeaseCancelTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
+        String senderPublicKey = "", recipient = "";
+        long amount = 0, fee = 0, val;
+        BigInteger timestamp = BigInteger.ZERO;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
+        PrivateKeyAccount priKeyAcc = null;
+
+        if (JsonUtil.containsKeys(jsonMap, keys)){
+            senderPublicKey = (String) jsonMap.get("senderPublicKey");
+            recipient = (String) jsonMap.get("recipient");
+            fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
+            timestamp = BigInteger.valueOf(val);
+            timestamp = timestamp.multiply(BigInteger.valueOf(1000000));
+        }
+        else {
+            Log.d(TAG, "Map does not contain all keys");
+        }
+
+        for(VEEAccount account:accounts){
+            if(account.isAccount(senderPublicKey)){
+                Log.d(TAG, "Private key: " + account.getPriKey());
+                priKeyAcc = PrivateKeyAccount.fromPrivateKey(account.getPriKey(), (byte)0);
+            }
+        }
+
+        if (priKeyAcc != null) {
+            return makeLeaseTx(priKeyAcc, recipient, amount, fee, timestamp);
+        }
+        else {
+            Log.d(TAG,"Private key cannot be found");
+            return null;
+        }
+    }
+    */
+
     static class Deserializer extends JsonDeserializer<VEETransaction> {
         @Override
         public VEETransaction deserialize(JsonParser p, DeserializationContext context) throws IOException {

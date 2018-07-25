@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class VEEWallet {
         if (JsonUtil.containsKeys(jsonMap, keys)) {
             seed = (String)jsonMap.get("seed");
             accountSeeds = (HashSet<String>)jsonMap.get("accountSeeds");
-            nonce = (int)jsonMap.get("nonce");
+            nonce = (long)jsonMap.get("nonce");
             agent = (String)jsonMap.get("agent");
         }
     }
@@ -64,17 +65,17 @@ public class VEEWallet {
         return recover(newSeed, 1);
     }
 
-    public static VEEWallet generate(int nonce) {
+    public static VEEWallet generate(long nonce) {
         String newSeed = PrivateKeyAccount.generateSeed();
         return recover(newSeed, nonce);
     }
 
-    public static VEEWallet recover(String seed, int num){
+    public static VEEWallet recover(String seed, long num){
         String newAccountSeed;
-        Set<String> newAccountSeeds = new HashSet<>();
+        Set<String> newAccountSeeds = new LinkedHashSet<>();
 
         if (seed != null && num > 0) {
-            for(int i = 0; i < num; i++) {
+            for(long i = 0; i < num; i++) {
                 newAccountSeed = generateAccountSeed(seed, i);
                 newAccountSeeds.add(newAccountSeed);
             }
@@ -84,26 +85,17 @@ public class VEEWallet {
         return null;
     }
 
-    public static VEEWallet append(VEEWallet wallet, long num){
-        String seed;
-        String newAccountSeed;
-        Set<String> newAccountSeeds;
-        long nonce;
+    public void append(long num){
+        String accountSeed;
 
-        if (wallet != null && num > 0) {
-            seed = wallet.getSeed();
-            newAccountSeeds = wallet.getAccountSeeds();
-            nonce = wallet.getNonce();
-
+        if (num > 0) {
             for (long i = nonce; i < nonce + num; i++) {
-                newAccountSeed = generateAccountSeed(seed, i);
-                newAccountSeeds.add(newAccountSeed);
+                accountSeed = generateAccountSeed(seed, i);
+                accountSeeds.add(accountSeed);
             }
-            return new VEEWallet(seed, newAccountSeeds, nonce + num);
         }
         else {
             Log.d(TAG,"Invalid append");
-            return  null;
         }
     }
 
@@ -120,6 +112,20 @@ public class VEEWallet {
             // not expected to ever happen
             return null;
         }
+    }
+
+    public ArrayList<VEEAccount> generateAccounts() {
+        ArrayList<VEEAccount> accounts = new ArrayList<>();
+        VEEAccount account;
+        long i = 0;
+
+        for(String accountSeed: accountSeeds){
+            account = new VEEAccount(accountSeed, i);
+            accounts.add(account);
+            //Log.d(TAG, account.toString());
+            i++;
+        }
+        return accounts;
     }
 
     private static String generateAccountSeed(String seed, long nonce) {
