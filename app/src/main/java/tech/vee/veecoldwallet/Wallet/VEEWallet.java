@@ -71,13 +71,14 @@ public class VEEWallet {
     }
 
     public static VEEWallet recover(String seed, long num){
-        String newAccountSeed;
+        String accountSeed;
         List<String> newAccountSeeds = new ArrayList<>();
 
         if (seed != null && num > 0) {
             for(long i = 0; i < num; i++) {
-                newAccountSeed = generateAccountSeedOld(seed, i);
-                newAccountSeeds.add(newAccountSeed);
+                accountSeed = generateAccountSeed(seed, i);
+                //accountSeed = generateAccountSeedOld(seed, i);
+                newAccountSeeds.add(accountSeed);
             }
             return new VEEWallet(seed, newAccountSeeds, num);
         }
@@ -90,7 +91,8 @@ public class VEEWallet {
 
         if (num > 0) {
             for (long i = nonce; i < nonce + num; i++) {
-                accountSeed = generateAccountSeedOld(seed, i);
+                accountSeed = generateAccountSeed(seed, i);
+                //accountSeed = generateAccountSeedOld(seed, i);
                 accountSeeds.add(accountSeed);
             }
         }

@@ -22,7 +22,7 @@ public class VEEAccount {
     String TAG = "Winston";
 
     private static final byte CHAIN_ID = 'T';
-    private static final byte ADDR_VERSION = 1;
+    private static final byte ADDR_VERSION = 5;
 
     private static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",

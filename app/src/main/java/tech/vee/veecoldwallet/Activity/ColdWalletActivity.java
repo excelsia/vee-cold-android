@@ -154,7 +154,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                     String seed = QRCodeUtil.parseSeed(qrContents);
 
                     if(VEEAccount.validateSeedPhrase(seed)) {
-                        wallet = VEEWallet.recover(seed, 3);
+                        wallet = VEEWallet.recover(seed, 2);
                         JsonUtil.save(wallet.getJson(), walletFilePath);
                         Log.d(TAG, wallet.getJson());
 
