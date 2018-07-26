@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ public class ColdWalletActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
     private static final String WALLET_FILE_NAME = "wallet.dat";
 
+    private ActionBar actionBar;
+
     private WalletFragment walletFrag;
     private SettingsFragment settingsFrag;
     private FragmentManager fragmentManager;
@@ -62,9 +65,14 @@ public class ColdWalletActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_wallet:
                     switchToFragment(walletFrag);
+                    actionBar.setIcon(R.drawable.ic_navigation_wallet);
+                    actionBar.setTitle(R.string.title_wallet);
                     return true;
+
                 case R.id.navigation_settings:
                     switchToFragment(settingsFrag);
+                    actionBar.setIcon(R.drawable.ic_navigation_settings);
+                    actionBar.setTitle(R.string.title_settings);
                     return true;
             }
             return false;
@@ -75,6 +83,9 @@ public class ColdWalletActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
 
         walletFrag = new WalletFragment();
         settingsFrag = new SettingsFragment();

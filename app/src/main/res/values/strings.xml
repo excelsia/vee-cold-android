@@ -1,7 +1,7 @@
 <resources>
     <!-- Strings related to Navigation Menu -->
-    <string name="app_name">VEE Cold Wallet</string>
-    <string name="title_wallet">My Wallet</string>
+    <string name="app_name">Wallet</string>
+    <string name="title_wallet">Wallet</string>
     <string name="title_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
