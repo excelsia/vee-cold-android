@@ -9,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -64,15 +66,15 @@ public class ColdWalletActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_wallet:
-                    switchToFragment(walletFrag);
-                    actionBar.setIcon(R.drawable.ic_navigation_wallet);
+                    actionBar.setLogo(R.drawable.ic_navigation_wallet);
                     actionBar.setTitle(R.string.title_wallet);
+                    switchToFragment(walletFrag);
                     return true;
 
                 case R.id.navigation_settings:
-                    switchToFragment(settingsFrag);
-                    actionBar.setIcon(R.drawable.ic_navigation_settings);
+                    actionBar.setLogo(R.drawable.ic_navigation_settings);
                     actionBar.setTitle(R.string.title_settings);
+                    switchToFragment(settingsFrag);
                     return true;
             }
             return false;
@@ -80,12 +82,38 @@ public class ColdWalletActivity extends AppCompatActivity {
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.scan:
+                QRCodeUtil.scan(this);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
+        setSupportActionBar(toolbar);
+
         actionBar = getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setLogo(R.drawable.ic_navigation_wallet);
+        actionBar.setTitle(R.string.title_wallet);
 
         walletFrag = new WalletFragment();
         settingsFrag = new SettingsFragment();

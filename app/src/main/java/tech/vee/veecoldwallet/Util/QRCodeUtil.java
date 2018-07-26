@@ -1,13 +1,16 @@
 package tech.vee.veecoldwallet.Util;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.HashMap;
 
+import tech.vee.veecoldwallet.Activity.ScannerActivity;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
@@ -72,5 +75,13 @@ public class QRCodeUtil {
         if (priKey != "") return 2;
 
         return 3;
+    }
+
+    public static void scan(Activity activity){
+        IntentIntegrator integrator = new IntentIntegrator(activity);
+        integrator.setCaptureActivity(ScannerActivity.class);
+        integrator.setBeepEnabled(false);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.initiateScan();
     }
 }

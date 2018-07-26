@@ -61,11 +61,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         //Toast.makeText(getActivity(),"Button Clicked!",Toast.LENGTH_LONG).show();
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setCaptureActivity(ScannerActivity.class);
-        integrator.setBeepEnabled(false);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.initiateScan();
+        QRCodeUtil.scan(getActivity());
     }
 
     public ImageView getQrCodeView(){
