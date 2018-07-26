@@ -1,27 +1,24 @@
 package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.DialogUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
+import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 
@@ -46,22 +43,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         // custom dialog
         ColdWalletActivity activity = (ColdWalletActivity) getActivity();
         wallet = activity.getWallet();
-
-        if(wallet != null){
-            final Dialog dialog = new Dialog(getActivity());
-            dialog.setContentView(R.layout.custom_dialog_clone);
-            ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_seed);
-            TextView seed = (TextView) dialog.findViewById(R.id.export_seed_string);
-            qrCode.setImageBitmap(QRCodeUtil.exportSeed(wallet,800));
-            seed.setText(wallet.getSeed());
-            dialog.setTitle("Clone Wallet");
-            dialog.show();
-        }
-        else {
-            Toast.makeText(getActivity(), "No seed found", Toast.LENGTH_LONG).show();
-        }
-
-
+        DialogUtil.createExportSeedDialog(getActivity(), wallet);
         /*
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.text);

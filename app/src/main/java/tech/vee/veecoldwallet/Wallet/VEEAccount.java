@@ -243,7 +243,7 @@ public class VEEAccount {
         if (seed != null) {
             String[] words = seed.split(" ");
             if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words))
-                    && (words.length == 15 || words.length == 18)) { return true; }
+                    && words.length == 15) { return true; }
         }
         return false;
     }

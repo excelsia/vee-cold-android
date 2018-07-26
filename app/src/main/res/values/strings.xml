@@ -17,8 +17,8 @@
     <string name="settings_clone">Export Seed</string>
     <string name="settings_clone_summary">Backup Wallet in another device</string>
 
-    <string name="settings_connectivity">Internet Connectivity</string>
-    <string name="settings_connectivity_summary">Check internet connection status</string>
+    <string name="settings_connectivity">Monitor connectivity</string>
+    <string name="settings_connectivity_summary">Check for wifi, data, and bluetooth connection</string>
 
     <string name="settings_language">Language Settings</string>
     <string name="settings_language_summary">Select language</string>
@@ -30,7 +30,10 @@
     <!-- Strings related to Scanner -->
     <string name="scanner_tip">Align QR code within frame to scan</string>
 
-    <!-- Strings related to Clone Wallet -->
+    <!-- Strings related to Export Seed -->
     <string name="export_seed">Wallet Seed</string>
+
+    <!-- Strings related to Clone Wallet -->
+    <string name="sign_tx">Sign Transaction</string>
 
 </resources>

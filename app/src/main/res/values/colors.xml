@@ -3,8 +3,11 @@
     <color name="colorPrimary">#FF8737</color>
     <color name="colorPrimaryDark">#E57931</color>
     <color name="colorAccent">#FF5E40</color>
+    <color name="textDark">#696B8A</color>
+    <color name="textPale">#9091A3</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="lightGray">#FAFAFA</color>
     <color name="black">#000000</color>
     <color name="gray">#838383</color>
     <color name="orange">#FF8737</color>
