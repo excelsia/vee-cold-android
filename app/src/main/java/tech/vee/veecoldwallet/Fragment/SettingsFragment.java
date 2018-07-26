@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
@@ -24,9 +26,9 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    ListPreference listPreference;
-    PreferenceScreen preferenceScreen;
-    VEEWallet wallet;
+    private ListPreference listPreference;
+    private PreferenceScreen preferenceScreen;
+    private VEEWallet wallet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             seed.setText(wallet.getSeed());
             dialog.setTitle("Clone Wallet");
             dialog.show();
+        }
+        else {
+            Toast.makeText(getActivity(), "No seed found", Toast.LENGTH_LONG).show();
         }
 
 

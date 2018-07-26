@@ -212,33 +212,32 @@ public class VEETransaction {
         }
     }
 
-    public static VEETransaction makeLeaseCancelTx(PublicKeyAccount sender, byte chainId, String leaseId, long fee, BigInteger timestamp) {
+    public static VEETransaction makeLeaseCancelTx(PublicKeyAccount sender, String txId, long fee, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
-        buf.put(LEASE_CANCEL).put(chainId).put(sender.getPublicKey()).putLong(fee);
+        buf.put(LEASE_CANCEL).put(sender.getPublicKey()).putLong(fee);
         putBigInteger(buf, timestamp);
-        buf.put(Base58.decode(leaseId));
+        buf.put(Base58.decode(txId));
         return new VEETransaction(sender, buf,"/transactions/broadcast",
                 "type", LEASE_CANCEL,
                 "version", V2,
-                "chainId", chainId,
                 "senderPublicKey", Base58.encode(sender.getPublicKey()),
-                "leaseId", leaseId,
+                "txId", txId,
                 "fee", fee,
                 "timestamp", timestamp);
     }
 
-    /*
+
     @NonNull
     public static VEETransaction makeLeaseCancelTx(HashMap<String, Object> jsonMap, ArrayList<VEEAccount> accounts) {
-        String senderPublicKey = "", recipient = "";
-        long amount = 0, fee = 0, val;
+        String senderPublicKey = "", txId = "";
+        long fee = 0, val;
         BigInteger timestamp = BigInteger.ZERO;
-        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
+        String[] keys = {"senderPublicKey", "txId", "fee", "timestamp"};
         PrivateKeyAccount priKeyAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
-            recipient = (String) jsonMap.get("recipient");
+            txId = (String) jsonMap.get("txId");
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
             val = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
             timestamp = BigInteger.valueOf(val);
@@ -256,14 +255,14 @@ public class VEETransaction {
         }
 
         if (priKeyAcc != null) {
-            return makeLeaseTx(priKeyAcc, recipient, amount, fee, timestamp);
+            return makeLeaseCancelTx(priKeyAcc, txId, fee, timestamp);
         }
         else {
             Log.d(TAG,"Private key cannot be found");
             return null;
         }
     }
-    */
+
 
     static class Deserializer extends JsonDeserializer<VEETransaction> {
         @Override

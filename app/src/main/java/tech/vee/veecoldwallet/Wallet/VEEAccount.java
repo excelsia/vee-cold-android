@@ -240,9 +240,8 @@ public class VEEAccount {
     public static boolean validateSeedPhrase(String seed){
         if (seed != null) {
             String[] words = seed.split(" ");
-            if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words))) {
-                return true;
-            }
+            if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words))
+                    && (words.length == 15 || words.length == 18)) { return true; }
         }
         return false;
     }

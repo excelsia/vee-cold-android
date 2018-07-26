@@ -18,6 +18,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.wavesplatform.wavesj.Base58;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ColdWalletActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
+    private static final String WALLET_FILE_NAME = "wallet.dat";
 
     private WalletFragment walletFrag;
     private SettingsFragment settingsFrag;
@@ -44,8 +46,11 @@ public class ColdWalletActivity extends AppCompatActivity {
     private Bitmap exportQRCode;
 
     private VEEWallet wallet;
+    private File walletFile;
+    private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
     private VEEAccount account;
+    private String password;
 
     public VEEWallet getWallet() { return wallet; }
 
@@ -75,11 +80,24 @@ public class ColdWalletActivity extends AppCompatActivity {
         settingsFrag = new SettingsFragment();
         fragmentManager = null;
 
-        accounts = new ArrayList<>();
 
         switchToFragment(walletFrag);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        walletFilePath = getFilesDir().getPath().toString() + "/" + WALLET_FILE_NAME;
+        //Log.d(TAG, "Wallet file path: " + walletFilePath);
+        walletFile = new File(walletFilePath);
+        password = "";
+        accounts = new ArrayList<>();
+
+        if (walletFile.exists()){
+            String seed = JsonUtil.load(walletFilePath);
+            if (seed != "" && seed != JsonUtil.ERROR) {
+                wallet = new VEEWallet(seed);
+                accounts = wallet.generateAccounts();
+            }
+        }
     }
 
     /**
@@ -121,6 +139,8 @@ public class ColdWalletActivity extends AppCompatActivity {
                         case 4: transaction = VEETransaction.makeTransferTx(jsonMap, accounts);
                                 break;
                         case 8: transaction = VEETransaction.makeLeaseTx(jsonMap, accounts);
+                                break;
+                        case 9: transaction = VEETransaction.makeLeaseCancelTx(jsonMap, accounts);
                     }
 
                     if (transaction != null) {
@@ -134,8 +154,8 @@ public class ColdWalletActivity extends AppCompatActivity {
                     String seed = QRCodeUtil.parseSeed(qrContents);
 
                     if(VEEAccount.validateSeedPhrase(seed)) {
-                        wallet = VEEWallet.recover(seed, 1);
-                        wallet.append(3);
+                        wallet = VEEWallet.recover(seed, 3);
+                        JsonUtil.save(wallet.getJson(), walletFilePath);
                         Log.d(TAG, wallet.getJson());
 
                         if (wallet != null){

@@ -21,23 +21,23 @@ import tech.vee.veecoldwallet.Util.JsonUtil;
 
 public class VEEWallet {
     private String seed;
-    private Set<String> accountSeeds;
+    private List<String> accountSeeds;
     private long nonce;
     private String agent;
 
     private static final String TAG = "Winston";
-    private static final String WALLET_VERSION = "0.0.1";
+    private static final String WALLET_VERSION = "1.0rc1";
     private static final String AGENT_VERSION = "0.0.1";
     private static final String AGENT_NAME = "VEE cold wallet";
 
     public VEEWallet(){
         seed = "";
-        accountSeeds = new HashSet<>();
+        accountSeeds = new ArrayList<>();
         nonce = 0;
         agent = "VEE wallet:" + WALLET_VERSION + "/" + AGENT_NAME + ":" + AGENT_VERSION;
     }
 
-    public VEEWallet(String seed, Set<String> accountSeeds, long nonce){
+    public VEEWallet(String seed, List<String> accountSeeds, long nonce){
         this.seed = seed;
         this.accountSeeds = accountSeeds;
         this.nonce = nonce;
@@ -48,15 +48,15 @@ public class VEEWallet {
         String[] keys = {"seed", "accountSeeds", "nonce", "agent"};
 
         if (JsonUtil.containsKeys(jsonMap, keys)) {
-            seed = (String)jsonMap.get("seed");
-            accountSeeds = (HashSet<String>)jsonMap.get("accountSeeds");
-            nonce = (long)jsonMap.get("nonce");
-            agent = (String)jsonMap.get("agent");
+            seed = (String) jsonMap.get("seed");
+            accountSeeds = (ArrayList<String>) jsonMap.get("accountSeeds");
+            nonce = Double.valueOf((double) jsonMap.get("nonce")).longValue();
+            agent = (String) jsonMap.get("agent");
         }
     }
 
     public String getSeed() { return seed; }
-    public Set<String> getAccountSeeds() { return accountSeeds; }
+    public List<String> getAccountSeeds() { return accountSeeds; }
     public long getNonce() { return nonce;}
     public String getAgent() { return agent; }
 
@@ -72,11 +72,11 @@ public class VEEWallet {
 
     public static VEEWallet recover(String seed, long num){
         String newAccountSeed;
-        Set<String> newAccountSeeds = new LinkedHashSet<>();
+        List<String> newAccountSeeds = new ArrayList<>();
 
         if (seed != null && num > 0) {
             for(long i = 0; i < num; i++) {
-                newAccountSeed = generateAccountSeed(seed, i);
+                newAccountSeed = generateAccountSeedOld(seed, i);
                 newAccountSeeds.add(newAccountSeed);
             }
             return new VEEWallet(seed, newAccountSeeds, num);
@@ -90,7 +90,7 @@ public class VEEWallet {
 
         if (num > 0) {
             for (long i = nonce; i < nonce + num; i++) {
-                accountSeed = generateAccountSeed(seed, i);
+                accountSeed = generateAccountSeedOld(seed, i);
                 accountSeeds.add(accountSeed);
             }
         }
@@ -117,21 +117,29 @@ public class VEEWallet {
     public ArrayList<VEEAccount> generateAccounts() {
         ArrayList<VEEAccount> accounts = new ArrayList<>();
         VEEAccount account;
-        long i = 0;
 
-        for(String accountSeed: accountSeeds){
-            account = new VEEAccount(accountSeed, i);
+        for(long i = 0; i < accountSeeds.size(); i++){
+            account = new VEEAccount(accountSeeds.get((int) i), i);
+            Log.d(TAG, account.toString());
             accounts.add(account);
-            //Log.d(TAG, account.toString());
-            i++;
         }
         return accounts;
     }
 
     private static String generateAccountSeed(String seed, long nonce) {
         // account seed from seed & nonce
-        ByteBuffer buf = ByteBuffer.allocate(seed.getBytes().length + 8);
-        buf.putLong(nonce).put(seed.getBytes());
+        String noncedSecret = String.valueOf(nonce) + seed;
+        ByteBuffer buf = ByteBuffer.allocate(noncedSecret.getBytes().length);
+        buf.put(noncedSecret.getBytes());
+        byte[] accountSeed = HashUtil.secureHash(buf.array(), 0, buf.array().length);
+        return Base58.encode(accountSeed);
+    }
+
+    private static String generateAccountSeedOld(String seed, long nonce) {
+        // account seed from seed & nonce
+        int num = (int) nonce;
+        ByteBuffer buf = ByteBuffer.allocate(seed.getBytes().length + 4);
+        buf.putInt(num).put(seed.getBytes());
         byte[] accountSeed = HashUtil.secureHash(buf.array(), 0, buf.array().length);
         return Base58.encode(accountSeed);
     }
