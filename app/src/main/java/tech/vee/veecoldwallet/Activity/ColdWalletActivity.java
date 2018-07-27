@@ -15,12 +15,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.nightonke.boommenu.Animation.BoomEnum;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.wavesplatform.wavesj.Base58;
 
 import java.io.File;
@@ -29,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import tech.vee.veecoldwallet.Util.DialogUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.R;
@@ -124,9 +131,8 @@ public class ColdWalletActivity extends AppCompatActivity {
         walletFrag = new WalletFragment();
         settingsFrag = new SettingsFragment();
         fragmentManager = null;
-
-
         switchToFragment(walletFrag);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -206,9 +212,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                         if (wallet != null){
                             accounts = wallet.generateAccounts();
                             account = accounts.get(0);
-                            //Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
-                            exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-                            qrCode.setImageBitmap(exportQRCode);
+                            DialogUtil.createExportAddressDialog(this, account);
                         }
                     }
                     else {

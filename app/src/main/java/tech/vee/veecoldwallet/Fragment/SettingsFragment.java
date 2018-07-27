@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nightonke.boommenu.BoomMenuButton;
+
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.DialogUtil;
@@ -44,22 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         ColdWalletActivity activity = (ColdWalletActivity) getActivity();
         wallet = activity.getWallet();
         DialogUtil.createExportSeedDialog(getActivity(), wallet);
-        /*
-        // set the custom dialog components - text, image and button
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText("Android custom dialog example!");
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        image.setImageResource(R.drawable.ic_launcher);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        */
         return true;
     }
 

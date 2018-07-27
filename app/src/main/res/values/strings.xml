@@ -36,4 +36,11 @@
     <!-- Strings related to Clone Wallet -->
     <string name="sign_tx">Sign Transaction</string>
 
+    <!-- Strings related to Floating Action Menu -->
+    <string name="import_seed">Import Seed</string>
+    <string name="generate_seed">Generate Seed</string>
+    <string name="message">Welcome to VEE Cold Wallet!
+        Press button below to import or create a new wallet.</string>
+
+
 </resources>

@@ -300,7 +300,6 @@ public class VEETransaction {
         }
     }
 
-
     /**
      * Returns JSON-encoded transaction data.
      * @return a JSON string

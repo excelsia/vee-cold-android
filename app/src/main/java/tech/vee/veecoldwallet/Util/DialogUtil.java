@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +35,7 @@ public class DialogUtil {
             }
     }
 
-    public static void createExportAddressDialog(Activity activity, VEEAccount account) {
+    public static void createExportAddressDialog(final Activity activity, VEEAccount account) {
         if (account != null) {
             final Dialog dialog = new Dialog(activity);
             dialog.setContentView(R.layout.custom_dialog_export_address);
@@ -42,10 +44,19 @@ public class DialogUtil {
             ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_address);
             TextView address = (TextView) dialog.findViewById(R.id.export_address_string);
             TextView title = (TextView) dialog.findViewById(R.id.export_account_title);
+            Button dialogButton = (Button) dialog.findViewById(R.id.sign_tx);
 
             qrCode.setImageBitmap(QRCodeUtil.exportPubKeyAddr(account,800));
             address.setText(account.getAddress());
             title.setText("Account " + String.valueOf(account.getNonce() + 1));
+
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QRCodeUtil.scan(activity);
+                }
+            });
 
             dialog.setTitle("Export Address");
             dialog.show();
