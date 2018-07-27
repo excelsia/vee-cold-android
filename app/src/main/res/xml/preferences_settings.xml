@@ -23,15 +23,6 @@
     <PreferenceCategory
         android:title="@string/settings_additional">
 
-        <ListPreference
-            android:key="settings_language"
-            android:title="@string/settings_language"
-            android:summary="@string/settings_language_summary"
-            android:entries="@array/settings_language_entries"
-            android:entryValues="@array/settings_language_entryvalues"
-            android:dialogTitle="@string/settings_language_title">
-        </ListPreference>
-
         <PreferenceScreen
             android:title="@string/settings_webclient"
             android:summary="@string/settings_webclient_summary">

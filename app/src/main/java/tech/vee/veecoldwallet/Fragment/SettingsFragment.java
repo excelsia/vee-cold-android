@@ -33,9 +33,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences_settings);
-        listPreference = (ListPreference) findPreference("settings_language");
-        // Set default language to English
-        listPreference.setValueIndex(0);
         preferenceScreen = (PreferenceScreen) findPreference("settings_clone");
         preferenceScreen.setOnPreferenceClickListener(this);
     }

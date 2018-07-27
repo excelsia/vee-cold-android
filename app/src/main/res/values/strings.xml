@@ -20,10 +20,6 @@
     <string name="settings_connectivity">Monitor connectivity</string>
     <string name="settings_connectivity_summary">Check for wifi, data, and bluetooth connection</string>
 
-    <string name="settings_language">Language Settings</string>
-    <string name="settings_language_summary">Select language</string>
-    <string name="settings_language_title">Language Options</string>
-
     <string name="settings_webclient">About Us</string>
     <string name="settings_webclient_summary">Learn more about VEE</string>
 
