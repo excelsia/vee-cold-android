@@ -28,15 +28,17 @@
 
     <!-- Strings related to Export Seed -->
     <string name="export_seed">Wallet Seed</string>
-
-    <!-- Strings related to Clone Wallet -->
     <string name="sign_tx">Sign Transaction</string>
+
+    <!-- Strings related to Account Number -->
+    <string name="account_number_title">Configure Wallet</string>
+    <string name="account_number_subtitle">Select the number of accounts</string>
+    <string name="account_number_confirm">Confirm</string>
 
     <!-- Strings related to Floating Action Menu -->
     <string name="import_seed">Import Seed</string>
     <string name="generate_seed">Generate Seed</string>
-    <string name="message">Welcome to VEE Cold Wallet!
-        Press button below to import or create a new wallet.</string>
+    <string name="message">Welcome to VEE Cold Wallet! Press button below to start.</string>
 
 
 </resources>

@@ -2,20 +2,28 @@ package tech.vee.veecoldwallet.Util;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xw.repo.BubbleSeekBar;
+
+import java.util.ArrayList;
+
+import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
+import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
-public class DialogUtil {
-
+public class UIUtil {
     public static void createExportSeedDialog(Activity activity, VEEWallet wallet) {
         if (wallet != null) {
             final Dialog dialog = new Dialog(activity);
@@ -31,8 +39,8 @@ public class DialogUtil {
             dialog.show();
         }
         else {
-                Toast.makeText(activity, "No seed found", Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(activity, "No seed found", Toast.LENGTH_LONG).show();
+        }
     }
 
     public static void createExportAddressDialog(final Activity activity, VEEAccount account) {
@@ -50,7 +58,6 @@ public class DialogUtil {
             address.setText(account.getAddress());
             title.setText("Account " + String.valueOf(account.getNonce() + 1));
 
-            // if button is clicked, close the custom dialog
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,4 +72,40 @@ public class DialogUtil {
             Toast.makeText(activity, "No account found", Toast.LENGTH_LONG).show();
         }
     }
+
+    public static void createAccountNumberDialog(final Activity activity, final String seed) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_account_number);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        final BubbleSeekBar bsb = (BubbleSeekBar) dialog.findViewById(R.id.account_number_bsb);
+        Button dialogButton = (Button) dialog.findViewById(R.id.account_number_confirm);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
+                intent.putExtra("ACCOUNT_NUMBER", bsb.getProgress());
+                intent.putExtra("SEED", seed);
+                activity.sendBroadcast(intent);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Configure Wallet");
+        dialog.show();
+    }
+
+    public static void setAccountCardsAdapter(Activity activity, RecyclerView accountCards,
+                                              WalletFragment.AccountAdapter adapter,
+                                              ArrayList<VEEAccount> accounts){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        if (accounts.size() > 0 & accountCards != null) {
+            accountCards.setAdapter(adapter);
+        }
+        accountCards.setLayoutManager(layoutManager);
+    }
+
 }

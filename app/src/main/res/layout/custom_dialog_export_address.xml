@@ -33,7 +33,7 @@
             android:layout_marginLeft="48dp"
             android:layout_marginRight="48dp"
             android:gravity="center"
-            android:textColor="@color/textPale"
+            android:textColor="@color/textLight"
             android:textSize="14sp" />
 
     </LinearLayout>

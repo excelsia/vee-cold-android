@@ -19,8 +19,9 @@ public class VEEAccount {
     String priKey;      // private key (base64)
     String pubKey;      // public key (base58)
     String address;
-    String TAG = "Winston";
+    String accountName;
 
+    private static final String TAG = "Winston";
     private static final byte CHAIN_ID = 'T';
     //private static final byte ADDR_VERSION = 5;
     private static final byte ADDR_VERSION = 1;
@@ -225,6 +226,8 @@ public class VEEAccount {
         pubKey = Base58.encode(publicKey);
 
         address = Base58.encode(generateAddress(publicKey));
+
+        accountName = "Account " + (nonce + 1);
     }
 
     public String getAccountSeed() { return accountSeed; }
@@ -238,6 +241,8 @@ public class VEEAccount {
     public String getAddress() {
         return address;
     }
+    public String getAccountName() { return accountName; }
+    public void setAccountName(String accountName) { this.accountName = accountName; }
 
     public static boolean validateSeedPhrase(String seed){
         if (seed != null) {
@@ -251,6 +256,22 @@ public class VEEAccount {
     public boolean isAccount(String pubKey){
         if (getPubKey().equals(pubKey)) return true;
         return false;
+    }
+
+    public String getMutatedAddress() {
+        String start, middle, end;
+        int len = address.length();
+
+        if(len > 6) {
+            start = address.substring(0, 6);
+            middle = "******";
+            end = address.substring(len - 6, len);
+            return start + middle + end;
+        }
+        else{
+            Log.d(TAG, "Address is incorrect length");
+            return "";
+        }
     }
 
     @Override

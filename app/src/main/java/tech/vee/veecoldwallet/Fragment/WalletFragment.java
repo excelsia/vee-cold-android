@@ -1,35 +1,27 @@
 package tech.vee.veecoldwallet.Fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import com.github.clans.fab.FloatingActionMenu;
+
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.util.ArrayList;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
-import tech.vee.veecoldwallet.Activity.ScannerActivity;
 import tech.vee.veecoldwallet.R;
-import tech.vee.veecoldwallet.Util.DialogUtil;
+import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
@@ -37,10 +29,15 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 public class WalletFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "Winston";
 
+    private Activity activity;
+
+    private RecyclerView accountCards;
+    private LinearLayout linearLayout;
+    private AccountAdapter adapter;
+
+    private FloatingActionMenu menu;
     private FloatingActionButton importSeed;
     private FloatingActionButton generateSeed;
-    private ImageView qrCodeView;
-    private BoomMenuButton bmb;
 
     private VEEWallet wallet;
     private ArrayList<VEEAccount> accounts;
@@ -55,29 +52,52 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
-        //qrCodeView = (ImageView)view.findViewById(R.id.qr_code);
-        //importQrCode = (Button)view.findViewById(R.id.importQRCode);
-        //signTx = (Button)view.findViewById(R.id.signTx);
+
+        activity = getActivity();
+
+        accountCards = view.findViewById(R.id.cards_account);
+        linearLayout = view.findViewById(R.id.start);
+
+        menu = view.findViewById(R.id.menu);
         importSeed = view.findViewById(R.id.importSeed);
         generateSeed = view.findViewById(R.id.generateSeed);
-        //bmb = (BoomMenuButton) view.findViewById(R.id.bmb);
-        //bmb.setButtonEnum(ButtonEnum.Ham);
-        //bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_2);
-        //bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_2);
-        //Log.d(TAG, "Pieces " + bmb.getPiecePlaceEnum().pieceNumber());
+
+        menu.setTag("OFF");
+        menu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ("OFF".equals(menu.getTag())) {
+                    displayAccounts(false);
+                    accountCards.setLayoutFrozen(true);
+                    menu.setTag("ON");
+                    menu.open(true);
+                }
+                else {
+                    displayAccounts(true);
+                    accountCards.setLayoutFrozen(false);
+                    menu.setTag("OFF");
+                    menu.close(true);
+                }
+            }
+        });
 
         importSeed.setOnClickListener(this);
         generateSeed.setOnClickListener(this);
 
         ColdWalletActivity activity = (ColdWalletActivity) getActivity();
         wallet = activity.getWallet();
-        if (wallet != null){
-            accounts = wallet.generateAccounts();
-            account = accounts.get(0);
-            //Toast.makeText(this, account.toString(), Toast.LENGTH_LONG).show();
-            Bitmap exportQRCode = QRCodeUtil.exportPubKeyAddr(account, 800);
-            //qrCodeView.setImageBitmap(exportQRCode);
+        accounts = activity.getAccounts();
+
+        // Display wallet if exists
+        if (wallet != null && accounts != null){
+            linearLayout.setVisibility(View.GONE);
+            adapter = new AccountAdapter(accounts);
+            UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
         }
+        else {
+            linearLayout.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
@@ -85,45 +105,96 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importSeed:
+                menu.setTag("OFF");
+                menu.close(true);
                 QRCodeUtil.scan(getActivity());
                 break;
 
             case R.id.generateSeed:
                 wallet = VEEWallet.generate();
-                DialogUtil.createExportSeedDialog(getActivity(), wallet);
+                UIUtil.createExportSeedDialog(getActivity(), wallet);
         }
     }
 
-    public ImageView getQrCodeView(){
-        return qrCodeView;
+    public void displayAccounts(Boolean flag){
+        if (!flag) { adapter.setFlag(false); }
+        else { adapter.setFlag(true); }
+        adapter.notifyDataSetChanged();
     }
 
-    /*
-    private void configureBmB(){
-        if(bmb != null) {
-            bmb.setButtonEnum(ButtonEnum.Ham);
-            bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_2);
-            bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_2);
+    public void refreshAccounts(ArrayList<VEEAccount> accounts){
+        adapter = new AccountAdapter(accounts);
+        UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
+        displayAccounts(true);
+    }
 
-            bmb.addBuilder(getHamButtonBuilder());
+    /**
+     * Used to hold the contents of an account
+     */
+    public class AccountHolder extends RecyclerView.ViewHolder {
+        public TextView accountName;
+        public TextView mutatedAddress;
+        public ImageView qrCode;
 
-            ListView listView = (ListView) findViewById(R.id.list_view);
-            assert listView != null;
-            listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
-                    BuilderManager.getHamButtonData(piecesAndButtons)));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        public AccountHolder(View v) {
+            super(v);
+            accountName = (TextView) v.findViewById(R.id.account_name);
+            mutatedAddress = (TextView) v.findViewById(R.id.account_mutated_address);
+            qrCode = (ImageView) v.findViewById(R.id.account_qr_code);
+            qrCode.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    bmb.setPiecePlaceEnum((PiecePlaceEnum) piecesAndButtons.get(position).first);
-                    bmb.setButtonPlaceEnum((ButtonPlaceEnum) piecesAndButtons.get(position).second);
-                    bmb.clearBuilders();
-                    for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++)
-                        bmb.addBuilder(BuilderManager.getHamButtonBuilder());
+                public void onClick(View v) {
+
                 }
             });
         }
-        else {
-            Log.d(TAG, "Boom menu button cannot be found");
+    }
+
+    /**
+     * Used to display all existing accounts in a scrollable recycler view
+     */
+    public class AccountAdapter extends RecyclerView.Adapter<AccountHolder> {
+        private ArrayList<VEEAccount> accounts;
+        private boolean flag = true;
+
+        public AccountAdapter(ArrayList<VEEAccount> accounts) {
+            this.accounts = accounts;
         }
-    } */
+
+        public Boolean getFlag() { return flag; }
+        public void setFlag(Boolean flag) { this.flag = flag; }
+
+        @Override
+        public AccountHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            // create a new view
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.cardview_account, parent, false);
+            AccountHolder holder = new AccountHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(final AccountHolder holder, int position) {
+            final VEEAccount account = accounts.get(position);
+            holder.accountName.setText(account.getAccountName());
+            holder.mutatedAddress.setText(account.getMutatedAddress());
+
+            if(flag) {
+                holder.qrCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UIUtil.createExportAddressDialog(activity, account);
+                    }
+                });
+            }
+            else {
+                holder.qrCode.setOnClickListener(null);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return accounts.size();
+        }
+    }
 }

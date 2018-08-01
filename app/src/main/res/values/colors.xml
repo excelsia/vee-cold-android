@@ -3,8 +3,9 @@
     <color name="colorPrimary">#FF8737</color>
     <color name="colorPrimaryDark">#E57931</color>
     <color name="colorAccent">#FF5E40</color>
+    <color name="colorAccentLight">#FFBEB2</color>
     <color name="textDark">#696B8A</color>
-    <color name="textPale">#9091A3</color>
+    <color name="textLight">#9091A3</color>
 
     <color name="white">#FFFFFF</color>
     <color name="lightGray">#FAFAFA</color>
@@ -13,4 +14,5 @@
     <color name="orange">#FF8737</color>
     <color name="yellow">#FAFAD2</color>
     <color name="transparent">#33FFFFFF</color>
+    <color name="translucent">#CCFFFFFF</color>
 </resources>
