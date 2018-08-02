@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Seed.ImportSeedActivity">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_gravity="start"
+                android:textColor="@color/textDark"
+                android:textSize="16sp"
+                android:text="@string/import_seed_title_1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="24dp"
+                android:layout_gravity="start"
+                android:textColor="@color/textLight"
+                android:textSize="14sp"
+                android:text="@string/import_seed_subtitle_1" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="1dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <EditText
+                android:id="@+id/import_seed_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/white"
+                android:inputType="textMultiLine|textLongMessage"
+                android:lineSpacingExtra="10dp"
+                android:textColor="@color/textDark"
+                android:textSize="16sp"
+                android:textColorHint="@color/textHint"
+                android:gravity="left|top"
+                android:hint="@string/import_seed_hint"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/import_seed_paste"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_gravity="center"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
+                android:text="@string/import_seed_paste"/>
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/import_seed_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@xml/rounded_corners_orange"
+            android:text="@string/import_seed_confirm"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_gravity="start"
+                    android:textColor="@color/textDark"
+                    android:textSize="16sp"
+                    android:text="@string/import_seed_title_2" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_gravity="start"
+                    android:textColor="@color/textLight"
+                    android:textSize="14sp"
+                    android:text="@string/import_seed_subtitle_2" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/import_seed_scan"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/ic_scan" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

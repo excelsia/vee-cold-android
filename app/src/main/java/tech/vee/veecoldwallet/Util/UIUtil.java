@@ -2,6 +2,9 @@ package tech.vee.veecoldwallet.Util;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -84,7 +87,7 @@ public class UIUtil {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
+                Intent intent = new Intent("SELECT_ACCOUNT_NUMBER");
                 intent.putExtra("ACCOUNT_NUMBER", bsb.getProgress());
                 intent.putExtra("SEED", seed);
                 activity.sendBroadcast(intent);
@@ -96,6 +99,7 @@ public class UIUtil {
         dialog.show();
     }
 
+    // Set adapter for account cards
     public static void setAccountCardsAdapter(Activity activity, RecyclerView accountCards,
                                               WalletFragment.AccountAdapter adapter,
                                               ArrayList<VEEAccount> accounts){
@@ -107,5 +111,4 @@ public class UIUtil {
         }
         accountCards.setLayoutManager(layoutManager);
     }
-
 }

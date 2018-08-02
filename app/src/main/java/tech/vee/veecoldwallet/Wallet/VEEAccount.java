@@ -1,11 +1,10 @@
 package tech.vee.veecoldwallet.Wallet;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.wavesplatform.wavesj.Base58;
-import com.wavesplatform.wavesj.PrivateKeyAccount;
-
 import org.whispersystems.curve25519.java.curve_sigs;
 
 import java.nio.ByteBuffer;
@@ -23,9 +22,7 @@ public class VEEAccount {
 
     private static final String TAG = "Winston";
     private static final byte CHAIN_ID = 'T';
-    //private static final byte ADDR_VERSION = 5;
-    private static final byte ADDR_VERSION = 1;
-
+    private static final byte ADDR_VERSION = 5;
 
     private static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
@@ -244,12 +241,13 @@ public class VEEAccount {
     public String getAccountName() { return accountName; }
     public void setAccountName(String accountName) { this.accountName = accountName; }
 
-    public static boolean validateSeedPhrase(String seed){
+    public static boolean validateSeedPhrase(Activity activity, String seed){
         if (seed != null) {
             String[] words = seed.split(" ");
             if (Arrays.asList(SEED_WORDS).containsAll(Arrays.asList(words))
                     && (words.length == 15 || words.length == 18)) { return true; }
         }
+        Toast.makeText(activity, "Invalid seed", Toast.LENGTH_LONG).show();
         return false;
     }
 

@@ -2,6 +2,7 @@ package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
+import tech.vee.veecoldwallet.Activity.ImportSeedActivity;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
@@ -85,19 +87,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         generateSeed.setOnClickListener(this);
 
         ColdWalletActivity activity = (ColdWalletActivity) getActivity();
-        wallet = activity.getWallet();
-        accounts = activity.getAccounts();
+        VEEWallet activityWallet = activity.getWallet();
+        if (activityWallet != null) { setWallet(activity.getWallet()); }
 
-        // Display wallet if exists
-        if (wallet != null && accounts != null){
-            linearLayout.setVisibility(View.GONE);
-            adapter = new AccountAdapter(accounts);
-            UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
-        }
-        else {
-            linearLayout.setVisibility(View.VISIBLE);
-        }
-
+        // Display wallet if exists, otherwise display start page
+        refreshAccounts(accounts);
         return view;
     }
 
@@ -107,13 +101,19 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             case R.id.importSeed:
                 menu.setTag("OFF");
                 menu.close(true);
-                QRCodeUtil.scan(getActivity());
+                Intent intent = new Intent(activity, ImportSeedActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.generateSeed:
                 wallet = VEEWallet.generate();
                 UIUtil.createExportSeedDialog(getActivity(), wallet);
         }
+    }
+
+    public void setWallet(VEEWallet wallet) {
+        this.wallet = wallet;
+        this.accounts = wallet.generateAccounts();
     }
 
     public void displayAccounts(Boolean flag){
@@ -124,8 +124,15 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     public void refreshAccounts(ArrayList<VEEAccount> accounts){
         adapter = new AccountAdapter(accounts);
-        UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
-        displayAccounts(true);
+
+        if (wallet != null && accounts != null){
+            linearLayout.setVisibility(View.GONE);
+            UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
+            displayAccounts(true);
+        }
+        else {
+            linearLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

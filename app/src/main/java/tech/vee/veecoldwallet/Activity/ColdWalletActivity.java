@@ -139,7 +139,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        walletFilePath = getFilesDir().getPath().toString() + "/" + WALLET_FILE_NAME;
+        walletFilePath = getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
         //Log.d(TAG, "Wallet file path: " + walletFilePath);
         walletFile = new File(walletFilePath);
         password = "";
@@ -152,18 +152,6 @@ public class ColdWalletActivity extends AppCompatActivity {
                 accounts = wallet.generateAccounts();
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        unregisterReceiver(receiver);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(receiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
     }
 
     /**
@@ -194,6 +182,11 @@ public class ColdWalletActivity extends AppCompatActivity {
                         txType = Double.valueOf((double)jsonMap.get("transactionType")).byteValue();
                     }
 
+                    if (accounts == null) {
+                        txType = -1;
+                        Toast.makeText(activity, "No wallet found", Toast.LENGTH_LONG).show();
+                    }
+
                     switch (txType) {
                         case 4: transaction = VEETransaction.makeTransferTx(jsonMap, accounts);
                                 break;
@@ -211,12 +204,8 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 case 2:
                     String seed = QRCodeUtil.parseSeed(qrContents);
-
-                    if(VEEAccount.validateSeedPhrase(seed)) {
+                    if (VEEAccount.validateSeedPhrase(activity, seed)) {
                         UIUtil.createAccountNumberDialog(activity, seed);
-                    }
-                    else {
-                        Log.d(TAG,"Invalid account seed!");
                     }
                     break;
 
@@ -228,25 +217,6 @@ public class ColdWalletActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == Intent.ACTION_ATTACH_DATA) {
-                int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
-                String seed = intent.getStringExtra("SEED");
-
-                //Toast.makeText(activity, "Seed: " + seed
-                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
-
-                wallet = VEEWallet.recover(seed, accountNum);
-                accounts = wallet.generateAccounts();
-                JsonUtil.save(wallet.getJson(), walletFilePath);
-                walletFrag.refreshAccounts(accounts);
-                Log.d(TAG, wallet.getJson());
-            }
-        }
-    };
 
     /**
      * Used to switch fragments when icon on bottom navigation menu is clicked
