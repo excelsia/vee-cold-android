@@ -1,3 +1,5 @@
+[![API](https://img.shields.io/badge/API-16%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![License](http://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat)](https://opensource.org/licenses/Apache-2.0)
 # VEE Android Client: Cold Wallet 
 ## Main Features:
 - Securely store your private keys on an offline mobile device 
