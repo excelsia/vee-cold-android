@@ -15,6 +15,7 @@ import tech.vee.veecoldwallet.Util.HashUtil;
 public class VEEAccount {
     String accountSeed;        // 15 word seed phrase
     long nonce;
+    byte chainId;
     String priKey;      // private key (base64)
     String pubKey;      // public key (base58)
     String address;
@@ -22,7 +23,7 @@ public class VEEAccount {
 
     private static final String TAG = "Winston";
     private static final byte CHAIN_ID = 'T';
-    private static final byte ADDR_VERSION = 5;
+    private static final byte ADDR_VERSION = 1;
 
     private static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
@@ -212,9 +213,10 @@ public class VEEAccount {
     };
 
     // Create new account using valid seed phrase
-    public VEEAccount(String accountSeed, long nonce) {
+    public VEEAccount(String accountSeed, long nonce, byte chainId) {
         this.accountSeed = accountSeed;
         this.nonce = nonce;
+        this.chainId = chainId;
         byte[] privateKey = generatePriKey(accountSeed);
         priKey = Base58.encode(privateKey);
 
@@ -229,6 +231,7 @@ public class VEEAccount {
 
     public String getAccountSeed() { return accountSeed; }
     public long getNonce() { return nonce; }
+    public byte getChainId() { return chainId; }
     public String getPriKey() {
         return priKey;
     }
@@ -257,6 +260,22 @@ public class VEEAccount {
     }
 
     public String getMutatedAddress() {
+        String start, middle, end;
+        int len = address.length();
+
+        if(len > 6) {
+            start = address.substring(0, 6);
+            middle = "******";
+            end = address.substring(len - 6, len);
+            return start + middle + end;
+        }
+        else{
+            Log.d(TAG, "Address is incorrect length");
+            return "";
+        }
+    }
+
+    public static String getMutatedAddress(String address) {
         String start, middle, end;
         int len = address.length();
 

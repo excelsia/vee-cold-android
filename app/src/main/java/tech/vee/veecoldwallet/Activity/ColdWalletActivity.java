@@ -188,17 +188,11 @@ public class ColdWalletActivity extends AppCompatActivity {
                     }
 
                     switch (txType) {
-                        case 4: transaction = VEETransaction.makeTransferTx(jsonMap, accounts);
+                        case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
                                 break;
-                        case 8: transaction = VEETransaction.makeLeaseTx(jsonMap, accounts);
+                        case 8: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
-                        case 9: transaction = VEETransaction.makeLeaseCancelTx(jsonMap, accounts);
-                    }
-
-                    if (transaction != null) {
-                        exportQRCode = QRCodeUtil.generateQRCode(transaction.getJson(), 800);
-                        //TODO: show signature as QR code
-                        Log.d(TAG, transaction.getFullJson());
+                        case 9: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
                     }
                     break;
 

@@ -13,7 +13,6 @@
         android:background="@xml/rounded_corners_light_gray">
 
         <TextView
-            android:id="@+id/export_account_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -22,10 +21,9 @@
             android:gravity="center"
             android:textColor="@color/textDark"
             android:textSize="20sp"
-            android:text="@string/export_seed"/>
+            android:text="@string/signature_title"/>
 
         <TextView
-            android:id="@+id/export_address_string"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -34,24 +32,26 @@
             android:layout_marginRight="48dp"
             android:gravity="center"
             android:textColor="@color/textLight"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:text="@string/signature_subtitle"/>
+
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/export_address"
+        android:id="@+id/signature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp" />
 
     <Button
-        android:id="@+id/sign_tx"
+        android:id="@+id/transaction_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
-        android:text="@string/sign_tx"
+        android:text="@string/transaction_done"
         android:textSize="16sp"
         android:textColor="@color/white"
         android:background="@xml/rounded_corners_orange"/>

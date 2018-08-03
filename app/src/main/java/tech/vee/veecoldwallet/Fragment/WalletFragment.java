@@ -96,6 +96,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        if (!menu.isOpened()) {
+            displayAccounts(true);
+            accountCards.setLayoutFrozen(false);
+            menu.setTag("OFF");
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.importSeed:

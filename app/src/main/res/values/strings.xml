@@ -7,24 +7,27 @@
     <string name="title_import_seed">Import Seed</string>
     <string name="title_generate_seed">Generate Seed</string>
     <string name="title_confirm_seed">Confirm Seed</string>
+    <string name="title_confirm_tx">Confirm Transaction</string>
 
     <!-- Strings related to Wallet -->
     <string name="wallet_import_key">Import seed</string>
     <string name="wallet_sign_tx">Sign transaction</string>
 
-
     <!-- Strings related to Settings -->
-    <string name="settings_account">Account</string>
+    <string name="settings_account">Account Settings</string>
     <string name="settings_additional">Additional Settings</string>
 
-    <string name="settings_clone">Export Seed</string>
-    <string name="settings_clone_summary">Backup Wallet in another device</string>
+    <string name="settings_export_seed">Export Seed</string>
+    <string name="settings_export_seed_summary">Backup wallet in another device</string>
+
+    <string name="settings_append_accounts">Append Accounts</string>
+    <string name="settings_append_accounts_summary">Increase the number of accounts in your wallet</string>
 
     <string name="settings_connectivity">Monitor connectivity</string>
     <string name="settings_connectivity_summary">Check for wifi, data, and bluetooth connection</string>
 
-    <string name="settings_webclient">About Us</string>
-    <string name="settings_webclient_summary">Learn more about VEE</string>
+    <string name="settings_about_us">About Us</string>
+    <string name="settings_about_us_summary">Learn more about VEE</string>
 
     <!-- Strings related to Scanner -->
     <string name="scanner_tip">Align QR code within frame to scan</string>
@@ -42,6 +45,26 @@
         report wall wolf flip grant injury middle mix split</string>
     <string name="import_seed_paste">Paste</string>
     <string name="import_seed_confirm">Confirm</string>
+
+    <!-- Strings related to Signature -->
+    <string name="signature_title">Validate Transaction</string>
+    <string name="signature_subtitle">Scan QR code to validate signature</string>
+
+    <!-- Strings related to Transaction -->
+    <string name="transaction_title">Confirm Transaction</string>
+    <string name="transaction_subtitle">Please review the following details carefully</string>
+    <string name="transaction_type">Type</string>
+    <string name="transaction_type_transfer">Transfer</string>
+    <string name="transaction_type_lease">Lease</string>
+    <string name="transaction_type_cancel_lease">Cancel Lease</string>
+    <string name="transaction_sender">Sender</string>
+    <string name="transaction_recipient">Recipient</string>
+    <string name="transaction_amount">Amount</string>
+    <string name="transaction_fee">Fee</string>
+    <string name="transaction_attachment">Attachment</string>
+    <string name="transaction_timestamp">Date</string>
+    <string name="transaction_confirm">Confirm</string>
+    <string name="transaction_done">Done</string>
 
     <!-- Strings related to Account Number -->
     <string name="account_number_title">Configure Wallet</string>

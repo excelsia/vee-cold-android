@@ -30,7 +30,8 @@
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
         <activity android:name=".Activity.ImportSeedActivity" />
-        <activity android:name=".Activity.GenerateSeedActivity"></activity>
+        <activity android:name=".Activity.GenerateSeedActivity" />
+        <activity android:name=".Activity.ConfirmTxActivity"></activity>
     </application>
 
 </manifest>

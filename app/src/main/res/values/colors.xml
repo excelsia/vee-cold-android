@@ -7,6 +7,7 @@
     <color name="textDark">#696B8A</color>
     <color name="textLight">#9091A3</color>
     <color name="textHint">#C5C6D1</color>
+    <color name="divider">#F7F7F7</color>
 
     <color name="white">#FFFFFF</color>
     <color name="lightGray">#FAFAFA</color>

@@ -29,6 +29,7 @@ public class VEEWallet {
     private static final String WALLET_VERSION = "1.0rc1";
     private static final String AGENT_VERSION = "0.0.1";
     private static final String AGENT_NAME = "VEE cold wallet";
+    private static final byte CHAIN_ID = 0;
 
     public VEEWallet(){
         seed = "";
@@ -121,7 +122,7 @@ public class VEEWallet {
         VEEAccount account;
 
         for(long i = 0; i < accountSeeds.size(); i++){
-            account = new VEEAccount(accountSeeds.get((int) i), i);
+            account = new VEEAccount(accountSeeds.get((int) i), i, CHAIN_ID);
             Log.d(TAG, account.toString());
             accounts.add(account);
         }

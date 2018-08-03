@@ -1,5 +1,6 @@
 package tech.vee.veecoldwallet.Fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -15,15 +16,19 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    private ListPreference listPreference;
+    private Activity activity;
+
     private PreferenceScreen preferenceScreen;
     private VEEWallet wallet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = getActivity();
+
         addPreferencesFromResource(R.xml.preferences_settings);
-        preferenceScreen = (PreferenceScreen) findPreference("settings_clone");
+        preferenceScreen = (PreferenceScreen) findPreference("settings_export_seed");
         preferenceScreen.setOnPreferenceClickListener(this);
     }
 

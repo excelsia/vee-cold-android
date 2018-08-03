@@ -4,11 +4,20 @@
         android:title="@string/settings_account">
 
         <PreferenceScreen
-            android:key="settings_clone"
-            android:title="@string/settings_clone"
-            android:summary="@string/settings_clone_summary">
-            <intent android:action="tech.vee.veecoldwallet.CloneWalletActivity"/>
+            android:key="settings_export_seed"
+            android:title="@string/settings_export_seed"
+            android:summary="@string/settings_export_seed_summary">
         </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="settings_append_accounts"
+            android:title="@string/settings_append_accounts"
+            android:summary="@string/settings_append_accounts_summary">
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_additional">
 
         <SwitchPreference
             android:key="settings_connectivity"
@@ -18,16 +27,10 @@
             android:defaultValue="true">
         </SwitchPreference>
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/settings_additional">
-
         <PreferenceScreen
-            android:title="@string/settings_webclient"
-            android:summary="@string/settings_webclient_summary">
+            android:title="@string/settings_about_us"
+            android:summary="@string/settings_about_us_summary">
         </PreferenceScreen>
-
     </PreferenceCategory>
 
 </PreferenceScreen>
