@@ -169,7 +169,7 @@ public class JsonUtil {
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
                 intent.putExtra("ACTION", "CANCEL_LEASE");
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
-                intent.putExtra("TX_ID", gson.toJson(senderAcc));
+                intent.putExtra("TX_ID", txId);
                 intent.putExtra("FEE", fee);
                 intent.putExtra("TIMESTAMP", timestamp);
 
