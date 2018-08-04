@@ -9,6 +9,12 @@
     <color name="textHint">#C5C6D1</color>
     <color name="divider">#F7F7F7</color>
 
+    <color name="passwordStrength1">#BB020C</color>
+    <color name="passwordStrength2">#F46514</color>
+    <color name="passwordStrength3">#E6D20B</color>
+    <color name="passwordStrength4">#9BC714</color>
+    <color name="passwordStrength5">#19B425</color>
+
     <color name="white">#FFFFFF</color>
     <color name="lightGray">#FAFAFA</color>
     <color name="black">#000000</color>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.Activity.ImportSeedActivity;
+import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
@@ -107,17 +108,18 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.importSeed:
                 menu.setTag("OFF");
                 menu.close(true);
-                Intent intent = new Intent(activity, ImportSeedActivity.class);
+                intent = new Intent(activity, ImportSeedActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.generateSeed:
-                wallet = VEEWallet.generate();
-                UIUtil.createExportSeedDialog(getActivity(), wallet);
+                intent = new Intent(activity, SetPasswordActivity.class);
+                startActivity(intent);
         }
     }
 

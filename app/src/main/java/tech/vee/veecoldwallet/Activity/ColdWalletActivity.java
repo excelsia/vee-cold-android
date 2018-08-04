@@ -140,7 +140,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         walletFilePath = getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
-        //Log.d(TAG, "Wallet file path: " + walletFilePath);
+        Log.d(TAG, "Wallet file path: " + walletFilePath);
         walletFile = new File(walletFilePath);
         password = "";
         accounts = new ArrayList<>();

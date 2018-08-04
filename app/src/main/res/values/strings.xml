@@ -6,7 +6,8 @@
     <string name="title_scan">Scan</string>
     <string name="title_import_seed">Import Seed</string>
     <string name="title_generate_seed">Generate Seed</string>
-    <string name="title_confirm_seed">Confirm Seed</string>
+    <string name="title_backup_seed">Confirm Backup Seed</string>
+    <string name="title_set_password">Set Password</string>
     <string name="title_confirm_tx">Confirm Transaction</string>
 
     <!-- Strings related to Wallet -->
@@ -76,5 +77,17 @@
     <string name="generate_seed">Generate Seed</string>
     <string name="message">Welcome to VEE Cold Wallet! Press button below to start.</string>
 
+    <!-- Strings related to Set Password -->
+    <string name="set_password_title">Password</string>
+    <string name="set_password_subtitle">Please set a password for your wallet</string>
+    <string name="set_password_hint_1">Set Password</string>
+    <string name="set_password_hint_2">Confirm Password</string>
+    <string name="set_password_confirm">Confirm</string>
+    <string name="password_strength_0">None</string>
+    <string name="password_strength_1">Weak</string>
+    <string name="password_strength_2">Fair</string>
+    <string name="password_strength_3">Good</string>
+    <string name="password_strength_4">Strong</string>
+    <string name="password_strength_5">Perfect</string>
 
 </resources>

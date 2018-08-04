@@ -38,10 +38,10 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ImportSeedActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
-    private static final String WALLET_FILE_NAME = "wallet.dat";
 
-    private ActionBar actionBar;
     private ImportSeedActivity activity;
+    private ActionBar actionBar;
+
     private TextView paste;
     private EditText input;
     private ImageView scan;
@@ -49,12 +49,13 @@ public class ImportSeedActivity extends AppCompatActivity {
 
     private String qrContents;
     private String pasteContents;
-    private String walletFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_seed);
+
+        activity = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
@@ -63,9 +64,6 @@ public class ImportSeedActivity extends AppCompatActivity {
         icon.mutate();
         icon.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
-        walletFilePath = getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
-
-        activity = this;
         actionBar = getSupportActionBar();
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -96,7 +94,9 @@ public class ImportSeedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String seed = input.getText().toString();
                 if (VEEAccount.validateSeedPhrase(activity, seed)) {
-                    UIUtil.createAccountNumberDialog(activity, seed);
+                    Intent intent = new Intent(activity, SetPasswordActivity.class);
+                    intent.putExtra("SEED", seed);
+                    startActivity(intent);
                 }
             }
         });
@@ -116,7 +116,9 @@ public class ImportSeedActivity extends AppCompatActivity {
                 case 2:
                     String seed = QRCodeUtil.parseSeed(qrContents);
                     if (VEEAccount.validateSeedPhrase(activity, seed)) {
-                        UIUtil.createAccountNumberDialog(activity, seed);
+                        Intent intent = new Intent(activity, SetPasswordActivity.class);
+                        intent.putExtra("SEED", seed);
+                        startActivity(intent);
                     }
                     break;
 
@@ -127,31 +129,6 @@ public class ImportSeedActivity extends AppCompatActivity {
         else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == "SELECT_ACCOUNT_NUMBER") {
-                int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
-                String seed = intent.getStringExtra("SEED");
-
-                //Toast.makeText(activity, "Seed: " + seed
-                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
-
-                VEEWallet wallet = VEEWallet.recover(seed, accountNum);
-                JsonUtil.save(wallet.getJson(), walletFilePath);
-                Log.d(TAG, wallet.getJson());
-                intent = new Intent(activity, ColdWalletActivity.class);
-                startActivity(intent);
-            }
-        }
-    };
-
-    @Override
-    protected void onPause() {
-        unregisterReceiver(receiver);
-        super.onPause();
     }
 
     @Override
@@ -174,8 +151,5 @@ public class ImportSeedActivity extends AppCompatActivity {
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
             pasteContents = item.getText().toString();
         }
-
-        // Register receiver for account number
-        registerReceiver(receiver, new IntentFilter("SELECT_ACCOUNT_NUMBER"));
     }
 }

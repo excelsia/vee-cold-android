@@ -192,7 +192,6 @@ public class UIUtil {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.custom_dialog_signature);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
 
         ImageView qrCode = (ImageView) dialog.findViewById(R.id.signature);
         Button done = (Button) dialog.findViewById(R.id.transaction_done);
