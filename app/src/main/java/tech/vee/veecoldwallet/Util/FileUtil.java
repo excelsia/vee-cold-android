@@ -55,6 +55,31 @@ public class FileUtil {
         }
     }
 
+    public static void loadBackup(Activity activity, String savePath, String walletFileName) {
+        FileInputStream inputStream;
+        String json;
+        String backupWalletFilePath = FileUtil.getBackupSdCardDir().getPath()
+                + "/" + walletFileName;
+        try {
+            inputStream = new FileInputStream(backupWalletFilePath);
+            //json = decrypt(key, IOUtils.toString(inputStream, ENCODING));
+            json = IOUtils.toString(inputStream, JsonUtil.ENCODING);
+            inputStream.close();
+            Log.d(TAG, "File loaded");
+
+            if (JsonUtil.isJsonString(json)) {
+                Toast.makeText(activity, "Load backup successful", Toast.LENGTH_LONG).show();
+                save(json, savePath);
+            }
+            else {
+                Toast.makeText(activity, "Load backup unsuccessful", Toast.LENGTH_LONG).show();
+            }
+        }
+        catch(IOException e) {
+            Log.d(TAG, "Error loading json file: " + e.getMessage());
+        }
+    }
+
     public static String load(String path) {
         FileInputStream inputStream;
         String json;
@@ -82,12 +107,12 @@ public class FileUtil {
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static File getSDPath() {
+    private static File getSDPath() {
         File sdDir = Environment.getExternalStorageDirectory();
         return sdDir;
     }
 
-    public static File getBackupSdCardDir() {
+    private static File getBackupSdCardDir() {
         File backupDir = new File(getSDPath(), VEE_BACKUP_SDCARD_DIR);
         if (!backupDir.exists()) {
             backupDir.mkdirs();

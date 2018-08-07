@@ -44,6 +44,19 @@ public class ConfirmTxActivity extends AppCompatActivity {
         String senderStr;
 
         switch (action) {
+            case "PAYMENT":
+                senderStr = getIntent().getStringExtra("SENDER");
+
+                sender = gson.fromJson(senderStr, VEEAccount.class);
+                recipient = intent.getStringExtra("RECIPIENT");
+                amount= intent.getLongExtra("AMOUNT", 0);
+                fee = intent.getLongExtra("FEE", 0);
+                timestamp =intent.getLongExtra("TIMESTAMP", 0);
+
+                UIUtil.createPaymentTxDialog(activity, sender, recipient, amount,
+                       fee, timestamp);
+                break;
+
             case "TRANSFER":
                 senderStr = getIntent().getStringExtra("SENDER");
 

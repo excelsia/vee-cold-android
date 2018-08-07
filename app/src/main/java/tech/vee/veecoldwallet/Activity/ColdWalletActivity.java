@@ -168,9 +168,11 @@ public class ColdWalletActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
+        int val = QRCodeUtil.processQrContents(qrContents);
+        if (wallet != null && val != 1) { val = 4; }
 
         if(result != null) {
-            switch (QRCodeUtil.processQrContents(qrContents)) {
+            switch (val) {
                 case 0:
                     Toast.makeText(activity, "Cancelled", Toast.LENGTH_LONG).show();
                     break;
@@ -192,6 +194,8 @@ public class ColdWalletActivity extends AppCompatActivity {
                     }
 
                     switch (txType) {
+                        case 3: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
+                            break;
                         case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
                                 break;
                         case 8: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
@@ -214,6 +218,9 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 case 3:
                     UIUtil.createForeignSeedDialog(activity, qrContents);
+
+                case 4:
+                    Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
         }
         else {

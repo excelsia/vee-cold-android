@@ -135,6 +135,73 @@ public class UIUtil {
         }
     }
 
+    public static void createPaymentTxDialog(final Activity activity, final VEEAccount sender,
+                                              final String recipient, final long amount,
+                                              final long fee, long timestamp) {
+        activity.setContentView(R.layout.custom_layout_payment_tx);
+
+        final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
+        final TextView recipientTx = (TextView) activity.findViewById(R.id.transaction_recipient);
+        TextView timestampTx = (TextView) activity.findViewById(R.id.transaction_timestamp);
+        TextView amountTx = (TextView) activity.findViewById(R.id.transaction_amount);
+        TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
+        Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
+
+        float amountFloat = (float) amount/100000000;
+        float feeFloat = (float) fee/100000000;
+
+        senderTx.setText(sender.getMutatedAddress());
+        recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
+        amountTx.setText(String.valueOf(amountFloat));
+        feeTx.setText(String.valueOf(feeFloat));
+
+        String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
+                .format(new Timestamp(timestamp));
+        timestampTx.setText(time + "\n" + TimeZone.getDefault().getDisplayName());
+
+        final BigInteger timeBigInteger = BigInteger.valueOf(timestamp)
+                .multiply(BigInteger.valueOf(1000000L));
+
+        senderTx.setTag("MUTATED");
+        senderTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (senderTx.getTag().equals("MUTATED")) {
+                    senderTx.setText(sender.getAddress());
+                    senderTx.setTag("COMPLETE");
+                }
+                else {
+                    senderTx.setText(sender.getMutatedAddress());
+                    senderTx.setTag("MUTATED");
+                }
+            }
+        });
+
+        recipientTx.setTag("MUTATED");
+        recipientTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recipientTx.getTag().equals("MUTATED")) {
+                    recipientTx.setText(recipient);
+                    recipientTx.setTag("COMPLETE");
+                }
+                else {
+                    recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
+                    recipientTx.setTag("MUTATED");
+                }
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VEETransaction transaction = VEETransaction.makePaymentTx(sender, recipient,
+                        amount, fee, timeBigInteger);
+                createSignatureDialog(activity, transaction);
+            }
+        });
+    }
+
     public static void createTransferTxDialog(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
                                               final String assetId, final long fee,
@@ -142,8 +209,8 @@ public class UIUtil {
                                               long timestamp) {
         activity.setContentView(R.layout.custom_layout_transfer_tx);
 
-        TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
-        TextView recipientTx = (TextView) activity.findViewById(R.id.transaction_recipient);
+        final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
+        final TextView recipientTx = (TextView) activity.findViewById(R.id.transaction_recipient);
         TextView timestampTx = (TextView) activity.findViewById(R.id.transaction_timestamp);
         TextView amountTx = (TextView) activity.findViewById(R.id.transaction_amount);
         TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
@@ -169,6 +236,36 @@ public class UIUtil {
         final BigInteger timeBigInteger = BigInteger.valueOf(timestamp)
                 .multiply(BigInteger.valueOf(1000000L));
 
+        senderTx.setTag("MUTATED");
+        senderTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (senderTx.getTag().equals("MUTATED")) {
+                    senderTx.setText(sender.getAddress());
+                    senderTx.setTag("COMPLETE");
+                }
+                else {
+                    senderTx.setText(sender.getMutatedAddress());
+                    senderTx.setTag("MUTATED");
+                }
+            }
+        });
+
+        recipientTx.setTag("MUTATED");
+        recipientTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recipientTx.getTag().equals("MUTATED")) {
+                    recipientTx.setText(recipient);
+                    recipientTx.setTag("COMPLETE");
+                }
+                else {
+                    recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
+                    recipientTx.setTag("MUTATED");
+                }
+            }
+        });
+
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,8 +280,9 @@ public class UIUtil {
                                               final String recipient, final long amount,
                                               final long fee, long timestamp) {
         activity.setContentView(R.layout.custom_layout_lease_tx);
-        TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
-        TextView recipientTx = (TextView) activity.findViewById(R.id.transaction_recipient);
+
+        final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
+        final TextView recipientTx = (TextView) activity.findViewById(R.id.transaction_recipient);
         TextView timestampTx = (TextView) activity.findViewById(R.id.transaction_timestamp);
         TextView amountTx = (TextView) activity.findViewById(R.id.transaction_amount);
         TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
@@ -205,6 +303,36 @@ public class UIUtil {
         final BigInteger timeBigInteger = BigInteger.valueOf(timestamp)
                 .multiply(BigInteger.valueOf(1000000L));
 
+        senderTx.setTag("MUTATED");
+        senderTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (senderTx.getTag().equals("MUTATED")) {
+                    senderTx.setText(sender.getAddress());
+                    senderTx.setTag("COMPLETE");
+                }
+                else {
+                    senderTx.setText(sender.getMutatedAddress());
+                    senderTx.setTag("MUTATED");
+                }
+            }
+        });
+
+        recipientTx.setTag("MUTATED");
+        recipientTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recipientTx.getTag().equals("MUTATED")) {
+                    recipientTx.setText(recipient);
+                    recipientTx.setTag("COMPLETE");
+                }
+                else {
+                    recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
+                    recipientTx.setTag("MUTATED");
+                }
+            }
+        });
+
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,7 +347,7 @@ public class UIUtil {
                                            final String txId, final long fee, long timestamp) {
         activity.setContentView(R.layout.custom_layout_cancel_lease_tx);
 
-        TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
+        final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
         TextView timestampTx = (TextView) activity.findViewById(R.id.transaction_timestamp);
         TextView feeTx = (TextView)activity.findViewById(R.id.transaction_fee);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
@@ -234,6 +362,21 @@ public class UIUtil {
 
         final BigInteger timeBigInteger = BigInteger.valueOf(timestamp)
                 .multiply(BigInteger.valueOf(1000000L));
+
+        senderTx.setTag("MUTATED");
+        senderTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (senderTx.getTag().equals("MUTATED")) {
+                    senderTx.setText(sender.getAddress());
+                    senderTx.setTag("COMPLETE");
+                }
+                else {
+                    senderTx.setText(sender.getMutatedAddress());
+                    senderTx.setTag("MUTATED");
+                }
+            }
+        });
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override

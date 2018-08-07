@@ -82,15 +82,22 @@
                     android:textSize="14sp"
                     android:text="@string/transaction_sender" />
 
-                <TextView
-                    android:id="@+id/transaction_sender"
+
+                <HorizontalScrollView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:layout_gravity="end"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/textDark"
-                    android:textSize="14sp" />
+                    android:layout_weight="2">
+
+                    <TextView
+                        android:id="@+id/transaction_sender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:maxLines="1" />
+                </HorizontalScrollView>
             </LinearLayout>
 
             <View
@@ -113,15 +120,21 @@
                     android:textSize="14sp"
                     android:text="@string/transaction_recipient" />
 
-                <TextView
-                    android:id="@+id/transaction_recipient"
+                <HorizontalScrollView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:layout_gravity="end"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/textDark"
-                    android:textSize="14sp" />
+                    android:layout_weight="2">
+
+                    <TextView
+                        android:id="@+id/transaction_recipient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:maxLines="1" />
+                </HorizontalScrollView>
             </LinearLayout>
 
             <View
@@ -149,6 +162,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:lines="2"
                     android:layout_gravity="end"
                     android:textAlignment="textEnd"
                     android:textColor="@color/textDark"

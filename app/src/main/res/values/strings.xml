@@ -75,6 +75,7 @@
     <string name="transaction_title">Confirm Transaction</string>
     <string name="transaction_subtitle">Please review the following details carefully</string>
     <string name="transaction_type">Type</string>
+    <string name="transaction_type_payment">Payment</string>
     <string name="transaction_type_transfer">Transfer</string>
     <string name="transaction_type_lease">Lease</string>
     <string name="transaction_type_cancel_lease">Cancel Lease</string>

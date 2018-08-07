@@ -38,6 +38,7 @@ public class VEETransaction {
     private static final int KBYTE = 1024;
     private static final byte V2 = 2;
 
+    private static final byte PAYMENT = 3;
     private static final byte TRANSFER = 4;
     private static final byte LEASE = 8;
     private static final byte LEASE_CANCEL = 9;
@@ -78,6 +79,26 @@ public class VEETransaction {
         this.proofs = (List<String>) data.get("proofs");
         this.endpoint = null;
         this.bytes = null;
+    }
+
+    @NonNull
+    public static VEETransaction makePaymentTx(VEEAccount sender, String recipient, long amount,
+                                                long fee, BigInteger timestamp)
+    {
+        ByteBuffer buf = ByteBuffer.allocate(KBYTE);
+        buf.put(PAYMENT).put(Base58.decode(sender.getPubKey()));
+        putBigInteger(buf, timestamp);
+        buf.putLong(amount).putLong(fee);
+        recipient = putRecipient(buf, sender.getChainId(), recipient);
+
+        return new VEETransaction(sender, buf,"/transactions/broadcast",
+                "type", TRANSFER,
+                "version", V2,
+                "senderPublicKey", sender.getPubKey(),
+                "recipient", recipient,
+                "amount", amount,
+                "fee", fee,
+                "timestamp", timestamp);
     }
 
     @NonNull

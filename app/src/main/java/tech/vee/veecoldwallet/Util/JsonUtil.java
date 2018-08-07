@@ -96,6 +96,51 @@ public class JsonUtil {
     }
 
     @NonNull
+    public static void checkPaymentTx(Activity activity, HashMap<String, Object> jsonMap,
+                                       ArrayList<VEEAccount> accounts) {
+        String senderPublicKey, recipient, attachment, assetId, feeAssetId;
+        long amount, fee, timestamp;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
+        VEEAccount senderAcc = null;
+
+        if (JsonUtil.containsKeys(jsonMap, keys)){
+            senderPublicKey = (String) jsonMap.get("senderPublicKey");
+            recipient = (String) jsonMap.get("recipient");
+            amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
+            fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            timestamp = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
+
+            for(VEEAccount account:accounts){
+                if(account.isAccount(senderPublicKey)){
+                    Log.d(TAG, "Private key: " + account.getPriKey());
+                    senderAcc = account;
+                }
+            }
+
+            if (senderAcc != null) {
+                Gson gson = new Gson();
+                Intent intent = new Intent(activity, ConfirmTxActivity.class);
+                intent.putExtra("ACTION", "PAYMENT");
+                intent.putExtra("SENDER", gson.toJson(senderAcc));
+                intent.putExtra("RECIPIENT", recipient);
+                intent.putExtra("AMOUNT", amount);
+                intent.putExtra("FEE", fee);
+                intent.putExtra("TIMESTAMP", timestamp);
+
+                activity.startActivity(intent);
+            }
+            else {
+                Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
+                Log.d(TAG,"Private key cannot be found");
+            }
+        }
+        else {
+            Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Map does not contain all keys");
+        }
+    }
+
+    @NonNull
     public static void checkLeaseTx(Activity activity, HashMap<String, Object> jsonMap,
                                        ArrayList<VEEAccount> accounts) {
         String senderPublicKey, recipient;
