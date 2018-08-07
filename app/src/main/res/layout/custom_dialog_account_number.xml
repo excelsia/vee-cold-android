@@ -4,58 +4,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@xml/rounded_corners"
+    android:background="@drawable/rounded_corners"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/account_number_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:gravity="center"
-        android:textColor="@color/textDark"
-        android:textSize="20sp"
-        android:text="@string/account_number_title"/>
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners_light_gray">
 
-    <TextView
-        android:id="@+id/account_number_subtitle"
+        <TextView
+            android:id="@+id/account_number_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:gravity="center"
+            android:textColor="@color/textDark"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/account_number_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:gravity="center"
+            android:textColor="@color/textLight"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:gravity="center"
-        android:textColor="@color/textLight"
-        android:textSize="16sp"
-        android:text="@string/account_number_subtitle"/>
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        app:cardCornerRadius="8dp">
 
-    <com.xw.repo.BubbleSeekBar
-        android:id="@+id/account_number_bsb"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/account_number_np"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:npWrapValue="true"
+            app:npMinValue="1"
+            app:npMaxValue="10"
 
-        app:bsb_bubble_color="@color/colorAccent"
-        app:bsb_bubble_text_color="@color/white"
-        app:bsb_thumb_radius_on_dragging="3dp"
-        app:bsb_thumb_radius="3dp"
-        app:bsb_second_track_color="@color/colorAccent"
-        app:bsb_section_text_position="bottom_sides"
-        app:bsb_auto_adjust_section_mark="true"
-        app:bsb_min="1"
-        app:bsb_max="10"
-        app:bsb_section_count="9"
-        app:bsb_show_section_mark="true"
-        app:bsb_show_section_text="true"
-        app:bsb_show_thumb_text="false"
-        app:bsb_always_show_bubble="true"
-        app:bsb_track_color="@color/colorAccentLight"/>
+            app:npBackgroundColor="@color/white"
+            app:npSeparatorColor="@color/colorAccent"
+            app:npTextColor="@color/textDark"
+            app:npTextSize="16sp"/>
+    </android.support.v7.widget.CardView>
 
     <Button
         android:id="@+id/account_number_confirm"
@@ -67,5 +70,5 @@
         android:text="@string/account_number_confirm"
         android:textSize="16sp"
         android:textColor="@color/white"
-        android:background="@xml/rounded_corners_orange"/>
+        android:background="@drawable/rounded_corners_orange"/>
 </LinearLayout>

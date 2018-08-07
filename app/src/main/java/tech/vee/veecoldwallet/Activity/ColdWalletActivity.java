@@ -6,12 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tech.vee.veecoldwallet.Util.PermissionUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
@@ -48,7 +51,6 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ColdWalletActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
-    private static final String WALLET_FILE_NAME = "wallet.dat";
 
     private ActionBar actionBar;
     private ColdWalletActivity activity;
@@ -58,17 +60,47 @@ public class ColdWalletActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
 
     private String qrContents;
-    private Bitmap exportQRCode;
 
     private VEEWallet wallet;
-    private File walletFile;
-    private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
-    private VEEAccount account;
     private String password;
 
-    public VEEWallet getWallet() { return wallet; }
-    public ArrayList<VEEAccount> getAccounts() { return accounts; }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        activity = this;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setLogo(R.drawable.ic_navigation_wallet);
+        actionBar.setTitle(R.string.title_wallet);
+
+        walletFrag = new WalletFragment();
+        settingsFrag = new SettingsFragment();
+        fragmentManager = null;
+        switchToFragment(walletFrag);
+
+        PermissionUtil.checkPermissions(activity);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        password = "";
+    }
+
+    public VEEWallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(VEEWallet wallet) {
+        this.wallet = wallet;
+        accounts = wallet.generateAccounts();
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -117,43 +149,15 @@ public class ColdWalletActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
-        setSupportActionBar(toolbar);
-
-        activity = this;
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setLogo(R.drawable.ic_navigation_wallet);
-        actionBar.setTitle(R.string.title_wallet);
-
-        walletFrag = new WalletFragment();
-        settingsFrag = new SettingsFragment();
-        fragmentManager = null;
-        switchToFragment(walletFrag);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        walletFilePath = getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
-        Log.d(TAG, "Wallet file path: " + walletFilePath);
-        walletFile = new File(walletFilePath);
-        password = "";
-        accounts = new ArrayList<>();
-
-        if (walletFile.exists()){
-            String seed = JsonUtil.load(walletFilePath);
-            if (seed != "" && seed != JsonUtil.ERROR) {
-                wallet = new VEEWallet(seed);
-                accounts = wallet.generateAccounts();
-            }
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtil.PERMISSION_REQUEST_CODE:
+                if (!PermissionUtil.permissionGranted(this)) {
+                    Toast.makeText(activity, "Please grant all permissions", Toast.LENGTH_LONG).show();
+                    finish();
+                }
         }
     }
-
     /**
      * Contain logic for decoding the results of a qr code
      * @param requestCode
@@ -198,13 +202,18 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 case 2:
                     String seed = QRCodeUtil.parseSeed(qrContents);
-                    if (VEEAccount.validateSeedPhrase(activity, seed)) {
-                        UIUtil.createAccountNumberDialog(activity, seed);
+                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
+                        Intent intent = new Intent(activity, SetPasswordActivity.class);
+                        intent.putExtra("SEED", seed);
+                        startActivity(intent);
+                    }
+                    else {
+                        UIUtil.createForeignSeedDialog(activity, seed);
                     }
                     break;
 
                 case 3:
-                    Toast.makeText(activity, "Incorrect QR code format", Toast.LENGTH_LONG).show();
+                    UIUtil.createForeignSeedDialog(activity, qrContents);
             }
         }
         else {
@@ -223,5 +232,6 @@ public class ColdWalletActivity extends AppCompatActivity {
                     .replace(R.id.frame_container,fragment).commit();
         }
     }
+
 }
 

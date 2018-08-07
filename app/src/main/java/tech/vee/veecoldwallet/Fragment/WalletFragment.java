@@ -2,7 +2,10 @@ package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
@@ -10,6 +13,7 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
+import tech.vee.veecoldwallet.Activity.GenerateSeedActivity;
 import tech.vee.veecoldwallet.Activity.ImportSeedActivity;
 import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.FileUtil;
+import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Util.QRCodeUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
@@ -31,6 +39,7 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "Winston";
+    private static final String WALLET_FILE_NAME = "wallet.dat";
 
     private Activity activity;
 
@@ -43,6 +52,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private FloatingActionButton generateSeed;
 
     private VEEWallet wallet;
+    private File walletFile;
+    private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
     private VEEAccount account;
 
@@ -66,6 +77,24 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         generateSeed = view.findViewById(R.id.generateSeed);
 
         menu.setTag("OFF");
+
+        walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
+        Log.d(TAG, "Wallet file path: " + walletFilePath);
+        walletFile = new File(walletFilePath);
+
+        if (walletFile.exists()){
+            String seed = FileUtil.load(walletFilePath);
+            if (seed != "" && seed != JsonUtil.ERROR) {
+                wallet = new VEEWallet(seed);
+                accounts = wallet.generateAccounts();
+                ColdWalletActivity mainActivity = (ColdWalletActivity) activity;
+                ((ColdWalletActivity) activity).setWallet(wallet);
+            }
+        }
+
+        // Display wallet if exists, otherwise display start page
+        refreshAccounts(accounts);
+
         menu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,20 +113,61 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        importSeed.setOnClickListener(this);
-        generateSeed.setOnClickListener(this);
+        importSeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String importText = getResources().getString(R.string.import_seed);
+                Intent intent;
 
-        ColdWalletActivity activity = (ColdWalletActivity) getActivity();
-        VEEWallet activityWallet = activity.getWallet();
-        if (activityWallet != null) { setWallet(activity.getWallet()); }
+                if (importSeed.getLabelText().equals(importText)) {
+                    menu.setTag("OFF");
+                    menu.close(true);
+                    intent = new Intent(activity, ImportSeedActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    int i = 100 - accounts.size();
+                    if(i > 0) {
+                        UIUtil.createAppendAccountsDialog(activity, 100 - accounts.size());
+                    }
+                    else {
+                        Toast.makeText(activity, "Max accounts reached", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
 
-        // Display wallet if exists, otherwise display start page
-        refreshAccounts(accounts);
+        generateSeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String generateText = getResources().getString(R.string.generate_seed);
+                Intent intent;
+
+                if (generateSeed.getLabelText().equals(generateText)) {
+                    menu.setTag("OFF");
+                    menu.close(true);
+                    intent = new Intent(activity, GenerateSeedActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    FileUtil.backup(activity, wallet, walletFilePath);
+                }
+            }
+        });
+
         return view;
     }
 
     @Override
+    public void onPause() {
+        activity.unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
+        // Register receiver for account number
+        activity.registerReceiver(receiver, new IntentFilter("SELECT_APPEND_ACCOUNT_NUMBER"));
         if (!menu.isOpened()) {
             displayAccounts(true);
             accountCards.setLayoutFrozen(false);
@@ -118,14 +188,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.generateSeed:
-                intent = new Intent(activity, SetPasswordActivity.class);
+                intent = new Intent(activity, GenerateSeedActivity.class);
                 startActivity(intent);
         }
-    }
-
-    public void setWallet(VEEWallet wallet) {
-        this.wallet = wallet;
-        this.accounts = wallet.generateAccounts();
     }
 
     public void displayAccounts(Boolean flag){
@@ -137,10 +202,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public void refreshAccounts(ArrayList<VEEAccount> accounts){
         adapter = new AccountAdapter(accounts);
 
-        if (wallet != null && accounts != null){
+        if (accounts != null){
             linearLayout.setVisibility(View.GONE);
             UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
             displayAccounts(true);
+            importSeed.setLabelText(getResources().getString(R.string.append_accounts));
+            generateSeed.setLabelText(getResources().getString(R.string.backup_wallet));
+            generateSeed.setImageDrawable(getResources().getDrawable(R.drawable.ic_backup));
         }
         else {
             linearLayout.setVisibility(View.VISIBLE);
@@ -216,4 +284,24 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             return accounts.size();
         }
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == "SELECT_APPEND_ACCOUNT_NUMBER") {
+                int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
+
+                //Toast.makeText(activity, "Seed: " + seed
+                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
+
+                wallet.append(accountNum);
+
+                FileUtil.save(wallet.getJson(), walletFilePath);
+                Log.d(TAG, wallet.getJson());
+                intent = new Intent(activity, ColdWalletActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        }
+    };
 }

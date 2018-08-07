@@ -38,6 +38,7 @@ import com.nulabinc.zxcvbn.Zxcvbn;
 import org.w3c.dom.Text;
 
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Util.FileUtil;
 import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
@@ -63,6 +64,7 @@ public class SetPasswordActivity extends AppCompatActivity {
     private int strength1, strength2, strength3, strength4, strength5, baseColor;
 
     private String walletFilePath;
+    private String backupWalletFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +170,10 @@ public class SetPasswordActivity extends AppCompatActivity {
                     UIUtil.createAccountNumberDialog(activity, seed);
                 }
                 else {
+                    setEdit.setText("");
+                    setEdit.clearFocus();
+                    confirmEdit.setText("");
+                    confirmEdit.clearFocus();
                     Toast.makeText(activity, "Passwords do not match", Toast.LENGTH_LONG).show();
                 }
             }
@@ -259,9 +265,11 @@ public class SetPasswordActivity extends AppCompatActivity {
                 //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
 
                 VEEWallet wallet = VEEWallet.recover(seed, accountNum);
-                JsonUtil.save(wallet.getJson(), walletFilePath);
+                FileUtil.save(wallet.getJson(), walletFilePath);
+                FileUtil.backup(activity, wallet, walletFilePath);
                 Log.d(TAG, wallet.getJson());
                 intent = new Intent(activity, ColdWalletActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }
@@ -275,10 +283,9 @@ public class SetPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
-
         // Register receiver for account number
         registerReceiver(receiver, new IntentFilter("SELECT_ACCOUNT_NUMBER"));
+        super.onResume();
     }
 }
 

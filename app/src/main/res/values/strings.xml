@@ -35,6 +35,7 @@
 
     <!-- Strings related to Export Seed -->
     <string name="export_seed">Wallet Seed</string>
+    <string name="export_seed_copy">Copy</string>
     <string name="sign_tx">Sign Transaction</string>
 
     <!-- Strings related to Import Seed -->
@@ -46,6 +47,25 @@
         report wall wolf flip grant injury middle mix split</string>
     <string name="import_seed_paste">Paste</string>
     <string name="import_seed_confirm">Confirm</string>
+
+    <!-- Strings related to Generate Seed -->
+    <string name="generate_seed_title">New backup seed phrase</string>
+    <string name="generate_seed_subtitle">Please carefully write down or copy
+        these 15 words in a secure location for future wallet recovery</string>
+    <string name="generate_seed_copy">Copy</string>
+    <string name="generate_seed_confirm">Confirm</string>
+
+    <!-- Strings related to Confirm Backup Seed -->
+    <string name="confirm_backup_seed_title">Verify your seed phrase</string>
+    <string name="confirm_backup_seed_subtitle">Tap each word in the correct order</string>
+    <string name="confirm_backup_seed_clear">Clear</string>
+
+    <!-- Strings related to Foreign Seed -->
+    <string name="foreign_seed_title">Foreign Seed Detected</string>
+    <string name="foreign_seed_subtitle">The seed phrase below is from a user-supplied source.
+        An insecure entropy source can lead to total loss of the wallet. Do you wish to continue?</string>
+    <string name="foreign_seed_positive_button">Continue</string>
+    <string name="foreign_seed_negative_button">Back</string>
 
     <!-- Strings related to Signature -->
     <string name="signature_title">Validate Transaction</string>
@@ -63,18 +83,22 @@
     <string name="transaction_amount">Amount</string>
     <string name="transaction_fee">Fee</string>
     <string name="transaction_attachment">Attachment</string>
-    <string name="transaction_timestamp">Date</string>
+    <string name="transaction_timestamp">Time</string>
     <string name="transaction_confirm">Confirm</string>
     <string name="transaction_done">Done</string>
 
     <!-- Strings related to Account Number -->
     <string name="account_number_title">Configure Wallet</string>
     <string name="account_number_subtitle">Select the number of accounts</string>
+    <string name="append_account_title">Add Accounts</string>
+    <string name="append_account_subtitle">Select the number of accounts to add</string>
     <string name="account_number_confirm">Confirm</string>
 
     <!-- Strings related to Floating Action Menu -->
     <string name="import_seed">Import Seed</string>
     <string name="generate_seed">Generate Seed</string>
+    <string name="backup_wallet">Backup Wallet</string>
+    <string name="append_accounts">Add Accounts</string>
     <string name="message">Welcome to VEE Cold Wallet! Press button below to start.</string>
 
     <!-- Strings related to Set Password -->

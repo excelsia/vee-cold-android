@@ -1,8 +1,6 @@
 package tech.vee.veecoldwallet.Wallet;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,10 +9,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.wavesplatform.wavesj.Asset;
-import com.wavesplatform.wavesj.Base58;
-import com.wavesplatform.wavesj.PrivateKeyAccount;
-import com.wavesplatform.wavesj.PublicKeyAccount;
 
 import org.whispersystems.curve25519.Curve25519;
 
@@ -22,14 +16,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tech.vee.veecoldwallet.Util.Base58;
 import tech.vee.veecoldwallet.Util.HashUtil;
-import tech.vee.veecoldwallet.Util.JsonUtil;
 
 @JsonDeserialize(using = VEETransaction.Deserializer.class)
 public class VEETransaction {
@@ -107,9 +100,9 @@ public class VEETransaction {
                 "senderPublicKey", sender.getPubKey(),
                 "recipient", recipient,
                 "amount", amount,
-                "assetId", toJsonObject(assetId),
+                "assetId", VEEAsset.toJsonObject(assetId),
                 "fee", fee,
-                "feeAssetId", toJsonObject(feeAssetId),
+                "feeAssetId", VEEAsset.toJsonObject(feeAssetId),
                 "timestamp", timestamp,
                 "attachment", Base58.encode(attachmentBytes));
     }
@@ -214,21 +207,8 @@ public class VEETransaction {
         return Base58.encode(HashUtil.hash(bytes, 0, bytes.length, HashUtil.BLAKE2B256));
     }
 
-    private static String normalize(String assetId) {
-        return assetId == null || assetId.isEmpty() ? Asset.WAVES : assetId;
-    }
-
-    private static boolean isWaves(String assetId) {
-        return WAVES.equals(normalize(assetId));
-    }
-
-    @Nullable
-    private static String toJsonObject(String assetId) {
-        return isWaves(assetId) ? null : assetId;
-    }
-
     private static void putAsset(ByteBuffer buffer, String assetId) {
-        if (isWaves(assetId)) {
+        if (VEEAsset.isVEE(assetId)) {
             buffer.put((byte) 0);
         } else {
             buffer.put((byte) 1).put(Base58.decode(assetId));
@@ -255,7 +235,8 @@ public class VEETransaction {
             // assume an alias
             buffer.put((byte) 0x02).put(chainId).putShort((short) recipient.length()).put(recipient.getBytes(UTF8));
             return String.format("alias:%c:%s", chainId, recipient);
-        } else {
+        }
+        else {
             buffer.put(Base58.decode(recipient));
             return recipient;
         }

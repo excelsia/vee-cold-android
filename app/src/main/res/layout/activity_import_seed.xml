@@ -101,7 +101,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@xml/rounded_corners_orange"
+            android:background="@drawable/rounded_corners_orange"
             android:text="@string/import_seed_confirm"
             android:textColor="@color/white"
             android:textSize="16sp" />

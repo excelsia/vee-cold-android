@@ -57,7 +57,6 @@ public class QRCodeUtil {
             return tokens[1];
         }
         else {
-            Log.d(TAG, "Format incorrect!");
             return "";
         }
     }
@@ -74,7 +73,7 @@ public class QRCodeUtil {
         priKey = QRCodeUtil.parseSeed(qrContents);
         if (priKey != "") return 2;
 
-        return 3;
+        else return 3;
     }
 
     public static void scan(Activity activity){

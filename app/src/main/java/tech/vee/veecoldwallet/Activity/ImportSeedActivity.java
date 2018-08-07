@@ -93,10 +93,13 @@ public class ImportSeedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String seed = input.getText().toString();
-                if (VEEAccount.validateSeedPhrase(activity, seed)) {
+                if (VEEWallet.validateSeedPhrase(activity, seed)) {
                     Intent intent = new Intent(activity, SetPasswordActivity.class);
                     intent.putExtra("SEED", seed);
                     startActivity(intent);
+                }
+                else {
+                    UIUtil.createForeignSeedDialog(activity, seed);
                 }
             }
         });
@@ -115,15 +118,19 @@ public class ImportSeedActivity extends AppCompatActivity {
 
                 case 2:
                     String seed = QRCodeUtil.parseSeed(qrContents);
-                    if (VEEAccount.validateSeedPhrase(activity, seed)) {
+                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
                         intent.putExtra("SEED", seed);
                         startActivity(intent);
                     }
+                    else {
+                        UIUtil.createForeignSeedDialog(activity, seed);
+                    }
                     break;
 
                 case 3:
-                    Toast.makeText(activity, "Incorrect QR code format", Toast.LENGTH_LONG).show();
+                    UIUtil.createForeignSeedDialog(activity, qrContents);
+                    //Toast.makeText(activity, "Incorrect QR code format", Toast.LENGTH_LONG).show();
             }
         }
         else {

@@ -16,7 +16,7 @@
         android:id="@+id/torch"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/torch"
+        android:src="@drawable/ic_torch_black"
         android:background="@drawable/round_icon"
         android:layout_marginBottom="40dp"
         android:padding="10dp"

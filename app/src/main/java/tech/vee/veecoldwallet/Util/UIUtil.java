@@ -2,6 +2,9 @@ package tech.vee.veecoldwallet.Util;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,10 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.xw.repo.BubbleSeekBar;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -22,7 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
+import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
@@ -30,16 +34,35 @@ import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class UIUtil {
-    public static void createExportSeedDialog(Activity activity, VEEWallet wallet) {
+    public static void createExportSeedDialog(final Activity activity, VEEWallet wallet) {
         if (wallet != null) {
             final Dialog dialog = new Dialog(activity);
             dialog.setContentView(R.layout.custom_dialog_export_seed);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+            final TextView copy = (TextView) dialog.findViewById(R.id.export_seed_copy);
             ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_seed);
             TextView seed = (TextView) dialog.findViewById(R.id.export_seed_string);
+            final String seedString = wallet.getSeed();
+
+            if (seedString.equals("")){
+                copy.setTextColor(activity.getResources().getColor(R.color.textLight));
+            }
+
+            copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("SEED", seedString);
+                    clipboard.setPrimaryClip(clip);
+                    copy.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
+
+                }
+            });
+
             qrCode.setImageBitmap(QRCodeUtil.exportSeed(wallet, 800));
-            seed.setText(wallet.getSeed());
+            seed.setText(seedString);
 
             dialog.setTitle("Export Seed");
             dialog.show();
@@ -48,6 +71,39 @@ public class UIUtil {
             Toast.makeText(activity, "No seed found", Toast.LENGTH_LONG).show();
         }
     }
+
+    public static void createForeignSeedDialog(final Activity activity, final String seed) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_foreign_seed);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(true);
+
+        TextView seedText = (TextView) dialog.findViewById(R.id.foreign_seed);
+        Button negative = (Button) dialog.findViewById(R.id.foreign_seed_negative);
+        Button positive = (Button) dialog.findViewById(R.id.foreign_seed_positive);
+
+        seedText.setText(seed);
+
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, SetPasswordActivity.class);
+                intent.putExtra("SEED", seed);
+                activity.startActivity(intent);
+            }
+        });
+
+        dialog.setTitle("Foreign Seed");
+        dialog.show();
+    }
+
 
     public static void createExportAddressDialog(final Activity activity, VEEAccount account) {
         if (account != null) {
@@ -58,13 +114,13 @@ public class UIUtil {
             ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_address);
             TextView address = (TextView) dialog.findViewById(R.id.export_address_string);
             TextView title = (TextView) dialog.findViewById(R.id.export_account_title);
-            Button dialogButton = (Button) dialog.findViewById(R.id.sign_tx);
+            Button sign = (Button) dialog.findViewById(R.id.sign_tx);
 
             qrCode.setImageBitmap(QRCodeUtil.exportPubKeyAddr(account,800));
             address.setText(account.getAddress());
             title.setText("Account " + String.valueOf(account.getNonce() + 1));
 
-            dialogButton.setOnClickListener(new View.OnClickListener() {
+            sign.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     QRCodeUtil.scan(activity);
@@ -99,8 +155,8 @@ public class UIUtil {
 
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountFloat) + " VEE");
-        feeTx.setText(String.valueOf(feeFloat) + " VEE");
+        amountTx.setText(String.valueOf(amountFloat));
+        feeTx.setText(String.valueOf(feeFloat));
 
         if (!attachment.equals("")) { attachmentTx.setText(attachment); }
         else { attachmentTx.setText("None"); }
@@ -139,8 +195,8 @@ public class UIUtil {
 
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountFloat) + " VEE");
-        feeTx.setText(String.valueOf(feeFloat) + " VEE");
+        amountTx.setText(String.valueOf(amountFloat));
+        feeTx.setText(String.valueOf(feeFloat));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -170,7 +226,7 @@ public class UIUtil {
 
         float feeFloat = (float) fee/100000000;
         senderTx.setText(sender.getMutatedAddress());
-        feeTx.setText(String.valueOf(feeFloat) + " VEE");
+        feeTx.setText(String.valueOf(feeFloat));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -202,6 +258,7 @@ public class UIUtil {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ColdWalletActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 activity.startActivity(intent);
             }
         });
@@ -216,20 +273,55 @@ public class UIUtil {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        final BubbleSeekBar bsb = (BubbleSeekBar) dialog.findViewById(R.id.account_number_bsb);
+        final MaterialNumberPicker np = (MaterialNumberPicker) dialog.findViewById(R.id.account_number_np);
         Button dialogButton = (Button) dialog.findViewById(R.id.account_number_confirm);
+        TextView title = (TextView) dialog.findViewById(R.id.account_number_title);
+        TextView subtitle = (TextView) dialog.findViewById(R.id.account_number_subtitle);
+
+        title.setText(R.string.account_number_title);
+        subtitle.setText(R.string.account_number_subtitle);
+
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent("SELECT_ACCOUNT_NUMBER");
-                intent.putExtra("ACCOUNT_NUMBER", bsb.getProgress());
+                intent.putExtra("ACCOUNT_NUMBER", np.getValue());
                 intent.putExtra("SEED", seed);
                 activity.sendBroadcast(intent);
                 dialog.dismiss();
             }
         });
 
-        dialog.setTitle("Configure Wallet");
+        dialog.setTitle("Create Accounts");
+        dialog.show();
+    }
+
+    public static void createAppendAccountsDialog(final Activity activity, final int max) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_account_number);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        final MaterialNumberPicker np = (MaterialNumberPicker) dialog.findViewById(R.id.account_number_np);
+        Button dialogButton = (Button) dialog.findViewById(R.id.account_number_confirm);
+        TextView title = (TextView) dialog.findViewById(R.id.account_number_title);
+        TextView subtitle = (TextView) dialog.findViewById(R.id.account_number_subtitle);
+
+        title.setText(R.string.append_account_title);
+        subtitle.setText(R.string.append_account_subtitle);
+
+        np.setMaxValue(max);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent("SELECT_APPEND_ACCOUNT_NUMBER");
+                intent.putExtra("ACCOUNT_NUMBER", np.getValue());
+                activity.sendBroadcast(intent);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Append Accounts");
         dialog.show();
     }
 

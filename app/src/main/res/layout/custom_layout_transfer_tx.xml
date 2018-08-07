@@ -175,15 +175,27 @@
                     android:textSize="14sp"
                     android:text="@string/transaction_amount" />
 
-                <TextView
-                    android:id="@+id/transaction_amount"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:layout_gravity="end"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/textDark"
-                    android:textSize="14sp" />
+                    android:gravity="end|center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_vee"
+                        android:layout_marginRight="4dp" />
+
+                    <TextView
+                        android:id="@+id/transaction_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <View
@@ -206,15 +218,27 @@
                     android:textSize="14sp"
                     android:text="@string/transaction_fee" />
 
-                <TextView
-                    android:id="@+id/transaction_fee"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:layout_gravity="end"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/textDark"
-                    android:textSize="14sp" />
+                    android:gravity="end|center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_vee"
+                        android:layout_marginRight="4dp"/>
+
+                    <TextView
+                        android:id="@+id/transaction_fee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <View
@@ -271,5 +295,5 @@
         android:text="@string/account_number_confirm"
         android:textSize="16sp"
         android:textColor="@color/white"
-        android:background="@xml/rounded_corners_orange"/>
+        android:background="@drawable/rounded_corners_orange"/>
 </LinearLayout>

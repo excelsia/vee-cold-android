@@ -1,6 +1,7 @@
 package tech.vee.veecoldwallet.Util;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,9 +14,13 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class PermissionUtil {
+    public static final int PERMISSION_REQUEST_CODE = 0000;
+
     private static String tag = "Winston";
     public static boolean permissionGranted(Activity activity){
-        if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             return false;
         else return true;
     }
@@ -26,8 +31,19 @@ public class PermissionUtil {
         if (permissionGranted(activity)) Log.d(tag, "Permission granted!");
         if (!permissionGranted(activity)) {
             ActivityCompat.requestPermissions(activity, new String[]{
-                    Manifest.permission.CAMERA}, 0000);
+                    Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
+    }
 
+    public static void requestCameraPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity, new String[]{
+                    Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE);
+    }
+
+    public static void requestReadWritePermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity, new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 }

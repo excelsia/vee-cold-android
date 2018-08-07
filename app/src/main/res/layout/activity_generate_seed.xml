@@ -1,9 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activity.GenerateSeedActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_gravity="start"
+                android:textColor="@color/textDark"
+                android:textSize="16sp"
+                android:text="@string/generate_seed_title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_gravity="start"
+                android:textColor="@color/textLight"
+                android:textSize="14sp"
+                android:text="@string/generate_seed_subtitle" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="1dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/generate_seed_string"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:background="@color/white"
+                android:lineSpacingMultiplier="1.8"
+                android:textColor="@color/textDark"
+                android:textSize="16sp"
+                android:textColorHint="@color/textHint"
+                android:gravity="center|top"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/generate_seed_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_gravity="center"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
+                android:text="@string/generate_seed_copy"/>
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/generate_seed_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/rounded_corners_orange"
+            android:text="@string/generate_seed_confirm"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

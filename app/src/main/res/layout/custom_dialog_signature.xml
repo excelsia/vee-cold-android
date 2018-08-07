@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@xml/rounded_corners"
+    android:background="@drawable/rounded_corners"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@xml/rounded_corners_light_gray">
+        android:background="@drawable/rounded_corners_light_gray">
 
         <TextView
             android:layout_width="match_parent"
@@ -54,6 +54,6 @@
         android:text="@string/transaction_done"
         android:textSize="16sp"
         android:textColor="@color/white"
-        android:background="@xml/rounded_corners_orange"/>
+        android:background="@drawable/rounded_corners_orange"/>
 
 </LinearLayout>
