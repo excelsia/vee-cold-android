@@ -37,7 +37,7 @@ import tech.vee.veecoldwallet.Util.QRCodeUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
-public class WalletFragment extends Fragment implements View.OnClickListener {
+public class WalletFragment extends Fragment {
     private static final String TAG = "Winston";
     private static final String WALLET_FILE_NAME = "wallet.dat";
 
@@ -50,6 +50,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private FloatingActionMenu menu;
     private FloatingActionButton importSeed;
     private FloatingActionButton generateSeed;
+    private FloatingActionButton loadBackup;
 
     private VEEWallet wallet;
     private File walletFile;
@@ -75,8 +76,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         menu = view.findViewById(R.id.menu);
         importSeed = view.findViewById(R.id.importSeed);
         generateSeed = view.findViewById(R.id.generateSeed);
-
-        menu.setTag("OFF");
+        loadBackup = view.findViewById(R.id.loadBackup);
 
         walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
         Log.d(TAG, "Wallet file path: " + walletFilePath);
@@ -95,6 +95,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         // Display wallet if exists, otherwise display start page
         refreshAccounts(accounts);
 
+        menu.setTag("OFF");
         menu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +156,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        loadBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileUtil.loadBackup(activity, walletFilePath, WALLET_FILE_NAME);
+                Intent intent = new Intent(activity, ColdWalletActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -176,23 +187,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         super.onResume();
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent;
-        switch (v.getId()) {
-            case R.id.importSeed:
-                menu.setTag("OFF");
-                menu.close(true);
-                intent = new Intent(activity, ImportSeedActivity.class);
-                startActivity(intent);
-                break;
-
-            case R.id.generateSeed:
-                intent = new Intent(activity, GenerateSeedActivity.class);
-                startActivity(intent);
-        }
-    }
-
     public void displayAccounts(Boolean flag){
         if (!flag) { adapter.setFlag(false); }
         else { adapter.setFlag(true); }
@@ -204,14 +198,29 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         if (accounts != null){
             linearLayout.setVisibility(View.GONE);
+
             UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
             displayAccounts(true);
+
+            loadBackup.setVisibility(View.GONE);
             importSeed.setLabelText(getResources().getString(R.string.append_accounts));
-            generateSeed.setLabelText(getResources().getString(R.string.backup_wallet));
-            generateSeed.setImageDrawable(getResources().getDrawable(R.drawable.ic_backup));
+            importSeed.setImageDrawable(getResources().getDrawable(R.drawable.ic_append));
+
+            if (FileUtil.sdCardMountedExists()) {
+                generateSeed.setLabelText(getResources().getString(R.string.backup_wallet));
+                generateSeed.setImageDrawable(getResources().getDrawable(R.drawable.ic_backup));
+            }
+            else {
+                generateSeed.setVisibility(View.GONE);
+            }
+
         }
         else {
             linearLayout.setVisibility(View.VISIBLE);
+            if (!FileUtil.sdCardMountedExists() ||
+                    !FileUtil.backupExists(activity, WALLET_FILE_NAME)) {
+                loadBackup.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -298,6 +307,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 FileUtil.save(wallet.getJson(), walletFilePath);
                 Log.d(TAG, wallet.getJson());
+                FileUtil.backup(activity, wallet, WALLET_FILE_NAME);
                 intent = new Intent(activity, ColdWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

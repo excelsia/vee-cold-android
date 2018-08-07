@@ -80,5 +80,16 @@
             app:fab_size="mini"
             app:fab_label="@string/generate_seed"/>
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/loadBackup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/ic_backup"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/lightGray"
+            app:fab_size="mini"
+            app:fab_label="@string/load_backup"/>
+
     </com.github.clans.fab.FloatingActionMenu>
 </FrameLayout>

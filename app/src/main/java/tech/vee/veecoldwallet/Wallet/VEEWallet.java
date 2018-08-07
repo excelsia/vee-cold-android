@@ -285,6 +285,7 @@ public class VEEWallet {
                 //accountSeed = generateAccountSeedOld(seed, i);
                 accountSeeds.add(accountSeed);
             }
+            nonce += num;
         }
         else {
             Log.d(TAG,"Invalid append");

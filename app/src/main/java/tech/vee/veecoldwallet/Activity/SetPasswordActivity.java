@@ -266,7 +266,7 @@ public class SetPasswordActivity extends AppCompatActivity {
 
                 VEEWallet wallet = VEEWallet.recover(seed, accountNum);
                 FileUtil.save(wallet.getJson(), walletFilePath);
-                FileUtil.backup(activity, wallet, walletFilePath);
+                FileUtil.backup(activity, wallet, WALLET_FILE_NAME);
                 Log.d(TAG, wallet.getJson());
                 intent = new Intent(activity, ColdWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

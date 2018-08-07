@@ -41,10 +41,18 @@ public class FileUtil {
         }
     }
 
+    public static boolean backupExists(Activity activity, String walletFileName) {
+        String backupWalletFilePath = FileUtil.getBackupSdCardDir().getPath()
+                + "/" + walletFileName;
+        File backupWalletFile = new File(backupWalletFilePath);
+        if (backupWalletFile.exists()) { return true; }
+        return false;
+    }
+
     public static void backup(Activity activity, VEEWallet wallet, String walletFileName) {
         String backupWalletFilePath;
 
-        if(existSdCardMounted()){
+        if(sdCardMountedExists()){
             backupWalletFilePath = FileUtil.getBackupSdCardDir().getPath()
                     + "/" + walletFileName;
             FileUtil.save(wallet.getJson(), backupWalletFilePath);
@@ -68,11 +76,11 @@ public class FileUtil {
             Log.d(TAG, "File loaded");
 
             if (JsonUtil.isJsonString(json)) {
-                Toast.makeText(activity, "Load backup successful", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Load backup file successful", Toast.LENGTH_LONG).show();
                 save(json, savePath);
             }
             else {
-                Toast.makeText(activity, "Load backup unsuccessful", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Load backup file unsuccessful", Toast.LENGTH_LONG).show();
             }
         }
         catch(IOException e) {
@@ -98,8 +106,9 @@ public class FileUtil {
         }
     }
 
-    public static boolean existSdCardMounted() {
+    public static boolean sdCardMountedExists() {
         String storageState = android.os.Environment.getExternalStorageState();
+
         if (isEmpty(storageState)) {
             return false;
         }
