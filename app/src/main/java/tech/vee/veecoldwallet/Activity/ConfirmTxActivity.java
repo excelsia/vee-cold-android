@@ -20,12 +20,14 @@ import com.google.gson.Gson;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ConfirmTxActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
     private ActionBar actionBar;
     private ConfirmTxActivity activity;
 
+    private VEEWallet wallet;
     private VEEAccount sender;
     private String recipient,assetId, feeAssetId, txId, attachment;
     private long timestamp, amount, fee;

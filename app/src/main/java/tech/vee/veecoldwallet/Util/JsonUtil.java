@@ -32,20 +32,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.Activity.ConfirmTxActivity;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class JsonUtil {
-    public final static String ERROR = "INVALID";
-
     private final static String TAG = "Winston";
-    public final static Charset ENCODING = Charset.forName("UTF-8");
-    private final static String KEYSALT = "0495c728-1614-41f6-8ac3-966c22b4a62d";
-    private final static String AES = "AES";
-    private final static String ALGORITHM = AES + "/ECB/PKCS5Padding";
-    private final static String HASHING = "PBKDF2WithHmacSHA512";
-    private final static int HASHINGITERATIONS = 999999;
-    private final static int KEYLENGTH = 128;
 
     @NonNull
     public static void checkTransferTx(Activity activity, HashMap<String, Object> jsonMap,
@@ -260,44 +253,6 @@ public class JsonUtil {
             return true;
         } catch (IOException e) {
             return false;
-        }
-    }
-
-    public static SecretKeySpec prepareKey(String key) {
-        return new SecretKeySpec(hashPassword(key.getBytes(ENCODING), KEYSALT.getBytes(ENCODING),
-                HASHINGITERATIONS, KEYLENGTH), AES);
-    }
-
-    private static byte[] hashPassword(byte[] password, byte[] salt, int iterations, int keyLength) {
-        PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());
-        gen.init(password, salt, iterations);
-        byte[] derivedKey = ((KeyParameter) gen.generateDerivedParameters(keyLength)).getKey();
-
-        return derivedKey;
-    }
-
-    private static String encrypt(SecretKeySpec key, String value) {
-        try{
-            Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return Base64.encode(cipher.doFinal(value.getBytes(ENCODING)));
-        }
-        catch(Exception e){
-            Log.d(TAG, "Failed encryption");
-            return "";
-
-        }
-    }
-
-    private static String decrypt(SecretKeySpec key, String encryptedValue) {
-        try{
-            Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            return cipher.doFinal(Base64.decode(encryptedValue)).toString();
-        }
-        catch(Exception e){
-            Log.d(TAG, "Failed decryption");
-            return "";
         }
     }
 }

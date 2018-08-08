@@ -55,7 +55,8 @@ public class WalletFragment extends Fragment {
     private VEEWallet wallet;
     private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
-    private VEEAccount account;
+
+    private String password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class WalletFragment extends Fragment {
 
         walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
         wallet = ((ColdWalletActivity) activity).getWallet();
+        password = ((ColdWalletActivity) activity).getPassword();
 
         if (wallet != null) {
             accounts = wallet.generateAccounts();
@@ -143,7 +145,7 @@ public class WalletFragment extends Fragment {
                     startActivity(intent);
                 }
                 else {
-                    FileUtil.backup(activity, wallet, walletFilePath);
+                    FileUtil.backup(activity, wallet, password, walletFilePath);
                 }
             }
         });
@@ -152,9 +154,6 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FileUtil.loadBackup(activity, walletFilePath, WALLET_FILE_NAME);
-                Intent intent = new Intent(activity, ColdWalletActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
             }
         });
 
@@ -163,14 +162,12 @@ public class WalletFragment extends Fragment {
 
     @Override
     public void onPause() {
-        activity.unregisterReceiver(receiver);
         super.onPause();
     }
 
     @Override
     public void onResume() {
         // Register receiver for account number
-        activity.registerReceiver(receiver, new IntentFilter("SELECT_APPEND_ACCOUNT_NUMBER"));
         if (!menu.isOpened()) {
             displayAccounts(true);
             accountCards.setLayoutFrozen(false);
@@ -285,25 +282,4 @@ public class WalletFragment extends Fragment {
             return accounts.size();
         }
     }
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == "SELECT_APPEND_ACCOUNT_NUMBER") {
-                int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
-
-                //Toast.makeText(activity, "Seed: " + seed
-                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
-
-                wallet.append(accountNum);
-
-                FileUtil.save(wallet.getJson(), walletFilePath);
-                Log.d(TAG, wallet.getJson());
-                FileUtil.backup(activity, wallet, WALLET_FILE_NAME);
-                intent = new Intent(activity, ColdWalletActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        }
-    };
 }

@@ -1,5 +1,6 @@
 package tech.vee.veecoldwallet.Activity;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -38,6 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tech.vee.veecoldwallet.Tasks.LoadTask;
 import tech.vee.veecoldwallet.Util.FileUtil;
 import tech.vee.veecoldwallet.Util.PermissionUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
@@ -89,27 +92,35 @@ public class ColdWalletActivity extends AppCompatActivity {
         settingsFrag = new SettingsFragment();
         fragmentManager = null;
 
-        PermissionUtil.checkPermissions(activity);
+        walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
+        Log.d(TAG, "Wallet file path: " + walletFilePath);
+
+        walletFile = new File(walletFilePath);
+        password = "";
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
-        walletFile = new File(walletFilePath);
-        Log.d(TAG, "Wallet file path: " + walletFilePath);
-        password = "";
+        PermissionUtil.checkPermissions(activity);
 
-        Toast.makeText(activity, "onCreate", Toast.LENGTH_LONG).show();
         if (walletFile.exists()){
-            UIUtil.createRequestPasswordDialog(activity, 0);
-            String seed = FileUtil.load(walletFilePath);
-            if (seed != "" && seed != JsonUtil.ERROR) {
-                wallet = new VEEWallet(seed);
-                accounts = wallet.generateAccounts();
-            }
-        }
 
-        switchToFragment(walletFrag);
+            UIUtil.createRequestPasswordDialog(activity);
+        }
+        else {
+            switchToFragment(walletFrag);
+        }
+    }
+
+    public void onPause() {
+        activity.unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    public void onResume() {
+        activity.registerReceiver(receiver, new IntentFilter("SELECT_APPEND_ACCOUNT_NUMBER"));
+        activity.registerReceiver(receiver, new IntentFilter("CONFIRM_PASSWORD"));
+        super.onResume();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -271,5 +282,42 @@ public class ColdWalletActivity extends AppCompatActivity {
         }
     }
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == "SELECT_APPEND_ACCOUNT_NUMBER") {
+                int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
+
+                //Toast.makeText(activity, "Seed: " + seed
+                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
+
+                wallet.append(accountNum);
+
+                FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
+                Log.d(TAG, wallet.getJson());
+                intent = new Intent(activity, ColdWalletActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+            else if (intent.getAction() == "CONFIRM_PASSWORD") {
+                password = intent.getStringExtra("PASSWORD");
+                Log.d(TAG, "Password " + password);
+                //LoadTask load = new LoadTask(activity, password, walletFilePath);
+                //load.execute();
+                //String seed = load.getSeed();
+                String seed = FileUtil.load(password, walletFilePath);
+                if (seed != "" && seed != FileUtil.ERROR) {
+                    wallet = new VEEWallet(seed);
+                    accounts = wallet.generateAccounts();
+                    if (accounts == null) {Log.d(TAG, "Accounts null"); }
+                    switchToFragment(walletFrag);
+                }
+                else {
+                    UIUtil.createRequestPasswordDialog(activity);
+                    Toast.makeText(activity, "Incorrect password", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    };
 }
 

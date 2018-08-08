@@ -133,8 +133,15 @@
     <string name="first_run_warning_1">NEVER UNINSTALL the cold wallet</string>
     <string name="first_run_warning_2">NEVER CLEAR the cold wallet\'s data</string>
     <string name="first_run_warning_3">NEVER FORGET your wallet password</string>
-    <string name="first_run_warning_confirm">Confirm</string>
+    <string name="first_run_warning_continue">Continue</string>
 
     <!-- Strings related to Monitor Connectivity-->
-
+    <string name="monitor_connectivity_title">Current Connectivity Status</string>
+    <string name="monitor_connectivity_unchecked_1">WIFI is connected</string>
+    <string name="monitor_connectivity_unchecked_2">MOBILE DATA is connected</string>
+    <string name="monitor_connectivity_unchecked_3">BLUETOOTH is connected</string>
+    <string name="monitor_connectivity_checked_1">WIFI is unconnected</string>
+    <string name="monitor_connectivity_checked_2">MOBILE DATA is unconnected</string>
+    <string name="monitor_connectivity_checked_3">BLUETOOTH is unconnected</string>
+    <string name="monitor_connectivity_continue">continue</string>
 </resources>

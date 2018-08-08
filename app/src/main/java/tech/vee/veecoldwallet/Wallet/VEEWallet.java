@@ -25,8 +25,8 @@ public class VEEWallet {
     private String agent;
 
     private static final String TAG = "Winston";
-    private static final String WALLET_VERSION = "1.0rc1";
-    private static final String AGENT_VERSION = "0.0.1";
+    private static final String WALLET_VERSION = "1.0rc2";
+    private static final String AGENT_VERSION = "0.0.3";
     private static final String AGENT_NAME = "VEE Cold Wallet Android";
 
     // Choose main net or test net

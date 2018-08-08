@@ -12,12 +12,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -27,6 +32,7 @@ import java.util.TimeZone;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
+import tech.vee.veecoldwallet.Activity.ConfirmTxActivity;
 import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.R;
@@ -124,7 +130,7 @@ public class UIUtil {
             sign.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createRequestPasswordDialog(activity, 1);
+                    QRCodeUtil.scan(activity);
                     dialog.dismiss();
                 }
             });
@@ -476,7 +482,7 @@ public class UIUtil {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.first_run_warning_confirm);
+        Button dialogButton = (Button) dialog.findViewById(R.id.first_run_warning_continue);
 
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -516,7 +522,7 @@ public class UIUtil {
         dialog.show();
     }
 
-    public static void createRequestPasswordDialog(final Activity activity, final int mode) {
+    public static void createRequestPasswordDialog(final Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.custom_dialog_request_password);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -528,27 +534,61 @@ public class UIUtil {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ColdWalletActivity cwa = (ColdWalletActivity) activity;
-                switch (mode) {
-                    case 0:
-                        cwa.setPassword(input.getText().toString());
-                        dialog.dismiss();
-                        break;
-
-                    case 1:
-                        if (cwa.getPassword().equals(input.getText().toString())) {
-                            QRCodeUtil.scan(activity);
-                            dialog.dismiss();
-                        }
-                        else {
-                            Toast.makeText(activity, "Password incorrect", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                }
+                InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                Intent intent = new Intent("CONFIRM_PASSWORD");
+                intent.putExtra("PASSWORD", input.getText().toString());
+                activity.sendBroadcast(intent);
+                dialog.dismiss();
             }
         });
 
-        dialog.setTitle("First Run Warning");
+        dialog.setTitle("Request Password");
+        dialog.show();
+    }
+
+    public static void createMonitorConnectivityDialog(final Activity activity, boolean b1,
+                                                       boolean b2, boolean b3) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_first_run_warning);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.monitor_connectivity_continue);
+        ImageView icon = (ImageView) dialog.findViewById(R.id.monitor_connectivity_icon);
+        ImageView circle1 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_1);
+        ImageView circle2 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_2);
+        ImageView circle3 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_3);
+        TextView text1 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_1);
+        TextView text2 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_2);
+        TextView text3 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_3);
+
+        if (b1) {
+           circle1.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+           text1.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_1));
+        }
+
+        if (b2) {
+            circle2.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+            text2.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_2));
+        }
+
+        if (b3) {
+            circle3.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+            text3.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_3));
+        }
+
+        if (b1 && b2 && b3) {
+            dialogButton.setVisibility(View.VISIBLE);
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        }
+
+        dialog.setTitle("Monitor Connectivity");
         dialog.show();
     }
 

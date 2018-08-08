@@ -65,6 +65,7 @@ public class SetPasswordActivity extends AppCompatActivity {
 
     private String walletFilePath;
     private int rating;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,9 +173,9 @@ public class SetPasswordActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = setEdit.getText().toString();
+                password = setEdit.getText().toString();
                 if(password.equals(confirmEdit.getText().toString())){
-                    Toast.makeText(activity, "Password: " + password, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity, "Password: " + password, Toast.LENGTH_LONG).show();
 
                     if (rating <= 2) {
                         UIUtil.createPasswordWarningDialog(activity, seed);
@@ -184,6 +185,7 @@ public class SetPasswordActivity extends AppCompatActivity {
                     }
                 }
                 else {
+                    password = "";
                     setEdit.setText("");
                     setEdit.clearFocus();
                     confirmEdit.setText("");
@@ -200,6 +202,10 @@ public class SetPasswordActivity extends AppCompatActivity {
         }else{
             layout.setError(null);
         }
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     private void setStrength0() {
@@ -272,15 +278,15 @@ public class SetPasswordActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() == "SELECT_ACCOUNT_NUMBER") {
+
                 int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
                 String seed = intent.getStringExtra("SEED");
 
-                //Toast.makeText(activity, "Seed: " + seed
-                //        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Password: " + password
+                        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
 
                 VEEWallet wallet = VEEWallet.recover(seed, accountNum);
-                FileUtil.save(wallet.getJson(), walletFilePath);
-                FileUtil.backup(activity, wallet, WALLET_FILE_NAME);
+                FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
                 Log.d(TAG, wallet.getJson());
                 intent = new Intent(activity, ColdWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

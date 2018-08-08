@@ -1,23 +1,99 @@
 package tech.vee.veecoldwallet.Util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class FileUtil {
     private final static String TAG = "Winston";
-    private final static String VEE_BACKUP_SDCARD_DIR = "VEEBackup";
 
+    private final static Charset ENCODING = Charset.forName("UTF-8");
+
+    public final static String ERROR = "INVALID";
+
+    private final static String VEE_BACKUP_SDCARD_DIR = "VEEBackup";
+    private final static String KEYSALT = "0ba950e1-828b-4bae-9e06-faf078eb33ec";
+    private final static String AES = "AES";
+    private final static String ALGORITHM = AES + "/ECB/PKCS5Padding";
+    private final static int HASHINGITERATIONS = 999999;
+    private final static int KEYLENGTH = 256;
+
+    //Save with password
+    public static void save(String json, String password, String path){
+        File folder;
+        PrintWriter file = null;
+
+        try {
+            folder = new File(path).getParentFile();
+
+            if (folder != null && !folder.exists()) { folder.mkdirs(); }
+
+            file = new PrintWriter(path);
+            file.write(encrypt(prepareKey(password), json));
+            //file.write(json);
+            Log.d(TAG, "File saved");
+        }
+        catch(IOException e) {
+            Log.d(TAG, "Error writing json file: " + e.getMessage());
+        }
+        finally
+        {
+            if (file != null) { file.close(); }
+        }
+    }
+
+    //Save and backup
+    public static void save(Activity activity, String json, String password, String path, String walletFileName){
+        File folder;
+        PrintWriter file = null;
+        String message = "";
+
+        try {
+            folder = new File(path).getParentFile();
+
+            if (folder != null && !folder.exists()) { folder.mkdirs(); }
+
+            file = new PrintWriter(path);
+            message = encrypt(prepareKey(password), json);
+            file.write(message);
+            //file.write(json);
+            Log.d(TAG, "File saved");
+
+            String backupWalletFilePath = FileUtil.getBackupSdCardDir().getPath()
+                    + "/" + walletFileName;
+            FileUtil.save(message, backupWalletFilePath);
+            Toast.makeText(activity, "Backup successful", Toast.LENGTH_LONG).show();
+
+        }
+        catch(IOException e) {
+            Log.d(TAG, "Error writing json file: " + e.getMessage());
+        }
+        finally
+        {
+            if (file != null) { file.close(); }
+        }
+    }
+
+    // Save without password
     public static void save(String json, String path){
         File folder;
         PrintWriter file = null;
@@ -28,7 +104,6 @@ public class FileUtil {
             if (folder != null && !folder.exists()) { folder.mkdirs(); }
 
             file = new PrintWriter(path);
-            //file.write(encrypt(key, json));
             file.write(json);
             Log.d(TAG, "File saved");
         }
@@ -49,13 +124,13 @@ public class FileUtil {
         return false;
     }
 
-    public static void backup(Activity activity, VEEWallet wallet, String walletFileName) {
+    public static void backup(Activity activity, VEEWallet wallet, String password, String walletFileName) {
         String backupWalletFilePath;
 
         if(sdCardMountedExists()){
             backupWalletFilePath = FileUtil.getBackupSdCardDir().getPath()
                     + "/" + walletFileName;
-            FileUtil.save(wallet.getJson(), backupWalletFilePath);
+            FileUtil.save(wallet.getJson(), password, backupWalletFilePath);
             Toast.makeText(activity, "Backup successful", Toast.LENGTH_LONG).show();
         }
         else {
@@ -70,35 +145,34 @@ public class FileUtil {
                 + "/" + walletFileName;
         try {
             inputStream = new FileInputStream(backupWalletFilePath);
-            //json = decrypt(key, IOUtils.toString(inputStream, ENCODING));
-            json = IOUtils.toString(inputStream, JsonUtil.ENCODING);
+            json = IOUtils.toString(inputStream, ENCODING);
             inputStream.close();
+            //Toast.makeText(activity, "Load backup file successful", Toast.LENGTH_LONG).show();
             Log.d(TAG, "File loaded");
 
-            if (JsonUtil.isJsonString(json)) {
-                Toast.makeText(activity, "Load backup file successful", Toast.LENGTH_LONG).show();
-                save(json, savePath);
-            }
-            else {
-                Toast.makeText(activity, "Load backup file unsuccessful", Toast.LENGTH_LONG).show();
-            }
+            save(json, savePath);
+            Intent intent = new Intent(activity, ColdWalletActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            activity.startActivity(intent);
         }
         catch(IOException e) {
+            Toast.makeText(activity, "Load backup file unsuccessful", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Error loading json file: " + e.getMessage());
         }
     }
 
-    public static String load(String path) {
+    public static String load(String password, String path) {
         FileInputStream inputStream;
         String json;
         try {
             inputStream = new FileInputStream(path);
-            //json = decrypt(key, IOUtils.toString(inputStream, ENCODING));
-            json = IOUtils.toString(inputStream, JsonUtil.ENCODING);
+            json = decrypt(prepareKey(password), IOUtils.toString(inputStream, ENCODING));
+            //json = IOUtils.toString(inputStream, ENCODING);
             inputStream.close();
+            Log.d(TAG, "Loaded string: " + json);
             Log.d(TAG, "File loaded");
             if (JsonUtil.isJsonString(json)) { return json; }
-            else { return JsonUtil.ERROR; }
+            else { return ERROR; }
         }
         catch(IOException e) {
             Log.d(TAG, "Error loading json file: " + e.getMessage());
@@ -138,6 +212,44 @@ public class FileUtil {
             return other == null;
         } else {
             return other != null && str.equals(other);
+        }
+    }
+
+    public static SecretKeySpec prepareKey(String key) {
+        return new SecretKeySpec(hashPassword(key.getBytes(ENCODING), KEYSALT.getBytes(ENCODING),
+                HASHINGITERATIONS, KEYLENGTH), AES);
+    }
+
+    private static byte[] hashPassword(byte[] password, byte[] salt, int iterations, int keyLength) {
+        PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());
+        gen.init(password, salt, iterations);
+        byte[] derivedKey = ((KeyParameter) gen.generateDerivedParameters(keyLength)).getKey();
+
+        return derivedKey;
+    }
+
+    private static String encrypt(SecretKeySpec key, String value) {
+        try{
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return Base64.encode(cipher.doFinal(value.getBytes(ENCODING)));
+        }
+        catch(Exception e){
+            Log.d(TAG, "Failed encryption");
+            return "";
+
+        }
+    }
+
+    private static String decrypt(SecretKeySpec key, String encryptedValue) {
+        try{
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return new String(cipher.doFinal(Base64.decode(encryptedValue)));
+        }
+        catch(Exception e){
+            Log.d(TAG, "Failed decryption: " + e.getMessage());
+            return "";
         }
     }
 }
