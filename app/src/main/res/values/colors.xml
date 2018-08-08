@@ -8,6 +8,7 @@
     <color name="textLight">#9091A3</color>
     <color name="textHint">#C5C6D1</color>
     <color name="divider">#F7F7F7</color>
+    <color name="divider_dark">#F5F5F5</color>
 
     <color name="passwordStrength1">#BB020C</color>
     <color name="passwordStrength2">#F46514</color>
@@ -23,4 +24,5 @@
     <color name="yellow">#FAFAD2</color>
     <color name="transparent">#33FFFFFF</color>
     <color name="translucent">#CCFFFFFF</color>
+    <color name="translucent_dark">#80000000</color>
 </resources>

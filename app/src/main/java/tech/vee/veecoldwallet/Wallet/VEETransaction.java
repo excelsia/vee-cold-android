@@ -38,7 +38,7 @@ public class VEETransaction {
     private static final int KBYTE = 1024;
     private static final byte V2 = 2;
 
-    private static final byte PAYMENT = 3;
+    private static final byte PAYMENT = 2;
     private static final byte TRANSFER = 4;
     private static final byte LEASE = 8;
     private static final byte LEASE_CANCEL = 9;

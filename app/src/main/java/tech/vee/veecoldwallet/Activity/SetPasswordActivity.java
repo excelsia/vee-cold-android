@@ -64,7 +64,7 @@ public class SetPasswordActivity extends AppCompatActivity {
     private int strength1, strength2, strength3, strength4, strength5, baseColor;
 
     private String walletFilePath;
-    private String backupWalletFilePath;
+    private int rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,8 @@ public class SetPasswordActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setLogo(icon);
         actionBar.setTitle(R.string.title_set_password);
+
+        rating = 0;
 
         strength1 = getResources().getColor(R.color.passwordStrength1);
         strength2 = getResources().getColor(R.color.passwordStrength2);
@@ -130,26 +132,32 @@ public class SetPasswordActivity extends AppCompatActivity {
 
                 switch (strengthVal) {
                     case 0:
+                        rating = 0;
                         setStrength0();
                         break;
 
                     case 1:
+                        rating = 1;
                         setStrength1();
                         break;
 
                     case 2:
+                        rating = 2;
                         setStrength2();
                         break;
 
                     case 3:
+                        rating = 3;
                         setStrength3();
                         break;
 
                     case 4:
+                        rating = 4;
                         setStrength4();
                         break;
 
                     case 5:
+                        rating = 5;
                         setStrength5();
                 }
                 Log.d("Winston", s.toString());
@@ -167,7 +175,13 @@ public class SetPasswordActivity extends AppCompatActivity {
                 String password = setEdit.getText().toString();
                 if(password.equals(confirmEdit.getText().toString())){
                     Toast.makeText(activity, "Password: " + password, Toast.LENGTH_LONG).show();
-                    UIUtil.createAccountNumberDialog(activity, seed);
+
+                    if (rating <= 2) {
+                        UIUtil.createPasswordWarningDialog(activity, seed);
+                    }
+                    else {
+                        UIUtil.createAccountNumberDialog(activity, seed);
+                    }
                 }
                 else {
                     setEdit.setText("");

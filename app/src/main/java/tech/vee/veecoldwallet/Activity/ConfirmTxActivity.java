@@ -53,7 +53,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 fee = intent.getLongExtra("FEE", 0);
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.createPaymentTxDialog(activity, sender, recipient, amount,
+                UIUtil.setPaymentTx(activity, sender, recipient, amount,
                        fee, timestamp);
                 break;
 
@@ -69,7 +69,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 fee = intent.getLongExtra("FEE", 0);
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.createTransferTxDialog(activity, sender, recipient, amount,
+                UIUtil.setTransferTx(activity, sender, recipient, amount,
                         assetId, fee, feeAssetId, attachment, timestamp);
                 break;
 
@@ -82,7 +82,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 fee = intent.getLongExtra("FEE", 0);
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.createLeaseTxDialog(activity, sender, recipient, amount, fee, timestamp);
+                UIUtil.setLeaseTx(activity, sender, recipient, amount, fee, timestamp);
                 break;
 
             case "CANCEL_LEASE":
@@ -93,7 +93,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 fee = intent.getLongExtra("FEE", 0);
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.createCancelLeaseTxDialog(activity, sender, txId, fee, timestamp);
+                UIUtil.setCancelLeaseTx(activity, sender, txId, fee, timestamp);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);

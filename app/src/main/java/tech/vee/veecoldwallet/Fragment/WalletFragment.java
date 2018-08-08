@@ -53,7 +53,6 @@ public class WalletFragment extends Fragment {
     private FloatingActionButton loadBackup;
 
     private VEEWallet wallet;
-    private File walletFile;
     private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
     private VEEAccount account;
@@ -79,17 +78,10 @@ public class WalletFragment extends Fragment {
         loadBackup = view.findViewById(R.id.loadBackup);
 
         walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
-        Log.d(TAG, "Wallet file path: " + walletFilePath);
-        walletFile = new File(walletFilePath);
+        wallet = ((ColdWalletActivity) activity).getWallet();
 
-        if (walletFile.exists()){
-            String seed = FileUtil.load(walletFilePath);
-            if (seed != "" && seed != JsonUtil.ERROR) {
-                wallet = new VEEWallet(seed);
-                accounts = wallet.generateAccounts();
-                ColdWalletActivity mainActivity = (ColdWalletActivity) activity;
-                ((ColdWalletActivity) activity).setWallet(wallet);
-            }
+        if (wallet != null) {
+            accounts = wallet.generateAccounts();
         }
 
         // Display wallet if exists, otherwise display start page

@@ -21,11 +21,11 @@
     <string name="settings_export_seed">Export Seed</string>
     <string name="settings_export_seed_summary">Backup wallet in another device</string>
 
-    <string name="settings_append_accounts">Append Accounts</string>
-    <string name="settings_append_accounts_summary">Increase the number of accounts in your wallet</string>
+    <string name="settings_auto_backup">Auto Backup</string>
+    <string name="settings_auto_backup_summary">Automatically backup changes to wallet</string>
 
     <string name="settings_connectivity">Monitor connectivity</string>
-    <string name="settings_connectivity_summary">Check for wifi, data, and bluetooth connection</string>
+    <string name="settings_connectivity_summary">Check for wifi, data, and bluetooth</string>
 
     <string name="settings_about_us">About Us</string>
     <string name="settings_about_us_summary">Learn more about VEE</string>
@@ -92,7 +92,7 @@
     <string name="account_number_title">Configure Wallet</string>
     <string name="account_number_subtitle">Select the number of accounts</string>
     <string name="append_account_title">Add Accounts</string>
-    <string name="append_account_subtitle">Select the number of accounts to add</string>
+    <string name="append_account_subtitle">Select the number of accounts</string>
     <string name="account_number_confirm">Confirm</string>
 
     <!-- Strings related to Floating Action Menu -->
@@ -115,5 +115,26 @@
     <string name="password_strength_3">Good</string>
     <string name="password_strength_4">Strong</string>
     <string name="password_strength_5">Perfect</string>
+
+    <!-- Strings related to Password Warning-->
+    <string name="password_warning_title">INSUFFICIENT Password Strength</string>
+    <string name="password_warning_1">TO ENSURE the safety of your wallet</string>
+    <string name="password_warning_2">RATING MUST be good or above</string>
+    <string name="password_warning_positive_button">Continue</string>
+    <string name="password_warning_negative_button">Back</string>
+
+    <!-- Strings related to Request Password-->
+    <string name="request_password_title">Password Request</string>
+    <string name="request_password_hint">Enter your password</string>
+    <string name="request_password_confirm">Confirm</string>
+
+    <!-- Strings related to First Run Warning-->
+    <string name="first_run_warning_title">TO PROTECT Your Cold Wallet</string>
+    <string name="first_run_warning_1">NEVER UNINSTALL the cold wallet</string>
+    <string name="first_run_warning_2">NEVER CLEAR the cold wallet\'s data</string>
+    <string name="first_run_warning_3">NEVER FORGET your wallet password</string>
+    <string name="first_run_warning_confirm">Confirm</string>
+
+    <!-- Strings related to Monitor Connectivity-->
 
 </resources>

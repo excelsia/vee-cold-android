@@ -11,6 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -260,26 +264,16 @@ public class JsonUtil {
     }
 
     public static SecretKeySpec prepareKey(String key) {
-        return new SecretKeySpec(hashPassword(key.toCharArray(), KEYSALT.getBytes(ENCODING),
+        return new SecretKeySpec(hashPassword(key.getBytes(ENCODING), KEYSALT.getBytes(ENCODING),
                 HASHINGITERATIONS, KEYLENGTH), AES);
     }
 
-    private static byte[] hashPassword(char[] password, byte[] salt, int iterations, int keyLength) {
-        try {
-            SecretKeyFactory skf  = SecretKeyFactory.getInstance(HASHING);
-            PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
-            SecretKey key  = skf.generateSecret(spec);
-            return key.getEncoded();
-        }
-        catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-            Log.d(TAG, "No such algorithm: ");
-            return null;
-        }
-        catch (InvalidKeySpecException e){
-            Log.d(TAG, "Invalid key specification: " + e.getCause());
-            return null;
-        }
+    private static byte[] hashPassword(byte[] password, byte[] salt, int iterations, int keyLength) {
+        PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());
+        gen.init(password, salt, iterations);
+        byte[] derivedKey = ((KeyParameter) gen.generateDerivedParameters(keyLength)).getKey();
+
+        return derivedKey;
     }
 
     private static String encrypt(SecretKeySpec key, String value) {

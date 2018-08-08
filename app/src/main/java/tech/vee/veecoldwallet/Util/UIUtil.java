@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -123,7 +124,8 @@ public class UIUtil {
             sign.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    QRCodeUtil.scan(activity);
+                    createRequestPasswordDialog(activity, 1);
+                    dialog.dismiss();
                 }
             });
 
@@ -135,7 +137,7 @@ public class UIUtil {
         }
     }
 
-    public static void createPaymentTxDialog(final Activity activity, final VEEAccount sender,
+    public static void setPaymentTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
                                               final long fee, long timestamp) {
         activity.setContentView(R.layout.custom_layout_payment_tx);
@@ -202,7 +204,7 @@ public class UIUtil {
         });
     }
 
-    public static void createTransferTxDialog(final Activity activity, final VEEAccount sender,
+    public static void setTransferTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
                                               final String assetId, final long fee,
                                               final String feeAssetId, final String attachment,
@@ -276,7 +278,7 @@ public class UIUtil {
         });
     }
 
-    public static void createLeaseTxDialog(final Activity activity, final VEEAccount sender,
+    public static void setLeaseTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
                                               final long fee, long timestamp) {
         activity.setContentView(R.layout.custom_layout_lease_tx);
@@ -343,7 +345,7 @@ public class UIUtil {
         });
     }
 
-    public static void createCancelLeaseTxDialog(final Activity activity, final VEEAccount sender,
+    public static void setCancelLeaseTx(final Activity activity, final VEEAccount sender,
                                            final String txId, final long fee, long timestamp) {
         activity.setContentView(R.layout.custom_layout_cancel_lease_tx);
 
@@ -465,6 +467,88 @@ public class UIUtil {
         });
 
         dialog.setTitle("Append Accounts");
+        dialog.show();
+    }
+
+    public static void createFirstRunWarningDialog(final Activity activity) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_first_run_warning);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.first_run_warning_confirm);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("First Run Warning");
+        dialog.show();
+    }
+
+    public static void createPasswordWarningDialog(final Activity activity, final String seed) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_password_warning);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        Button positiveButton = (Button) dialog.findViewById(R.id.password_warning_positive);
+        Button negativeButton = (Button) dialog.findViewById(R.id.password_warning_negative);
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIUtil.createAccountNumberDialog(activity, seed);
+                dialog.dismiss();
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Password Warning");
+        dialog.show();
+    }
+
+    public static void createRequestPasswordDialog(final Activity activity, final int mode) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_request_password);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.request_password_confirm);
+        final EditText input = (EditText) dialog.findViewById(R.id.request_password_input);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ColdWalletActivity cwa = (ColdWalletActivity) activity;
+                switch (mode) {
+                    case 0:
+                        cwa.setPassword(input.getText().toString());
+                        dialog.dismiss();
+                        break;
+
+                    case 1:
+                        if (cwa.getPassword().equals(input.getText().toString())) {
+                            QRCodeUtil.scan(activity);
+                            dialog.dismiss();
+                        }
+                        else {
+                            Toast.makeText(activity, "Password incorrect", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                }
+            }
+        });
+
+        dialog.setTitle("First Run Warning");
         dialog.show();
     }
 

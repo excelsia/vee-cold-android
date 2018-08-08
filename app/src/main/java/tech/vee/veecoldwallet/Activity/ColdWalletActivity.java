@@ -38,6 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tech.vee.veecoldwallet.Util.FileUtil;
 import tech.vee.veecoldwallet.Util.PermissionUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
@@ -51,6 +52,7 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ColdWalletActivity extends AppCompatActivity {
     private static final String TAG = "Winston";
+    private static final String WALLET_FILE_NAME = "wallet.dat";
 
     private ActionBar actionBar;
     private ColdWalletActivity activity;
@@ -62,6 +64,8 @@ public class ColdWalletActivity extends AppCompatActivity {
     private String qrContents;
 
     private VEEWallet wallet;
+    private File walletFile;
+    private String walletFilePath;
     private ArrayList<VEEAccount> accounts;
     private String password;
 
@@ -84,22 +88,28 @@ public class ColdWalletActivity extends AppCompatActivity {
         walletFrag = new WalletFragment();
         settingsFrag = new SettingsFragment();
         fragmentManager = null;
-        switchToFragment(walletFrag);
 
         PermissionUtil.checkPermissions(activity);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        walletFilePath = activity.getFilesDir().getPath() + "/" + WALLET_FILE_NAME;
+        walletFile = new File(walletFilePath);
+        Log.d(TAG, "Wallet file path: " + walletFilePath);
         password = "";
-    }
 
-    public VEEWallet getWallet() {
-        return wallet;
-    }
+        Toast.makeText(activity, "onCreate", Toast.LENGTH_LONG).show();
+        if (walletFile.exists()){
+            UIUtil.createRequestPasswordDialog(activity, 0);
+            String seed = FileUtil.load(walletFilePath);
+            if (seed != "" && seed != JsonUtil.ERROR) {
+                wallet = new VEEWallet(seed);
+                accounts = wallet.generateAccounts();
+            }
+        }
 
-    public void setWallet(VEEWallet wallet) {
-        this.wallet = wallet;
-        accounts = wallet.generateAccounts();
+        switchToFragment(walletFrag);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -156,8 +166,12 @@ public class ColdWalletActivity extends AppCompatActivity {
                     Toast.makeText(activity, "Please grant all permissions", Toast.LENGTH_LONG).show();
                     finish();
                 }
+                else {
+                    UIUtil.createFirstRunWarningDialog(activity);
+                }
         }
     }
+
     /**
      * Contain logic for decoding the results of a qr code
      * @param requestCode
@@ -169,7 +183,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
         int val = QRCodeUtil.processQrContents(qrContents);
-        if (wallet != null && val != 1) { val = 4; }
+        if (wallet != null && (val != 1 && val != 0)) { val = 4; }
 
         if(result != null) {
             switch (val) {
@@ -194,10 +208,10 @@ public class ColdWalletActivity extends AppCompatActivity {
                     }
 
                     switch (txType) {
-                        case 3: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
+                        case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
                             break;
-                        case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
-                                break;
+                        //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
+                        //        break;
                         case 8: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
                         case 9: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
@@ -226,6 +240,23 @@ public class ColdWalletActivity extends AppCompatActivity {
         else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public VEEWallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(VEEWallet wallet) {
+        this.wallet = wallet;
+        accounts = wallet.generateAccounts();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     /**

@@ -20,7 +20,11 @@ public class PermissionUtil {
     public static boolean permissionGranted(Activity activity){
         if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED)
             return false;
         else return true;
     }
@@ -32,18 +36,9 @@ public class PermissionUtil {
         if (!permissionGranted(activity)) {
             ActivityCompat.requestPermissions(activity, new String[]{
                     Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.INTERNET,
+                    Manifest.permission.BLUETOOTH}, PERMISSION_REQUEST_CODE);
         }
-    }
-
-    public static void requestCameraPermission(Activity activity) {
-        ActivityCompat.requestPermissions(activity, new String[]{
-                    Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE);
-    }
-
-    public static void requestReadWritePermission(Activity activity) {
-        ActivityCompat.requestPermissions(activity, new String[]{
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 }

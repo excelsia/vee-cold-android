@@ -10,11 +10,13 @@
             android:summary="@string/settings_export_seed_summary">
         </PreferenceScreen>
 
-        <PreferenceScreen
-            android:key="settings_append_accounts"
-            android:title="@string/settings_append_accounts"
-            android:summary="@string/settings_append_accounts_summary">
-        </PreferenceScreen>
+        <SwitchPreference
+            android:key="settings_auto_backup"
+            android:title="@string/settings_auto_backup"
+            android:summary="@string/settings_auto_backup_summary"
+            android:checked="true"
+            android:defaultValue="true">
+        </SwitchPreference>
     </PreferenceCategory>
 
     <PreferenceCategory
