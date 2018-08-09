@@ -145,7 +145,7 @@ public class WalletFragment extends Fragment {
                     startActivity(intent);
                 }
                 else {
-                    FileUtil.backup(activity, wallet, password, walletFilePath);
+                    FileUtil.backup(activity, wallet, password, WALLET_FILE_NAME);
                 }
             }
         });

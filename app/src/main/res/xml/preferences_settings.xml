@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:widgetLayout="@layout/cardview_preference"
         android:title="@string/settings_account">
 
         <PreferenceScreen
@@ -20,7 +19,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:widgetLayout="@layout/cardview_preference"
         android:title="@string/settings_additional">
 
         <SwitchPreference

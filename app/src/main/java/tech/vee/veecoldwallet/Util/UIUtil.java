@@ -36,6 +36,7 @@ import tech.vee.veecoldwallet.Activity.ConfirmTxActivity;
 import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Receiver.NetworkReceiver;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
@@ -409,6 +410,7 @@ public class UIUtil {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ColdWalletActivity.class);
+                intent.putExtra("WALLET", ((ConfirmTxActivity) activity).getWalletStr());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 activity.startActivity(intent);
             }
@@ -547,47 +549,58 @@ public class UIUtil {
         dialog.show();
     }
 
-    public static void createMonitorConnectivityDialog(final Activity activity, boolean b1,
-                                                       boolean b2, boolean b3) {
+    public static void createMonitorConnectivityDialog(final Activity activity, boolean wifi,
+                                                       boolean data, boolean bluetooth) {
         final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.custom_dialog_first_run_warning);
+        dialog.setContentView(R.layout.custom_dialog_monitor_connectivity);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.monitor_connectivity_continue);
-        ImageView icon = (ImageView) dialog.findViewById(R.id.monitor_connectivity_icon);
-        ImageView circle1 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_1);
-        ImageView circle2 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_2);
-        ImageView circle3 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_3);
-        TextView text1 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_1);
-        TextView text2 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_2);
-        TextView text3 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_3);
+        final Button dialogButton = (Button) dialog.findViewById(R.id.monitor_connectivity_continue);
+        final ImageView icon = (ImageView) dialog.findViewById(R.id.monitor_connectivity_icon);
+        final ImageView circle1 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_1);
+        final ImageView circle2 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_2);
+        final ImageView circle3 = (ImageView) dialog.findViewById(R.id.monitor_connectivity_circle_3);
+        final TextView text1 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_1);
+        final TextView text2 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_2);
+        final TextView text3 = (TextView) dialog.findViewById(R.id.monitor_connectivity_text_3);
 
-        if (b1) {
+        if (!wifi) {
            circle1.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
            text1.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_1));
         }
 
-        if (b2) {
+        if (!data) {
             circle2.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
             text2.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_2));
         }
 
-        if (b3) {
+        if (!bluetooth) {
             circle3.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
             text3.setText(activity.getResources().getText(R.string.monitor_connectivity_checked_3));
         }
 
-        if (b1 && b2 && b3) {
-            dialogButton.setVisibility(View.VISIBLE);
-            dialogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+        if (!wifi && !data && !bluetooth) {
+            dialogButton.setText(R.string.monitor_connectivity_continue);
+            icon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_check));
         }
 
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogButton.getText().equals(activity.getResources()
+                        .getString(R.string.monitor_connectivity_continue))) {
+                    UIUtil.createRequestPasswordDialog(activity);
+                    dialog.dismiss();
+                }
+                else {
+                    UIUtil.refreshNetworkConnection(activity, dialogButton, icon, circle1, circle2,
+                            circle3, text1, text2, text3);
+                }
+            }
+        });
+
+        Toast.makeText(activity, "Please disconnect all networks", Toast.LENGTH_LONG).show();
         dialog.setTitle("Monitor Connectivity");
         dialog.show();
     }
@@ -603,5 +616,59 @@ public class UIUtil {
             accountCards.setAdapter(adapter);
         }
         accountCards.setLayoutManager(layoutManager);
+    }
+
+    public static void refreshNetworkConnection(Activity activity, Button dialogButton, ImageView icon,
+                                          ImageView wifiState, ImageView dataState, ImageView bluetoothState,
+                                          TextView wifiText, TextView dataText, TextView bluetoothText) {
+        Boolean wifi = false, data = false, bluetooth;
+        NetworkUtil.NetworkType type;
+
+        bluetooth = NetworkUtil.bluetoothIsConnected();
+
+        switch (NetworkUtil.isConnectedType(activity)) {
+            case NoConnect:
+                break;
+
+            case Wifi:
+                wifi = true;
+                break;
+
+            case Mobile:
+                data = true;
+        }
+
+        if(wifi){
+            wifiText.setText(R.string.monitor_connectivity_unchecked_1);
+            wifiState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_gray));
+        }
+        else {
+            wifiText.setText(R.string.monitor_connectivity_checked_1);
+            wifiState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+        }
+
+        if(data){
+            dataText.setText(R.string.monitor_connectivity_unchecked_2);
+            dataState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_gray));
+        }
+        else {
+            dataText.setText(R.string.monitor_connectivity_checked_2);
+            dataState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+        }
+
+        if(bluetooth){
+            bluetoothText.setText(R.string.monitor_connectivity_unchecked_3);
+            bluetoothState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_gray));
+        }
+        else {
+            bluetoothText.setText(R.string.monitor_connectivity_checked_3);
+            bluetoothState.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_circle_green));
+        }
+
+        if(!wifi && !data && !bluetooth) {
+            icon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_check));
+            dialogButton.setEnabled(true);
+            dialogButton.setText(R.string.monitor_connectivity_continue);
+        }
     }
 }

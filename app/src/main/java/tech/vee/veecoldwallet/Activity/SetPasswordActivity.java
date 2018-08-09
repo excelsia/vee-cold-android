@@ -8,10 +8,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CheckableImageButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -282,11 +284,18 @@ public class SetPasswordActivity extends AppCompatActivity {
                 int accountNum = intent.getIntExtra("ACCOUNT_NUMBER", 1);
                 String seed = intent.getStringExtra("SEED");
 
-                Toast.makeText(activity, "Password: " + password
-                        + "\nAccount Number " + accountNum, Toast.LENGTH_LONG).show();
 
                 VEEWallet wallet = VEEWallet.recover(seed, accountNum);
-                FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean monitorState = preferences.getBoolean("settings_auto_backup", true);
+
+                if (monitorState) {
+                    FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
+                }
+                else {
+                    FileUtil.save(wallet.getJson(), password, walletFilePath);
+                }
+
                 Log.d(TAG, wallet.getJson());
                 intent = new Intent(activity, ColdWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

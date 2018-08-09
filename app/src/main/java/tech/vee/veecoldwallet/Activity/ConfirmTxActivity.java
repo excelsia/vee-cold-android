@@ -27,9 +27,8 @@ public class ConfirmTxActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private ConfirmTxActivity activity;
 
-    private VEEWallet wallet;
     private VEEAccount sender;
-    private String recipient,assetId, feeAssetId, txId, attachment;
+    private String recipient,assetId, feeAssetId, txId, attachment, walletStr;
     private long timestamp, amount, fee;
 
     @Override
@@ -44,10 +43,11 @@ public class ConfirmTxActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         String senderStr;
+        walletStr = intent.getStringExtra("WALLET");
 
         switch (action) {
             case "PAYMENT":
-                senderStr = getIntent().getStringExtra("SENDER");
+                senderStr = intent.getStringExtra("SENDER");
 
                 sender = gson.fromJson(senderStr, VEEAccount.class);
                 recipient = intent.getStringExtra("RECIPIENT");
@@ -60,7 +60,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 break;
 
             case "TRANSFER":
-                senderStr = getIntent().getStringExtra("SENDER");
+                senderStr = intent.getStringExtra("SENDER");
 
                 sender = gson.fromJson(senderStr, VEEAccount.class);
                 recipient = intent.getStringExtra("RECIPIENT");
@@ -76,7 +76,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 break;
 
             case "LEASE":
-                senderStr = getIntent().getStringExtra("SENDER");
+                senderStr = intent.getStringExtra("SENDER");
 
                 sender = gson.fromJson(senderStr, VEEAccount.class);
                 recipient = intent.getStringExtra("RECIPIENT");
@@ -88,7 +88,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 break;
 
             case "CANCEL_LEASE":
-                senderStr = getIntent().getStringExtra("SENDER");
+                senderStr = intent.getStringExtra("SENDER");
 
                 sender = gson.fromJson(senderStr, VEEAccount.class);
                 txId = intent.getStringExtra("TX_ID");
@@ -110,5 +110,9 @@ public class ConfirmTxActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setLogo(icon);
         actionBar.setTitle(R.string.title_confirm_tx);
+    }
+
+    public String getWalletStr() {
+        return walletStr;
     }
 }

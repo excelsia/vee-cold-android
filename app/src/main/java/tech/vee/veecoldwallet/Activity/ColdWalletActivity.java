@@ -3,15 +3,19 @@ package tech.vee.veecoldwallet.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -40,8 +44,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tech.vee.veecoldwallet.Receiver.NetworkReceiver;
 import tech.vee.veecoldwallet.Tasks.LoadTask;
 import tech.vee.veecoldwallet.Util.FileUtil;
+import tech.vee.veecoldwallet.Util.NetworkUtil;
 import tech.vee.veecoldwallet.Util.PermissionUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
@@ -103,9 +109,42 @@ public class ColdWalletActivity extends AppCompatActivity {
 
         PermissionUtil.checkPermissions(activity);
 
-        if (walletFile.exists()){
+        //Toast.makeText(activity, "Backup State: " + settingsFrag.getBackupState(), Toast.LENGTH_SHORT).show();
+        String walletStr = getIntent().getStringExtra("WALLET");
+        boolean wifi = false, bluetooth, data = false;
+        NetworkUtil.NetworkType type;
 
-            UIUtil.createRequestPasswordDialog(activity);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean monitorState = preferences.getBoolean("settings_connectivity", true);
+
+        if(walletStr != null) {
+            Gson gson = new Gson();
+            wallet = gson.fromJson(walletStr, VEEWallet.class);
+            accounts = wallet.generateAccounts();
+            switchToFragment(walletFrag);
+        }
+        else if (walletFile.exists()){
+            if ((!NetworkUtil.bluetoothIsConnected() && !NetworkUtil.isConnected(activity)) || !monitorState) {
+                UIUtil.createRequestPasswordDialog(activity);
+            }
+            else {
+                bluetooth = NetworkUtil.bluetoothIsConnected();
+                type = NetworkUtil.isConnectedType(activity);
+
+                switch (type) {
+                    case NoConnect:
+                        break;
+
+                    case Wifi:
+                        wifi = true;
+                        break;
+
+                    case Mobile:
+                        data = true;
+                }
+
+                UIUtil.createMonitorConnectivityDialog(activity, wifi, data, bluetooth);
+            }
         }
         else {
             switchToFragment(walletFrag);
@@ -114,12 +153,15 @@ public class ColdWalletActivity extends AppCompatActivity {
 
     public void onPause() {
         activity.unregisterReceiver(receiver);
+        //activity.unregisterReceiver(networkReceiver);
         super.onPause();
     }
 
     public void onResume() {
         activity.registerReceiver(receiver, new IntentFilter("SELECT_APPEND_ACCOUNT_NUMBER"));
         activity.registerReceiver(receiver, new IntentFilter("CONFIRM_PASSWORD"));
+        //activity.registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        //activity.registerReceiver(networkReceiver,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         super.onResume();
     }
 
@@ -218,6 +260,10 @@ public class ColdWalletActivity extends AppCompatActivity {
                         Toast.makeText(activity, "No wallet found", Toast.LENGTH_LONG).show();
                     }
 
+                    if (txType != 2 && txType != 8 && txType != 9) {
+                        Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
+                    }
+
                     switch (txType) {
                         case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
                             break;
@@ -282,6 +328,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         }
     }
 
+    private NetworkReceiver networkReceiver = new NetworkReceiver();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -293,7 +340,16 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 wallet.append(accountNum);
 
-                FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean monitorState = preferences.getBoolean("settings_auto_backup", true);
+
+                if (monitorState) {
+                    FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
+                }
+                else {
+                    FileUtil.save(wallet.getJson(), password, walletFilePath);
+                }
+
                 Log.d(TAG, wallet.getJson());
                 intent = new Intent(activity, ColdWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -305,6 +361,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                 //LoadTask load = new LoadTask(activity, password, walletFilePath);
                 //load.execute();
                 //String seed = load.getSeed();
+
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {
                     wallet = new VEEWallet(seed);

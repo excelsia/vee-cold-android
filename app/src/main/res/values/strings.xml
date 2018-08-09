@@ -143,5 +143,7 @@
     <string name="monitor_connectivity_checked_1">WIFI is unconnected</string>
     <string name="monitor_connectivity_checked_2">MOBILE DATA is unconnected</string>
     <string name="monitor_connectivity_checked_3">BLUETOOTH is unconnected</string>
-    <string name="monitor_connectivity_continue">continue</string>
+    <string name="monitor_connectivity_disabled">Please disconnect networks</string>
+    <string name="monitor_connectivity_refresh">Refresh</string>
+    <string name="monitor_connectivity_continue">Continue</string>
 </resources>

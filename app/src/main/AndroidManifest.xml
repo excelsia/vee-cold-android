@@ -32,7 +32,7 @@
     <uses-feature
         android:name="android.hardware.bluetooth"
         android:required="false" />
-
+    
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -81,6 +81,14 @@
         <activity android:name=".Activity.SetPasswordActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
+        <receiver android:name=".Receiver.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

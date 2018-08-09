@@ -68,8 +68,11 @@ public class JsonUtil {
 
             if (senderAcc != null) {
                 Gson gson = new Gson();
+                VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
+                String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
                 intent.putExtra("ACTION", "TRANSFER");
+                intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
                 intent.putExtra("RECIPIENT", recipient);
                 intent.putExtra("AMOUNT", amount);
@@ -116,8 +119,11 @@ public class JsonUtil {
 
             if (senderAcc != null) {
                 Gson gson = new Gson();
+                VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
+                String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
                 intent.putExtra("ACTION", "PAYMENT");
+                intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
                 intent.putExtra("RECIPIENT", recipient);
                 intent.putExtra("AMOUNT", amount);
@@ -161,8 +167,11 @@ public class JsonUtil {
 
             if (senderAcc != null) {
                 Gson gson = new Gson();
+                VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
+                String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
                 intent.putExtra("ACTION", "LEASE");
+                intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
                 intent.putExtra("RECIPIENT", recipient);
                 intent.putExtra("AMOUNT", amount);
@@ -205,8 +214,11 @@ public class JsonUtil {
 
             if (senderAcc != null) {
                 Gson gson = new Gson();
+                VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
+                String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
                 intent.putExtra("ACTION", "CANCEL_LEASE");
+                intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
                 intent.putExtra("TX_ID", txId);
                 intent.putExtra("FEE", fee);
