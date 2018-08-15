@@ -260,7 +260,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                         Toast.makeText(activity, "No wallet found", Toast.LENGTH_LONG).show();
                     }
 
-                    if (txType != 2 && txType != 8 && txType != 9) {
+                    if (txType != 2 && txType != 3 && txType != 4) {
                         Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
                     }
 
@@ -269,9 +269,9 @@ public class ColdWalletActivity extends AppCompatActivity {
                             break;
                         //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
                         //        break;
-                        case 8: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
+                        case 3: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
-                        case 9: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
+                        case 4: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
                     }
                     break;
 

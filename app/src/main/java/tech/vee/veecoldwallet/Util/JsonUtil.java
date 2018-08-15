@@ -100,7 +100,8 @@ public class JsonUtil {
                                        ArrayList<VEEAccount> accounts) {
         String senderPublicKey, recipient, attachment, assetId, feeAssetId;
         long amount, fee, timestamp;
-        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
+        short feeScale;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
@@ -108,6 +109,7 @@ public class JsonUtil {
             recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            feeScale = Double.valueOf((double)jsonMap.get("feeScale")).shortValue();
             timestamp = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
 
             for(VEEAccount account:accounts){
@@ -128,6 +130,7 @@ public class JsonUtil {
                 intent.putExtra("RECIPIENT", recipient);
                 intent.putExtra("AMOUNT", amount);
                 intent.putExtra("FEE", fee);
+                intent.putExtra("FEESCALE", feeScale);
                 intent.putExtra("TIMESTAMP", timestamp);
 
                 activity.startActivity(intent);
@@ -148,7 +151,8 @@ public class JsonUtil {
                                        ArrayList<VEEAccount> accounts) {
         String senderPublicKey, recipient;
         long amount, fee, timestamp;
-        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "timestamp"};
+        short feeScale;
+        String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
@@ -156,6 +160,7 @@ public class JsonUtil {
             recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            feeScale = Double.valueOf((double)jsonMap.get("feeScale")).shortValue();
             timestamp = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
 
             for(VEEAccount account:accounts){
@@ -176,6 +181,7 @@ public class JsonUtil {
                 intent.putExtra("RECIPIENT", recipient);
                 intent.putExtra("AMOUNT", amount);
                 intent.putExtra("FEE", fee);
+                intent.putExtra("FEESCALE", feeScale);
                 intent.putExtra("TIMESTAMP", timestamp);
 
                 activity.startActivity(intent);
@@ -196,13 +202,15 @@ public class JsonUtil {
                                        ArrayList<VEEAccount> accounts) {
         String senderPublicKey, txId;
         long fee, timestamp;
-        String[] keys = {"senderPublicKey", "txId", "fee", "timestamp"};
+        short feeScale;
+        String[] keys = {"senderPublicKey", "txId", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             txId = (String) jsonMap.get("txId");
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
+            feeScale = Double.valueOf((double)jsonMap.get("feeScale")).shortValue();
             timestamp = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
 
             for(VEEAccount account:accounts){
@@ -222,6 +230,7 @@ public class JsonUtil {
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
                 intent.putExtra("TX_ID", txId);
                 intent.putExtra("FEE", fee);
+                intent.putExtra("FEESCALE", feeScale);
                 intent.putExtra("TIMESTAMP", timestamp);
 
                 activity.startActivity(intent);

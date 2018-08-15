@@ -30,6 +30,7 @@ public class ConfirmTxActivity extends AppCompatActivity {
     private VEEAccount sender;
     private String recipient,assetId, feeAssetId, txId, attachment, walletStr;
     private long timestamp, amount, fee;
+    private short feeScale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,11 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 recipient = intent.getStringExtra("RECIPIENT");
                 amount= intent.getLongExtra("AMOUNT", 0);
                 fee = intent.getLongExtra("FEE", 0);
+                feeScale = intent.getShortExtra("FEESCALE", Short.valueOf("100"));
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
                 UIUtil.setPaymentTx(activity, sender, recipient, amount,
-                       fee, timestamp);
+                       fee, feeScale, timestamp);
                 break;
 
             case "TRANSFER":
@@ -82,9 +84,10 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 recipient = intent.getStringExtra("RECIPIENT");
                 amount= intent.getLongExtra("AMOUNT", 0);
                 fee = intent.getLongExtra("FEE", 0);
+                feeScale = intent.getShortExtra("FEESCALE", Short.valueOf("100"));
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.setLeaseTx(activity, sender, recipient, amount, fee, timestamp);
+                UIUtil.setLeaseTx(activity, sender, recipient, amount, fee, feeScale, timestamp);
                 break;
 
             case "CANCEL_LEASE":
@@ -93,9 +96,10 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 sender = gson.fromJson(senderStr, VEEAccount.class);
                 txId = intent.getStringExtra("TX_ID");
                 fee = intent.getLongExtra("FEE", 0);
+                feeScale = intent.getShortExtra("FEESCALE", Short.valueOf("100"));
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
-                UIUtil.setCancelLeaseTx(activity, sender, txId, fee, timestamp);
+                UIUtil.setCancelLeaseTx(activity, sender, txId, fee, feeScale, timestamp);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);

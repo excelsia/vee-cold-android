@@ -146,7 +146,7 @@ public class UIUtil {
 
     public static void setPaymentTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
-                                              final long fee, long timestamp) {
+                                              final long fee, final short feeScale, long timestamp) {
         activity.setContentView(R.layout.custom_layout_payment_tx);
 
         final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
@@ -205,7 +205,7 @@ public class UIUtil {
             @Override
             public void onClick(View v) {
                 VEETransaction transaction = VEETransaction.makePaymentTx(sender, recipient,
-                        amount, fee, timeBigInteger);
+                        amount, fee, feeScale, timeBigInteger);
                 createSignatureDialog(activity, transaction);
             }
         });
@@ -287,7 +287,7 @@ public class UIUtil {
 
     public static void setLeaseTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
-                                              final long fee, long timestamp) {
+                                              final long fee, final short feeScale, long timestamp) {
         activity.setContentView(R.layout.custom_layout_lease_tx);
 
         final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
@@ -346,14 +346,14 @@ public class UIUtil {
             @Override
             public void onClick(View v) {
                 VEETransaction transaction = VEETransaction.makeLeaseTx(sender, recipient,
-                        amount, fee, timeBigInteger);
+                        amount, fee, feeScale, timeBigInteger);
                 createSignatureDialog(activity, transaction);
             }
         });
     }
 
     public static void setCancelLeaseTx(final Activity activity, final VEEAccount sender,
-                                           final String txId, final long fee, long timestamp) {
+                                           final String txId, final long fee, final short feeScale, long timestamp) {
         activity.setContentView(R.layout.custom_layout_cancel_lease_tx);
 
         final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
@@ -390,7 +390,7 @@ public class UIUtil {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VEETransaction transaction = VEETransaction.makeLeaseCancelTx(sender, txId, fee, timeBigInteger);
+                VEETransaction transaction = VEETransaction.makeLeaseCancelTx(sender, txId, fee, feeScale, timeBigInteger);
                 createSignatureDialog(activity, transaction);
             }
         });

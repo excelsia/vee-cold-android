@@ -39,9 +39,9 @@ public class VEETransaction {
     private static final byte V2 = 2;
 
     private static final byte PAYMENT = 2;
-    private static final byte TRANSFER = 4;
-    private static final byte LEASE = 8;
-    private static final byte LEASE_CANCEL = 9;
+    private static final byte TRANSFER = 12;
+    private static final byte LEASE = 3;
+    private static final byte LEASE_CANCEL = 4;
 
     /** VEETransaction ID. */
     public final String id;
@@ -60,8 +60,6 @@ public class VEETransaction {
         this.id = hash(bytes);
         this.endpoint = endpoint;
         this.proofs = Collections.singletonList(sign(signer, bytes));
-
-
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i=0; i<items.length; i+=2) {
@@ -83,21 +81,23 @@ public class VEETransaction {
 
     @NonNull
     public static VEETransaction makePaymentTx(VEEAccount sender, String recipient, long amount,
-                                                long fee, BigInteger timestamp)
+                                                long fee, short feeScale, BigInteger timestamp)
     {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
         buf.put(PAYMENT).put(Base58.decode(sender.getPubKey()));
         putBigInteger(buf, timestamp);
         buf.putLong(amount).putLong(fee);
+        buf.putShort(feeScale);
         recipient = putRecipient(buf, sender.getChainId(), recipient);
 
         return new VEETransaction(sender, buf,"/transactions/broadcast",
-                "type", TRANSFER,
+                "type", PAYMENT,
                 "version", V2,
                 "senderPublicKey", sender.getPubKey(),
                 "recipient", recipient,
                 "amount", amount,
                 "fee", fee,
+                "feeScale", feeScale,
                 "timestamp", timestamp);
     }
 
@@ -129,11 +129,12 @@ public class VEETransaction {
     }
 
     @NonNull
-    public static VEETransaction makeLeaseTx(VEEAccount sender, String recipient, long amount, long fee, BigInteger timestamp) {
+    public static VEETransaction makeLeaseTx(VEEAccount sender, String recipient, long amount, long fee, short feeScale, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
         buf.put(LEASE).put(Base58.decode(sender.getPubKey()));
         recipient = putRecipient(buf, sender.getChainId(), recipient);
         buf.putLong(amount).putLong(fee);
+        buf.putShort(feeScale);
         putBigInteger(buf, timestamp);
         return new VEETransaction(sender, buf,"/transactions/broadcast",
                 "type", LEASE,
@@ -142,13 +143,15 @@ public class VEETransaction {
                 "recipient", recipient,
                 "amount", amount,
                 "fee", fee,
+                "feeScale", feeScale,
                 "timestamp", timestamp);
     }
 
 
-    public static VEETransaction makeLeaseCancelTx(VEEAccount sender, String txId, long fee, BigInteger timestamp) {
+    public static VEETransaction makeLeaseCancelTx(VEEAccount sender, String txId, long fee, short feeScale, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
         buf.put(LEASE_CANCEL).put(Base58.decode(sender.getPubKey())).putLong(fee);
+        buf.putShort(feeScale);
         putBigInteger(buf, timestamp);
         buf.put(Base58.decode(txId));
         return new VEETransaction(sender, buf,"/transactions/broadcast",
@@ -157,6 +160,7 @@ public class VEETransaction {
                 "senderPublicKey", sender.getPubKey(),
                 "txId", txId,
                 "fee", fee,
+                "feeScale", feeScale,
                 "timestamp", timestamp);
     }
 
