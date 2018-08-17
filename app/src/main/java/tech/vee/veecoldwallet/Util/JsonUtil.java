@@ -108,6 +108,7 @@ public class JsonUtil {
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
+            attachment = (String) jsonMap.get("attachment");
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
             feeScale = Double.valueOf((double)jsonMap.get("feeScale")).shortValue();
             timestamp = Double.valueOf((double)jsonMap.get("timestamp")).longValue();
@@ -131,6 +132,7 @@ public class JsonUtil {
                 intent.putExtra("AMOUNT", amount);
                 intent.putExtra("FEE", fee);
                 intent.putExtra("FEESCALE", feeScale);
+                intent.putExtra("ATTACHMENT", attachment);
                 intent.putExtra("TIMESTAMP", timestamp);
 
                 activity.startActivity(intent);

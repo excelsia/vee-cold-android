@@ -81,14 +81,16 @@ public class VEETransaction {
 
     @NonNull
     public static VEETransaction makePaymentTx(VEEAccount sender, String recipient, long amount,
-                                                long fee, short feeScale, BigInteger timestamp)
+                                                long fee, short feeScale, String attachment, BigInteger timestamp)
     {
+        byte[] attachmentBytes = (attachment == null ? "" : attachment).getBytes();
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
         buf.put(PAYMENT).put(Base58.decode(sender.getPubKey()));
         putBigInteger(buf, timestamp);
         buf.putLong(amount).putLong(fee);
         buf.putShort(feeScale);
         recipient = putRecipient(buf, sender.getChainId(), recipient);
+        putString(buf, attachment);
 
         return new VEETransaction(sender, buf,"/transactions/broadcast",
                 "type", PAYMENT,
@@ -98,7 +100,8 @@ public class VEETransaction {
                 "amount", amount,
                 "fee", fee,
                 "feeScale", feeScale,
-                "timestamp", timestamp);
+                "timestamp", timestamp,
+                "attachment", Base58.encode(attachmentBytes));
     }
 
     @NonNull

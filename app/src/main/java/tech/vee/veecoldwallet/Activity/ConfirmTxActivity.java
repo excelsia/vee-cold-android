@@ -55,10 +55,11 @@ public class ConfirmTxActivity extends AppCompatActivity {
                 amount= intent.getLongExtra("AMOUNT", 0);
                 fee = intent.getLongExtra("FEE", 0);
                 feeScale = intent.getShortExtra("FEESCALE", Short.valueOf("100"));
+                attachment = intent.getStringExtra("ATTACHMENT");
                 timestamp =intent.getLongExtra("TIMESTAMP", 0);
 
                 UIUtil.setPaymentTx(activity, sender, recipient, amount,
-                       fee, feeScale, timestamp);
+                       fee, feeScale, attachment, timestamp);
                 break;
 
             case "TRANSFER":

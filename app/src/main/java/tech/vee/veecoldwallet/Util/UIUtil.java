@@ -146,7 +146,7 @@ public class UIUtil {
 
     public static void setPaymentTx(final Activity activity, final VEEAccount sender,
                                               final String recipient, final long amount,
-                                              final long fee, final short feeScale, long timestamp) {
+                                              final long fee, final short feeScale, final String attachment, long timestamp) {
         activity.setContentView(R.layout.custom_layout_payment_tx);
 
         final TextView senderTx = (TextView) activity.findViewById(R.id.transaction_sender);
@@ -154,6 +154,7 @@ public class UIUtil {
         TextView timestampTx = (TextView) activity.findViewById(R.id.transaction_timestamp);
         TextView amountTx = (TextView) activity.findViewById(R.id.transaction_amount);
         TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
+        TextView attachmentTx = (TextView) activity.findViewById(R.id.transaction_attachment);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
         float amountFloat = (float) amount/100000000;
@@ -167,6 +168,9 @@ public class UIUtil {
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
         timestampTx.setText(time + "\n" + TimeZone.getDefault().getDisplayName());
+
+        if (!attachment.equals("")) { attachmentTx.setText(attachment); }
+        else { attachmentTx.setText("None"); }
 
         final BigInteger timeBigInteger = BigInteger.valueOf(timestamp)
                 .multiply(BigInteger.valueOf(1000000L));
@@ -205,7 +209,7 @@ public class UIUtil {
             @Override
             public void onClick(View v) {
                 VEETransaction transaction = VEETransaction.makePaymentTx(sender, recipient,
-                        amount, fee, feeScale, timeBigInteger);
+                        amount, fee, feeScale, attachment, timeBigInteger);
                 createSignatureDialog(activity, transaction);
             }
         });
