@@ -85,7 +85,7 @@ public class VEETransaction {
     {
         byte[] attachmentBytes = (attachment == null ? "" : attachment).getBytes();
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
-        buf.put(PAYMENT).put(Base58.decode(sender.getPubKey()));
+        buf.put(PAYMENT);
         putBigInteger(buf, timestamp);
         buf.putLong(amount).putLong(fee);
         buf.putShort(feeScale);
@@ -134,7 +134,7 @@ public class VEETransaction {
     @NonNull
     public static VEETransaction makeLeaseTx(VEEAccount sender, String recipient, long amount, long fee, short feeScale, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
-        buf.put(LEASE).put(Base58.decode(sender.getPubKey()));
+        buf.put(LEASE);
         recipient = putRecipient(buf, sender.getChainId(), recipient);
         buf.putLong(amount).putLong(fee);
         buf.putShort(feeScale);
@@ -153,7 +153,7 @@ public class VEETransaction {
 
     public static VEETransaction makeLeaseCancelTx(VEEAccount sender, String txId, long fee, short feeScale, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
-        buf.put(LEASE_CANCEL).put(Base58.decode(sender.getPubKey())).putLong(fee);
+        buf.put(LEASE_CANCEL);
         buf.putShort(feeScale);
         putBigInteger(buf, timestamp);
         buf.put(Base58.decode(txId));
