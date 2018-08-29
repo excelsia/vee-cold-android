@@ -153,7 +153,7 @@ public class VEETransaction {
 
     public static VEETransaction makeLeaseCancelTx(VEEAccount sender, String txId, long fee, short feeScale, BigInteger timestamp) {
         ByteBuffer buf = ByteBuffer.allocate(KBYTE);
-        buf.put(LEASE_CANCEL);
+        buf.put(LEASE_CANCEL).putLong(fee);
         buf.putShort(feeScale);
         putBigInteger(buf, timestamp);
         buf.put(Base58.decode(txId));
