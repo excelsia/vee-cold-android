@@ -10,19 +10,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -36,7 +30,6 @@ import tech.vee.veecoldwallet.Activity.ConfirmTxActivity;
 import tech.vee.veecoldwallet.Activity.SetPasswordActivity;
 import tech.vee.veecoldwallet.Fragment.WalletFragment;
 import tech.vee.veecoldwallet.R;
-import tech.vee.veecoldwallet.Receiver.NetworkReceiver;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
@@ -142,6 +135,15 @@ public class UIUtil {
         else {
             Toast.makeText(activity, "No account found", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public static void createAboutUsDialog(final Activity activity) {
+            final Dialog dialog = new Dialog(activity);
+            dialog.setContentView(R.layout.activity_about_us);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            dialog.setTitle("About");
+            dialog.show();
     }
 
     public static void setPaymentTx(final Activity activity, final VEEAccount sender,

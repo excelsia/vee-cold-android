@@ -9,6 +9,7 @@
     <string name="title_backup_seed">Confirm Backup Seed</string>
     <string name="title_set_password">Set Password</string>
     <string name="title_confirm_tx">Confirm Transaction</string>
+    <string name="title_about_us">About</string>
 
     <!-- Strings related to Wallet -->
     <string name="wallet_import_key">Import seed</string>
@@ -37,6 +38,12 @@
     <string name="export_seed">Wallet Seed</string>
     <string name="export_seed_copy">Copy</string>
     <string name="sign_tx">Sign Transaction</string>
+
+    <!-- Strings related to About us -->
+    <string name="copyright">Copyright (c) 2018 VEE Technology LLC</string>
+    <string name="version">VEE Cold Wallet version 0.1rc1</string>
+    <string name="description">VEE cold wallet is a reference implementation of high security cold storage for VEE blockchain network. It implements VEE wallet format specification 1.0.
+</string>
 
     <!-- Strings related to Import Seed -->
     <string name="import_seed_title_1">Method 1</string>
