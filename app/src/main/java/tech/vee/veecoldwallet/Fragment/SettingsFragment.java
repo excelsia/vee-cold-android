@@ -13,6 +13,7 @@ import android.preference.SwitchPreference;
 import android.view.View;
 import android.widget.ListView;
 
+import tech.vee.veecoldwallet.Activity.AboutUsActivity;
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.FileUtil;
@@ -54,7 +55,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         aboutUs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent it = new Intent(activity, )
+                Intent intent = new Intent();
+                intent.setClass(activity, AboutUsActivity.class);
+                startActivity(intent);
                 return true;
             }
         });

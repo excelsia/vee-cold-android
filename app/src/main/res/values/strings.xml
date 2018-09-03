@@ -9,6 +9,7 @@
     <string name="title_backup_seed">Confirm Backup Seed</string>
     <string name="title_set_password">Set Password</string>
     <string name="title_confirm_tx">Confirm Transaction</string>
+    <string name="title_about_us">About</string>
 
     <!-- Strings related to Wallet -->
     <string name="wallet_import_key">Import seed</string>
