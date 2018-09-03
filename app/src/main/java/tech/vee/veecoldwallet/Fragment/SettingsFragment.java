@@ -1,15 +1,17 @@
 package tech.vee.veecoldwallet.Fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.R;
@@ -25,6 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private SwitchPreference backup;
     private SwitchPreference monitor;
     private VEEWallet wallet;
+    private PreferenceScreen aboutUs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +37,27 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         addPreferencesFromResource(R.xml.preferences_settings);
         preferenceScreen = (PreferenceScreen) findPreference("settings_export_seed");
-        preferenceScreen.setOnPreferenceClickListener(this);
+        preferenceScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // custom dialog
+                ColdWalletActivity activity = (ColdWalletActivity) getActivity();
+                wallet = activity.getWallet();
+                UIUtil.createExportSeedDialog(getActivity(), wallet);
+
+                return true;
+            }
+        });
         backup = (SwitchPreference) findPreference("settings_auto_backup");
         monitor = (SwitchPreference) findPreference("settings_connectivity");
+        aboutUs = (PreferenceScreen) findPreference("settings_about_us");
+        aboutUs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent it = new Intent(activity, )
+                return true;
+            }
+        });
         if (!FileUtil.sdCardMountedExists()) {
             backup.setEnabled(false);
         }
@@ -44,11 +65,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     @Override
     public boolean onPreferenceClick(Preference preference){
-        // custom dialog
-        ColdWalletActivity activity = (ColdWalletActivity) getActivity();
-        wallet = activity.getWallet();
-        UIUtil.createExportSeedDialog(getActivity(), wallet);
-
         return true;
     }
 

@@ -30,6 +30,7 @@
         </SwitchPreference>
 
         <PreferenceScreen
+            android:key="settings_about_us"
             android:title="@string/settings_about_us"
             android:summary="@string/settings_about_us_summary">
         </PreferenceScreen>
