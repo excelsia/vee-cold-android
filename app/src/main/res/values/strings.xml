@@ -41,8 +41,8 @@
 
     <!-- Strings related to About us -->
     <string name="copyright">Copyright (c) 2018 VEE Technology LLC</string>
-    <string name="version">VEE Cold Wallet version 0.1rc1</string>
-    <string name="version_test">VEE Cold Wallet version 0.1rc1(for Testnet)</string>
+    <string name="version_main">VEE Cold Wallet version 0.1rc2</string>
+    <string name="version_test">VEE Cold Wallet version 0.1rc2(for Testnet)</string>
     <string name="description">VEE cold wallet is a reference implementation of high security cold storage for VEE blockchain network. It implements VEE wallet format specification 1.0.
 </string>
 
