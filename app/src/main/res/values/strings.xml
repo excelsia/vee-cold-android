@@ -77,7 +77,8 @@
 
     <!-- Strings related to Signature -->
     <string name="signature_title">Validate Transaction</string>
-    <string name="signature_subtitle">Scan QR code to validate signature</string>
+    <string name="signature_step1">Step 1: Scan QR code via browser to validate signature</string>
+    <string name="signature_step2">Step 2: Click the button below</string>
 
     <!-- Strings related to Transaction -->
     <string name="transaction_title">Confirm Transaction</string>
@@ -94,7 +95,7 @@
     <string name="transaction_attachment">Attachment</string>
     <string name="transaction_timestamp">Time</string>
     <string name="transaction_confirm">Confirm</string>
-    <string name="transaction_done">Done</string>
+    <string name="transaction_done">Back to Home</string>
 
     <!-- Strings related to Account Number -->
     <string name="account_number_title">Configure Wallet</string>

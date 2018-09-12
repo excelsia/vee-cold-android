@@ -23,18 +23,6 @@
             android:textSize="20sp"
             android:text="@string/signature_title"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="48dp"
-            android:layout_marginRight="48dp"
-            android:gravity="center"
-            android:textColor="@color/textLight"
-            android:textSize="14sp"
-            android:text="@string/signature_subtitle"/>
-
     </LinearLayout>
 
     <ImageView
@@ -44,6 +32,30 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:gravity="center"
+        android:textColor="@color/textLight"
+        android:textSize="18sp"
+        android:text="@string/signature_step1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:gravity="center"
+        android:textColor="@color/textLight"
+        android:textSize="18sp"
+        android:text="@string/signature_step2"/>
+
     <Button
         android:id="@+id/transaction_done"
         android:layout_width="match_parent"
@@ -51,9 +63,10 @@
         android:layout_marginBottom="32dp"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
+        android:background="@drawable/rounded_corners_orange"
         android:text="@string/transaction_done"
-        android:textSize="16sp"
         android:textColor="@color/white"
-        android:background="@drawable/rounded_corners_orange"/>
+        android:textAllCaps="false"
+        android:textSize="16sp" />
 
 </LinearLayout>
