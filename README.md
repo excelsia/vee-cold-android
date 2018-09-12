@@ -21,3 +21,7 @@
 - Do not share your phone with others
 - Your accounts on the cold wallet can be monitored using the web client 
 
+## Download Link:	
+Scan below using mobile device	
+
+ ![Download Link](https://github.com/excelsia/VEE-Android-Client/raw/master/vee-cold-android-0.1rc2.testnet.png)
