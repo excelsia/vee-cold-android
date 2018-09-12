@@ -10,8 +10,8 @@
 
 ## Requirements:
 - Android mobile device (not compatible with tablet)
-- Android version 4.1+ (Jelly Bean API level 16) 
-- Recommended Android version 6.0+ (Marshmellow API level 23) for optimal usage
+- Android version 7.0+ (Nougat API level 24) 
+- Recommended Android version 7.0+ (Nougat API level 24) for optimal usage
 - Functioning camera 
 
 ## Usage: 
@@ -21,7 +21,3 @@
 - Do not share your phone with others
 - Your accounts on the cold wallet can be monitored using the web client 
 
-## Download Link:
-Scan below using mobile device
-
-![Download Link](https://github.com/excelsia/VEE-Android-Client/raw/master/VEE%20Cold%20Wallet.PNG)
