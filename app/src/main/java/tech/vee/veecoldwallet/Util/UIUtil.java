@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -159,13 +160,14 @@ public class UIUtil {
         TextView attachmentTx = (TextView) activity.findViewById(R.id.transaction_attachment);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        float amountFloat = (float) amount/100000000;
-        float feeFloat = (float) fee/100000000;
+        double amountDbl = (double) amount/100000000;
+        double feeDbl = (double) fee/100000000;
 
+        Log.d("Winston", amount + " " + fee);
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountFloat));
-        feeTx.setText(String.valueOf(feeFloat));
+        amountTx.setText(String.valueOf(amountDbl));
+        feeTx.setText(String.valueOf(feeDbl));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -232,13 +234,13 @@ public class UIUtil {
         TextView attachmentTx = (TextView) activity.findViewById(R.id.transaction_attachment);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        float amountFloat = (float) amount/100000000;
-        float feeFloat = (float) fee/100000000;
+        double amountDbl = (double) amount/100000000;
+        double feeDbl = (double) fee/100000000;
 
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountFloat));
-        feeTx.setText(String.valueOf(feeFloat));
+        amountTx.setText(String.valueOf(amountDbl));
+        feeTx.setText(String.valueOf(feeDbl));
 
         if (!attachment.equals("")) { attachmentTx.setText(attachment); }
         else { attachmentTx.setText("None"); }
@@ -303,13 +305,13 @@ public class UIUtil {
         TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        float amountFloat = (float) amount/100000000;
-        float feeFloat = (float) fee/100000000;
+        double amountDbl = (double) amount/100000000;
+        double feeDbl = (double) fee/100000000;
 
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountFloat));
-        feeTx.setText(String.valueOf(feeFloat));
+        amountTx.setText(String.valueOf(amountDbl));
+        feeTx.setText(String.valueOf(feeDbl));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -367,9 +369,9 @@ public class UIUtil {
         TextView feeTx = (TextView)activity.findViewById(R.id.transaction_fee);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        float feeFloat = (float) fee/100000000;
+        double feeDbl = (double) fee/100000000;
         senderTx.setText(sender.getMutatedAddress());
-        feeTx.setText(String.valueOf(feeFloat));
+        feeTx.setText(String.valueOf(feeDbl));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -500,6 +502,25 @@ public class UIUtil {
         });
 
         dialog.setTitle("First Run Warning");
+        dialog.show();
+    }
+
+    public static void createUpdateAppDialog(final Activity activity) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_update_app);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.first_run_warning_continue);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Update App");
         dialog.show();
     }
 

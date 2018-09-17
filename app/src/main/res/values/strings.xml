@@ -43,8 +43,8 @@
     <string name="copyright">Copyright (c) 2018 VEE Technology LLC</string>
     <string name="version_main">VEE Cold Wallet version 0.1rc2</string>
     <string name="version_test">VEE Cold Wallet version 0.1rc2(for Testnet)</string>
-    <string name="description">VEE cold wallet is a reference implementation of high security cold storage for VEE blockchain network. It implements VEE wallet format specification 1.0.
-</string>
+    <string name="description">VEE Cold Wallet is a reference implementation of high security cold
+        storage for the VEE blockchain network. It implements VEE wallet format specification 1.0. </string>
 
     <!-- Strings related to Import Seed -->
     <string name="import_seed_title_1">Method 1</string>
@@ -77,8 +77,10 @@
 
     <!-- Strings related to Signature -->
     <string name="signature_title">Validate Transaction</string>
-    <string name="signature_step1">Step 1: Scan QR code via browser to validate signature</string>
-    <string name="signature_step2">Step 2: Click the button below</string>
+    <string name="signature_step1">Step 1:</string>
+    <string name="signature_step1_contents">Scan QR code via browser to validate signature</string>
+    <string name="signature_step2">Step 2:</string>
+    <string name="signature_step2_contents"> Click the button below</string>
 
     <!-- Strings related to Transaction -->
     <string name="transaction_title">Confirm Transaction</string>
@@ -143,6 +145,14 @@
     <string name="first_run_warning_2">NEVER CLEAR the cold wallet\'s data</string>
     <string name="first_run_warning_3">NEVER FORGET your wallet password</string>
     <string name="first_run_warning_continue">Continue</string>
+
+    <!-- Strings related to Update App-->
+    <string name="update_app_title">CANNOT READ TRANSACTION</string>
+    <string name="update_app_subtitle">Possible Reasons</string>
+    <string name="update_app_reason_1_contents">Wallet is not updated to latest version</string>
+    <string name="update_app_reason_2_contents">Wallet cannot find the sender\'s address</string>
+    <string name="update_app_reason_3_contents">Invalid transaction format</string>
+    <string name="update_app_continue">Continue</string>
 
     <!-- Strings related to Monitor Connectivity-->
     <string name="monitor_connectivity_title">Current Connectivity Status</string>

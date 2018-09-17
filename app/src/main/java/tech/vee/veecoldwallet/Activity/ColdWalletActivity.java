@@ -266,7 +266,7 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                     switch (txType) {
                         case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
-                            break;
+                                break;
                         //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
                         //        break;
                         case 3: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
@@ -291,7 +291,8 @@ public class ColdWalletActivity extends AppCompatActivity {
                     UIUtil.createForeignSeedDialog(activity, qrContents);
 
                 case 4:
-                    Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
+                    UIUtil.createUpdateAppDialog(activity);
+                    //Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
         }
         else {
@@ -328,7 +329,6 @@ public class ColdWalletActivity extends AppCompatActivity {
         }
     }
 
-    private NetworkReceiver networkReceiver = new NetworkReceiver();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

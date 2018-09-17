@@ -85,12 +85,14 @@ public class JsonUtil {
                 activity.startActivity(intent);
         }
             else {
-                Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
+                UIUtil.createUpdateAppDialog(activity);
+                //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
         }
         else {
-            Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
+            UIUtil.createUpdateAppDialog(activity);
+            //Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Map does not contain all keys");
         }
     }
@@ -138,12 +140,14 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
+                UIUtil.createUpdateAppDialog(activity);
+                //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
         }
         else {
-            Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
+            UIUtil.createUpdateAppDialog(activity);
+            //Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Map does not contain all keys");
         }
     }
@@ -189,12 +193,14 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
+                UIUtil.createUpdateAppDialog(activity);
+                //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
         }
         else {
-            Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
+            UIUtil.createUpdateAppDialog(activity);
+            //Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Map does not contain all keys");
         }
     }
@@ -238,12 +244,14 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
+                UIUtil.createUpdateAppDialog(activity);
+                //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
         }
         else {
-            Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
+            UIUtil.createUpdateAppDialog(activity);
+            //Toast.makeText(activity, "Invalid transaction format", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Map does not contain all keys");
         }
     }
