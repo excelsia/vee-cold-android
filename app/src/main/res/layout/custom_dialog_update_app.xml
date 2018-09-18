@@ -36,77 +36,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginBottom="20dp"
         android:textColor="@color/textDark"
         android:layout_gravity="center"
         android:textSize="16sp"
         android:text="@string/update_app_subtitle"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="12dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_list_style" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            android:text="@string/update_app_reason_1_contents"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="12dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_list_style" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            android:text="@string/update_app_reason_2_contents"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_list_style" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textDark"
-            android:textSize="14sp"
-            android:text="@string/update_app_reason_3_contents"/>
-    </LinearLayout>
-
     <Button
-        android:id="@+id/first_run_warning_continue"
+        android:id="@+id/update_app_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
@@ -115,5 +54,5 @@
         android:background="@drawable/rounded_corners_orange"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:text="@string/first_run_warning_continue" />
+        android:text="@string/update_app_ok" />
 </LinearLayout>

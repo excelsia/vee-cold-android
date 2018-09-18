@@ -146,13 +146,18 @@
     <string name="first_run_warning_3">NEVER FORGET your wallet password</string>
     <string name="first_run_warning_continue">Continue</string>
 
-    <!-- Strings related to Update App-->
-    <string name="update_app_title">CANNOT READ TRANSACTION</string>
-    <string name="update_app_subtitle">Possible Reasons</string>
-    <string name="update_app_reason_1_contents">Wallet is not updated to latest version</string>
-    <string name="update_app_reason_2_contents">Wallet cannot find the sender\'s address</string>
-    <string name="update_app_reason_3_contents">Invalid transaction format</string>
-    <string name="update_app_continue">Continue</string>
+    <!-- Strings related to Wrong Transaction-->
+    <string name="wrong_transaction_title">CANNOT READ TRANSACTION</string>
+    <string name="wrong_transaction_subtitle">Possible Reasons</string>
+    <string name="wrong_transaction_reason_1_contents">Wallet is not updated to latest version</string>
+    <string name="wrong_transaction_reason_2_contents">Wallet cannot find the sender\'s address</string>
+    <string name="wrong_transaction_reason_3_contents">Invalid transaction format</string>
+    <string name="wrong_transaction_continue">Continue</string>
+
+    <!-- String related to Update app -->
+    <string name="update_app_title">NEED TO UPDATE</string>
+    <string name="update_app_subtitle">You need to get the latest version. </string>
+    <string name="update_app_ok">OK</string>
 
     <!-- Strings related to Monitor Connectivity-->
     <string name="monitor_connectivity_title">Current Connectivity Status</string>

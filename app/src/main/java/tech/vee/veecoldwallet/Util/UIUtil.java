@@ -524,6 +524,25 @@ public class UIUtil {
         dialog.show();
     }
 
+    public static void createWrongTransactionDialog(final Activity activity) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_wrong_transaction);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.update_app_ok);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Wrong Transaction");
+        dialog.show();
+    }
+
     public static void createPasswordWarningDialog(final Activity activity, final String seed) {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.custom_dialog_password_warning);

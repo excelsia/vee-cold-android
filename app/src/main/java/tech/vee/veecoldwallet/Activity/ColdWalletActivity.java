@@ -251,6 +251,14 @@ public class ColdWalletActivity extends AppCompatActivity {
                     byte txType = -1;
                     VEETransaction transaction = null;
 
+                    if (jsonMap.containsKey("api")) {
+                        byte api = Double.valueOf((double)jsonMap.get("api")).byteValue();
+                        if (api > 1) {
+                            UIUtil.createUpdateAppDialog(activity);
+                            break;
+                        }
+                    }
+
                     if (jsonMap.containsKey("transactionType")) {
                         txType = Double.valueOf((double)jsonMap.get("transactionType")).byteValue();
                     }
@@ -291,7 +299,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                     UIUtil.createForeignSeedDialog(activity, qrContents);
 
                 case 4:
-                    UIUtil.createUpdateAppDialog(activity);
+                    UIUtil.createWrongTransactionDialog(activity);
                     //Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
         }
