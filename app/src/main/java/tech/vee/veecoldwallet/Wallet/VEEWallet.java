@@ -30,7 +30,7 @@ public class VEEWallet {
     private static final String AGENT_NAME = "VEE Cold Wallet Android";
 
     // Choose blockchain ID: MAIN_NET, TEST_NET
-    private static final byte CHAIN_ID = VEEChain.TEST_NET;
+    private static final byte CHAIN_ID = VEEChain.MAIN_NET;
 
     public static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
