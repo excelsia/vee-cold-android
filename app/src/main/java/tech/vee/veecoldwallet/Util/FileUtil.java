@@ -34,7 +34,7 @@ public class FileUtil {
     private final static String KEYSALT = "0ba950e1-828b-4bae-9e06-faf078eb33ec";
     private final static String AES = "AES";
     private final static String ALGORITHM = AES + "/ECB/PKCS5Padding";
-    private final static int HASHINGITERATIONS = 999999;
+    private final static int HASHINGITERATIONS = 9999;
     private final static int KEYLENGTH = 256;
 
     //Save with password

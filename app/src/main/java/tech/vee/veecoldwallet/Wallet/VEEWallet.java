@@ -25,8 +25,8 @@ public class VEEWallet {
     private String agent;
 
     private static final String TAG = "Winston";
-    private static final String WALLET_VERSION = "1.0rc2";
-    private static final String AGENT_VERSION = "0.1rc2";
+    private static final String WALLET_VERSION = "1.0";
+    private static final String AGENT_VERSION = "0.1rc3";
     private static final String AGENT_NAME = "VEE Cold Wallet Android";
 
     // Choose blockchain ID: MAIN_NET, TEST_NET
