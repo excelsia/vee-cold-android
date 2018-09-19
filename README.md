@@ -28,4 +28,4 @@
 ## Download Link:	
 Scan below using mobile device	
 
- ![Download Link](https://github.com/excelsia/VEE-Android-Client/raw/master/vee-cold-android-0.1rc2.testnet.png)
+ ![Download Link](https://github.com/excelsia/VEE-Android-Client/raw/master/vee-cold-android-0.1.0.png)
