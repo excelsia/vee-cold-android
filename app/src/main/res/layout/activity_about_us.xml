@@ -17,7 +17,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:contentDescription="@string/version_test"
+        android:contentDescription="@string/version_main"
         android:layout_marginTop="48dp"
         app:srcCompat="@drawable/ic_vee" />
 
@@ -29,7 +29,7 @@
         android:textSize="16sp"
         android:textColor="@color/textDark"
         android:layout_marginTop="20dp"
-        android:text="@string/version_test" />
+        android:text="@string/version_main" />
 
     <TextView
         android:id="@+id/textView4"
