@@ -116,19 +116,10 @@ public class UIUtil {
             ImageView qrCode = (ImageView) dialog.findViewById(R.id.export_address);
             TextView address = (TextView) dialog.findViewById(R.id.export_address_string);
             TextView title = (TextView) dialog.findViewById(R.id.export_account_title);
-            Button sign = (Button) dialog.findViewById(R.id.sign_tx);
 
             qrCode.setImageBitmap(QRCodeUtil.exportPubKeyAddr(account,800));
             address.setText(account.getAddress());
             title.setText("Account " + String.valueOf(account.getNonce() + 1));
-
-            sign.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    QRCodeUtil.scan(activity);
-                    dialog.dismiss();
-                }
-            });
 
             dialog.setTitle("Export Address");
             dialog.show();

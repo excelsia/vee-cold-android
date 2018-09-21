@@ -44,15 +44,4 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/sign_tx"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:text="@string/sign_tx"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_corners_orange"/>
 </LinearLayout>
