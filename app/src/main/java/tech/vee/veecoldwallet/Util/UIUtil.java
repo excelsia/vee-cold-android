@@ -151,14 +151,11 @@ public class UIUtil {
         TextView attachmentTx = (TextView) activity.findViewById(R.id.transaction_attachment);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        double amountDbl = (double) amount/100000000;
-        double feeDbl = (double) fee/100000000;
-
         Log.d("Winston", amount + " " + fee);
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountDbl));
-        feeTx.setText(String.valueOf(feeDbl));
+        amountTx.setText(String.valueOf(convert(amount)));
+        feeTx.setText(String.valueOf(convert(fee)));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -225,13 +222,10 @@ public class UIUtil {
         TextView attachmentTx = (TextView) activity.findViewById(R.id.transaction_attachment);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        double amountDbl = (double) amount/100000000;
-        double feeDbl = (double) fee/100000000;
-
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountDbl));
-        feeTx.setText(String.valueOf(feeDbl));
+        amountTx.setText(String.valueOf(convert(amount)));
+        feeTx.setText(String.valueOf(convert(fee)));
 
         if (!attachment.equals("")) { attachmentTx.setText(attachment); }
         else { attachmentTx.setText("None"); }
@@ -296,13 +290,10 @@ public class UIUtil {
         TextView feeTx = (TextView) activity.findViewById(R.id.transaction_fee);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        double amountDbl = (double) amount/100000000;
-        double feeDbl = (double) fee/100000000;
-
         senderTx.setText(sender.getMutatedAddress());
         recipientTx.setText(VEEAccount.getMutatedAddress(recipient));
-        amountTx.setText(String.valueOf(amountDbl));
-        feeTx.setText(String.valueOf(feeDbl));
+        amountTx.setText(String.valueOf(convert(amount)));
+        feeTx.setText(String.valueOf(convert(fee)));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -360,9 +351,8 @@ public class UIUtil {
         TextView feeTx = (TextView)activity.findViewById(R.id.transaction_fee);
         Button confirm = (Button) activity.findViewById(R.id.transaction_confirm);
 
-        double feeDbl = (double) fee/100000000;
         senderTx.setText(sender.getMutatedAddress());
-        feeTx.setText(String.valueOf(feeDbl));
+        feeTx.setText(String.valueOf(convert(fee)));
 
         String time = new SimpleDateFormat("yyyy-MM-dd  HH:MM:SS")
                 .format(new Timestamp(timestamp));
@@ -706,6 +696,30 @@ public class UIUtil {
             icon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_check));
             dialogButton.setEnabled(true);
             dialogButton.setText(R.string.monitor_connectivity_continue);
+        }
+    }
+
+    private static String convert(long num) {
+        String res = String.valueOf(num);
+        String whole, decimal;
+
+        if (res.equals("0")) {
+            return "0";
+        }
+        else if (res.length() <= 8) {
+            decimal = res.replaceAll("0+$", "");
+            for (int i=0; i<(8 - res.length()); i++) {
+                decimal = "0" + decimal;
+            }
+            return "0." + decimal;
+        }
+        else {
+            decimal = res.substring(res.length() - 8, res.length()).replaceAll("0+$", "");
+            whole = res.substring(0, res.length() - 8);
+            if (decimal.equals("")) {
+                return whole;
+            }
+            return whole + "." + decimal;
         }
     }
 }

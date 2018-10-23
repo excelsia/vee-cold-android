@@ -31,6 +31,7 @@ public class AboutUsActivity extends AppCompatActivity {
         Drawable icon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_vee);
         icon.mutate();
         icon.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+
         actionBar = getSupportActionBar();
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -41,7 +42,7 @@ public class AboutUsActivity extends AppCompatActivity {
 
         TextView version = (TextView) findViewById(R.id.version);
         chain = intent.getByteExtra("CHAIN_ID", (byte)0);
-        
+
         switch (chain) {
             case VEEChain.MAIN_NET:
                 version.setText(R.string.version_main);
