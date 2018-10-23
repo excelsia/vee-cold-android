@@ -110,6 +110,7 @@
     <string name="import_seed">Import Seed</string>
     <string name="generate_seed">Generate Seed</string>
     <string name="load_backup">Load Backup File</string>
+    <string name="sign_transaction">Sign Transaction</string>
     <string name="backup_wallet">Backup Wallet</string>
     <string name="append_accounts">Add Accounts</string>
     <string name="message">Welcome to VEE Cold Wallet! Press button below to start.</string>

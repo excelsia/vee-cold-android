@@ -153,7 +153,17 @@ public class WalletFragment extends Fragment {
         loadBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileUtil.loadBackup(activity, walletFilePath, WALLET_FILE_NAME);
+                String loadText = getResources().getString(R.string.load_backup);
+                Intent intent;
+
+                if (generateSeed.getLabelText().equals(loadText)) {
+                    menu.setTag("OFF");
+                    menu.close(true);
+                    FileUtil.loadBackup(activity, walletFilePath, WALLET_FILE_NAME);
+                }
+                else {
+                    QRCodeUtil.scan(activity);
+                }
             }
         });
 
@@ -191,7 +201,8 @@ public class WalletFragment extends Fragment {
             UIUtil.setAccountCardsAdapter(activity, accountCards, adapter, accounts);
             displayAccounts(true);
 
-            loadBackup.setVisibility(View.GONE);
+            loadBackup.setLabelText(getResources().getString(R.string.sign_transaction));
+            loadBackup.setImageDrawable(getResources().getDrawable(R.drawable.ic_scan));
             importSeed.setLabelText(getResources().getString(R.string.append_accounts));
             importSeed.setImageDrawable(getResources().getDrawable(R.drawable.ic_append));
 
