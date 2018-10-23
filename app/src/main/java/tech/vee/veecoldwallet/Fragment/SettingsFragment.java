@@ -22,19 +22,21 @@ import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    private Activity activity;
 
     private PreferenceScreen preferenceScreen;
     private SwitchPreference backup;
     private SwitchPreference monitor;
     private VEEWallet wallet;
     private PreferenceScreen aboutUs;
+    private byte chainId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity = getActivity();
+        final ColdWalletActivity activity = (ColdWalletActivity) getActivity();
+        wallet = activity.getWallet();
+        chainId = wallet.getChainId();
 
         addPreferencesFromResource(R.xml.preferences_settings);
         preferenceScreen = (PreferenceScreen) findPreference("settings_export_seed");
@@ -42,10 +44,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 // custom dialog
-                ColdWalletActivity activity = (ColdWalletActivity) getActivity();
-                wallet = activity.getWallet();
                 UIUtil.createExportSeedDialog(getActivity(), wallet);
-
                 return true;
             }
         });
@@ -56,6 +55,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent();
+                intent.putExtra("CHAIN_ID", chainId);
                 intent.setClass(activity, AboutUsActivity.class);
                 startActivity(intent);
                 return true;
