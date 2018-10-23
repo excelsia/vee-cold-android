@@ -156,7 +156,7 @@ public class WalletFragment extends Fragment {
                 String loadText = getResources().getString(R.string.load_backup);
                 Intent intent;
 
-                if (generateSeed.getLabelText().equals(loadText)) {
+                if (loadBackup.getLabelText().equals(loadText)) {
                     menu.setTag("OFF");
                     menu.close(true);
                     FileUtil.loadBackup(activity, walletFilePath, WALLET_FILE_NAME);
