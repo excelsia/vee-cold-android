@@ -492,7 +492,7 @@ public class UIUtil {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.first_run_warning_continue);
+        Button dialogButton = (Button) dialog.findViewById(R.id.update_app_ok);
 
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
