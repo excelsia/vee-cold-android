@@ -8,4 +8,14 @@
     <string-array name="settings_language_entryvalues">
         <item>English</item>
     </string-array>
+
+    <string-array name="settings_network_entries">
+        <item>Testnet</item>
+        <item>Mainnet</item>
+    </string-array>
+
+    <string-array name="settings_network_entryvalues">
+        <item>T</item>
+        <item>M</item>
+    </string-array>
 </resources>

@@ -23,6 +23,7 @@ public class VEEWallet {
     private List<String> accountSeeds;
     private long nonce;
     private String agent;
+    private byte chainId;
 
     private static final String TAG = "Winston";
     private static final String WALLET_VERSION = "1.0";
@@ -31,7 +32,7 @@ public class VEEWallet {
 
     // Choose blockchain ID: MAIN_NET, TEST_NET
     //private static final byte CHAIN_ID = VEEChain.MAIN_NET;
-    private static final byte CHAIN_ID = VEEChain.TEST_NET;
+    // private static final byte CHAIN_ID = VEEChain.TEST_NET;
 
     public static final String[] SEED_WORDS = {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
@@ -224,16 +225,18 @@ public class VEEWallet {
         seed = "";
         accountSeeds = new ArrayList<>();
         nonce = 0;
+        chainId = 0;
         agent = "VEE wallet:" + WALLET_VERSION + "/" + AGENT_NAME + ":" + AGENT_VERSION;
     }
 
-    public VEEWallet(String seed, List<String> accountSeeds, long nonce){
+    public VEEWallet(byte chainId, String seed, List<String> accountSeeds, long nonce){
+        this.chainId = chainId;
         this.seed = seed;
         this.accountSeeds = accountSeeds;
         this.nonce = nonce;
 
         String chain ="";
-        switch (CHAIN_ID) {
+        switch (chainId) {
             case VEEChain.MAIN_NET:
                 chain = "mainnet";
                 break;
@@ -243,9 +246,11 @@ public class VEEWallet {
         agent = "VEE Wallet:" + WALLET_VERSION + "/" + AGENT_NAME + ":" + AGENT_VERSION + "/" + chain;
         Log.d(TAG, agent);
     }
-    public VEEWallet(String json){
+    public VEEWallet(byte chainId, String json){
         HashMap<String,Object> jsonMap = JsonUtil.getJsonAsMap(json);
         String[] keys = {"seed", "accountSeeds", "nonce", "agent"};
+
+        this.chainId = chainId;
 
         if (JsonUtil.containsKeys(jsonMap, keys)) {
             seed = (String) jsonMap.get("seed");
@@ -259,9 +264,9 @@ public class VEEWallet {
     public List<String> getAccountSeeds() { return accountSeeds; }
     public long getNonce() { return nonce;}
     public String getAgent() { return agent; }
-    public byte getChainId() { return CHAIN_ID; }
+    public byte getChainId() { return chainId; }
 
-    public static VEEWallet recover(String seed, long num){
+    public static VEEWallet recover(byte chainId, String seed, long num){
         String accountSeed;
         List<String> newAccountSeeds = new ArrayList<>();
 
@@ -271,7 +276,7 @@ public class VEEWallet {
                 //accountSeed = generateAccountSeedOld(seed, i);
                 newAccountSeeds.add(accountSeed);
             }
-            return new VEEWallet(seed, newAccountSeeds, num);
+            return new VEEWallet(chainId, seed, newAccountSeeds, num);
         }
         Log.d(TAG, "Invalid recover");
         return null;
@@ -313,7 +318,7 @@ public class VEEWallet {
         VEEAccount account;
 
         for(long i = 0; i < accountSeeds.size(); i++){
-            account = new VEEAccount(accountSeeds.get((int) i), i, CHAIN_ID);
+            account = new VEEAccount(accountSeeds.get((int) i), i, chainId);
             Log.d(TAG, account.toString());
             accounts.add(account);
         }

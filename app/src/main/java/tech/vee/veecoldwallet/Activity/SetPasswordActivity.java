@@ -43,6 +43,7 @@ import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.FileUtil;
 import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
+import tech.vee.veecoldwallet.Wallet.VEEChain;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class SetPasswordActivity extends AppCompatActivity {
@@ -285,10 +286,11 @@ public class SetPasswordActivity extends AppCompatActivity {
                 String seed = intent.getStringExtra("SEED");
 
 
-                VEEWallet wallet = VEEWallet.recover(seed, accountNum);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                boolean monitorState = preferences.getBoolean("settings_auto_backup", true);
+                byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "T"));
+                VEEWallet wallet = VEEWallet.recover(chainId, seed, accountNum);
 
+                boolean monitorState = preferences.getBoolean("settings_auto_backup", true);
                 if (monitorState) {
                     FileUtil.save(activity, wallet.getJson(), password, walletFilePath, WALLET_FILE_NAME);
                 }

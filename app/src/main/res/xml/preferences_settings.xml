@@ -3,6 +3,16 @@
     <PreferenceCategory
         android:title="@string/settings_account">
 
+        <ListPreference
+            android:key="settings_network"
+            android:title="@string/settings_network"
+            android:summary="@string/settings_network_summary"
+            android:entries="@array/settings_network_entries"
+            android:entryValues="@array/settings_network_entryvalues"
+            android:defaultValue="T"
+            android:enabled="false">
+        </ListPreference>
+
         <PreferenceScreen
             android:key="settings_export_seed"
             android:title="@string/settings_export_seed"

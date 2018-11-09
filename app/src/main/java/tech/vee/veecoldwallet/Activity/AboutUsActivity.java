@@ -46,8 +46,10 @@ public class AboutUsActivity extends AppCompatActivity {
         switch (chain) {
             case VEEChain.MAIN_NET:
                 version.setText(R.string.version_main);
+                break;
             case VEEChain.TEST_NET:
                 version.setText(R.string.version_test);
+                break;
         }
     }
 }
