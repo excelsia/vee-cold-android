@@ -9,7 +9,7 @@
             android:summary="@string/settings_network_summary"
             android:entries="@array/settings_network_entries"
             android:entryValues="@array/settings_network_entryvalues"
-            android:defaultValue="T"
+            android:defaultValue="M"
             android:enabled="false">
         </ListPreference>
 

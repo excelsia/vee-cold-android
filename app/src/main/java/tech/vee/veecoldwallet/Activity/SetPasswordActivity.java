@@ -287,7 +287,7 @@ public class SetPasswordActivity extends AppCompatActivity {
 
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "T"));
+                byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "M"));
                 VEEWallet wallet = VEEWallet.recover(chainId, seed, accountNum);
 
                 boolean monitorState = preferences.getBoolean("settings_auto_backup", true);

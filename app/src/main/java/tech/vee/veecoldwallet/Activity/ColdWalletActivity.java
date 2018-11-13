@@ -374,7 +374,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "T"));
+                    byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "M"));
                     wallet = new VEEWallet(chainId, seed);
                     accounts = wallet.generateAccounts();
                     if (accounts == null) {Log.d(TAG, "Accounts null"); }
