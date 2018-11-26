@@ -51,6 +51,7 @@ import tech.vee.veecoldwallet.Util.NetworkUtil;
 import tech.vee.veecoldwallet.Util.PermissionUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
+import tech.vee.veecoldwallet.Wallet.VEEChain;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Fragment.SettingsFragment;
@@ -372,7 +373,9 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {
-                    wallet = new VEEWallet(seed);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    byte chainId = VEEChain.getChainId(preferences.getString("settings_network", "M"));
+                    wallet = new VEEWallet(chainId, seed);
                     accounts = wallet.generateAccounts();
                     if (accounts == null) {Log.d(TAG, "Accounts null"); }
                     switchToFragment(walletFrag);

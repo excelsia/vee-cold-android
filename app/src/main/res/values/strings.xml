@@ -15,6 +15,11 @@
     <string name="wallet_import_key">Import seed</string>
     <string name="wallet_sign_tx">Sign transaction</string>
 
+    <string name="settings_network">Network</string>
+    <string name="settings_network_testnet">Network (Testnet)</string>
+    <string name="settings_network_mainnet">Network (Mainnet)</string>
+    <string name="settings_network_summary">Select Testnet or Mainnet for your wallet, This will be disabled after you create your wallet</string>
+
     <!-- Strings related to Settings -->
     <string name="settings_account">Account Settings</string>
     <string name="settings_additional">Additional Settings</string>
