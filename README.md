@@ -2,8 +2,13 @@
 [![License](http://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat)](https://opensource.org/licenses/Apache-2.0)
 # VEE Android Client: Cold Wallet 
 ## Current release:
-- 0.1.0
-- IMPORTANT: 0.1rc2 and before have been deprecated, if you used these preview releases, regeneration of wallet or recovery from seed phrase is required.
+- 0.2.0
+
+## Release notes for 0.2.0: 
+- Misc bug fixes related to UI
+- Compatibility fixes for more screen sizes
+- Fix support for Android 6.0
+- Single apk for both mainnet and testnet
 
 ## Main Features:
 - Securely store your private keys on an offline mobile device 
@@ -14,9 +19,9 @@
 
 ## Requirements:
 - Android mobile device (not compatible with tablet)
-- Android version 7.0+ (Nougat API level 24) 
-- Recommended Android version 7.0+ (Nougat API level 24) for optimal usage
-- Functioning camera 
+- Android version 6.0+ (Marshmallow API level 23)
+- Recommended Android version 6.0+ (Marshmallow API level 23) for optimal usage
+- Functioning camera
 
 ## Usage: 
 - Do not delete the app unless absolutely necessary
