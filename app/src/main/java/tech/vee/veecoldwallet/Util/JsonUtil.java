@@ -83,9 +83,9 @@ public class JsonUtil {
                 intent.putExtra("TIMESTAMP", timestamp);
 
                 activity.startActivity(intent);
-        }
+            }
             else {
-                UIUtil.createUpdateAppDialog(activity);
+                UIUtil.createNonexistentSenderDialog(activity);
                 //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
@@ -140,7 +140,7 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                UIUtil.createUpdateAppDialog(activity);
+                UIUtil.createNonexistentSenderDialog(activity);
                 //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
@@ -193,7 +193,7 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                UIUtil.createUpdateAppDialog(activity);
+                UIUtil.createNonexistentSenderDialog(activity);
                 //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }
@@ -244,7 +244,7 @@ public class JsonUtil {
                 activity.startActivity(intent);
             }
             else {
-                UIUtil.createUpdateAppDialog(activity);
+                UIUtil.createNonexistentSenderDialog(activity);
                 //Toast.makeText(activity, "Wallet does not contain sender", Toast.LENGTH_LONG).show();
                 Log.d(TAG,"Private key cannot be found");
             }

@@ -505,6 +505,25 @@ public class UIUtil {
         dialog.show();
     }
 
+    public static void createNonexistentSenderDialog(final Activity activity) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.custom_dialog_nonexistent_sender);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.nonexistent_sender_ok);
+
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle("Nonexistent Sender");
+        dialog.show();
+    }
+
     public static void createWrongTransactionDialog(final Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.custom_dialog_wrong_transaction);

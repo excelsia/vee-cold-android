@@ -18,7 +18,8 @@
     <string name="settings_network">Network</string>
     <string name="settings_network_testnet">Network (Testnet)</string>
     <string name="settings_network_mainnet">Network (Mainnet)</string>
-    <string name="settings_network_summary">Select Testnet or Mainnet for your wallet, This will be disabled after you create your wallet</string>
+    <string name="settings_network_summary">Select your wallet\'s network (Testnet or Mainnet)\n
+        Cannot be changed once wallet is created</string>
 
     <!-- Strings related to Settings -->
     <string name="settings_account">Account Settings</string>
@@ -160,10 +161,16 @@
     <string name="wrong_transaction_reason_3_contents">Invalid transaction format</string>
     <string name="wrong_transaction_continue">Continue</string>
 
-    <!-- String related to Update app -->
+    <!-- Strings related to Update App -->
     <string name="update_app_title">NEED TO UPDATE</string>
-    <string name="update_app_subtitle">You need to get the latest version. </string>
+    <string name="update_app_subtitle">Please update to the latest version. </string>
     <string name="update_app_ok">OK</string>
+
+    <!-- Strings related to Nonexistent Sender -->
+    <string name="nonexistent_sender_title">CANNOT FIND SENDER</string>
+    <string name="nonexistent_sender_subtitle">Your cold wallet does not contain the sender address.
+        Please double check your transaction details and try again.</string>
+    <string name="nonexistent_sender_ok">OK</string>
 
     <!-- Strings related to Monitor Connectivity-->
     <string name="monitor_connectivity_title">Current Connectivity Status</string>
