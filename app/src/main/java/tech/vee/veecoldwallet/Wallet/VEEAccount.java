@@ -10,6 +10,7 @@ import java.util.Arrays;
 import tech.vee.veecoldwallet.Util.HashUtil;
 import tech.vee.veecoldwallet.Util.Base58;
 
+
 public class VEEAccount {
     String accountSeed;
     long nonce;
@@ -18,6 +19,7 @@ public class VEEAccount {
     String pubKey;
     String address;
     String accountName;
+    String version;
 
     private static final String TAG = "Winston";
     private static final byte ADDR_VERSION = 5;
@@ -37,6 +39,7 @@ public class VEEAccount {
         address = Base58.encode(generateAddress(publicKey, chainId));
 
         accountName = "Account " + (nonce + 1);
+        version = "0.3.0" ;
     }
 
     public String getAccountSeed() { return accountSeed; }
@@ -51,11 +54,12 @@ public class VEEAccount {
     public String getAddress() {
         return address;
     }
+    public String getVersion(){return version;}
     public String getAccountName() { return accountName; }
     public void setAccountName(String accountName) { this.accountName = accountName; }
 
     public boolean isAccount(String pubKey){
-        if (getPubKey().equals(pubKey)) return true;
+        if (getAddress().equals(pubKey)|| getPubKey().equals(pubKey)) return true;
         return false;
     }
 

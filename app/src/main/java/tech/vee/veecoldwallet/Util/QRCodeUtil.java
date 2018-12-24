@@ -32,7 +32,7 @@ public class QRCodeUtil {
     }
 
     public static String generatePubKeyAddrStr(VEEAccount account) {
-        return DOMAIN + "/#cold/export?address=" + account.getAddress() + "&publicKey=" + account.getPubKey();
+        return DOMAIN + "/#cold/export?address=" + account.getAddress() + "$version=" + account.getVersion();
     }
 
     public static String generateSeedStr(VEEWallet wallet) {

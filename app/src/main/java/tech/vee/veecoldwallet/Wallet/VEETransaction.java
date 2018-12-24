@@ -190,6 +190,7 @@ public class VEETransaction {
             // assume proof0 is a signature
             toJson.put("signature", proofs.get(0));
         }
+        toJson.put("publicKey",this.data.get("senderPublicKey"));
 
         try {
             return new ObjectMapper().writeValueAsString(toJson);

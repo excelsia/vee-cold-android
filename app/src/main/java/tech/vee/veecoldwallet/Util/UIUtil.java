@@ -389,10 +389,8 @@ public class UIUtil {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.custom_dialog_signature);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
         ImageView qrCode = (ImageView) dialog.findViewById(R.id.signature);
         Button done = (Button) dialog.findViewById(R.id.transaction_done);
-
         qrCode.setImageBitmap(QRCodeUtil.generateQRCode(transaction.getJson(), 500));
 
         done.setOnClickListener(new View.OnClickListener() {
