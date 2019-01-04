@@ -220,7 +220,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
         int val = QRCodeUtil.processQrContents(qrContents);
-        if (wallet != null && (val != 1 && val != 0)) { val = 4; }
+        if (wallet != null && (val != 1 && val != 0 )) { val = 4; }
 
         if(result != null) {
             switch (val) {
@@ -268,17 +268,20 @@ public class ColdWalletActivity extends AppCompatActivity {
                     break;
 
                 case 2:
-                    String seed = QRCodeUtil.parseSeed(qrContents);
-                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
+                    HashMap<String,Object> coldseedMap = new HashMap<>();
+                    coldseedMap = JsonUtil.getJsonAsMap(qrContents);
+                    Object seedObject = coldseedMap.get("seed");
+                    String qrseed = seedObject.toString();
+
+                    if (VEEWallet.validateSeedPhrase(activity, qrseed)) {
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
-                        intent.putExtra("SEED", seed);
+                        intent.putExtra("SEED", qrseed);
                         startActivity(intent);
                     }
                     else {
-                        UIUtil.createForeignSeedDialog(activity, seed);
+                        UIUtil.createForeignSeedDialog(activity, qrseed);
                     }
                     break;
-
                 case 3:
                     UIUtil.createForeignSeedDialog(activity, qrContents);
 

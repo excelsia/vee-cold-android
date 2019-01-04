@@ -69,6 +69,7 @@ public class QRCodeUtil {
             //not expected to ever happen
             return null;
         }
+
     }
 
     public static Bitmap exportPubKeyAddr(VEEAccount account, int width){
@@ -100,11 +101,17 @@ public class QRCodeUtil {
         if (qrContents == null) return 0;
 
         map = JsonUtil.getJsonAsMap(qrContents);
-        if (map != null) return 1;
+        if (map != null) {
+            if (map.containsKey("transactionType"))
+            {
+                return 1;
+            }
+            else return 9;
+        }
 
-        priKey = QRCodeUtil.parseSeed(qrContents);
+        /* priKey = QRCodeUtil.parseSeed(qrContents);
         if (priKey != "") return 2;
-
+        */
         else return 3;
     }
 

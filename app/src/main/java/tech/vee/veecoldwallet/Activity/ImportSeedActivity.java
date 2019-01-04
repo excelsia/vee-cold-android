@@ -24,7 +24,8 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
+import com.journeyapps.barcodescanner.Util;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -115,9 +116,12 @@ public class ImportSeedActivity extends AppCompatActivity {
                 case 0:
                     Toast.makeText(activity, "Cancelled", Toast.LENGTH_LONG).show();
                     break;
-
                 case 2:
-                    String seed = QRCodeUtil.parseSeed(qrContents);
+                    HashMap<String,Object> seedmap = new HashMap<>();
+                    seedmap = JsonUtil.getJsonAsMap(qrContents);
+                    Object seedObject = seedmap.get("seed");
+                    String seed = seedObject.toString();
+
                     if (VEEWallet.validateSeedPhrase(activity, seed)) {
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
                         intent.putExtra("SEED", seed);
