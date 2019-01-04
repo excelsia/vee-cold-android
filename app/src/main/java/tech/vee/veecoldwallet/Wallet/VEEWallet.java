@@ -25,6 +25,9 @@ public class VEEWallet {
     private String agent;
     private byte chainId;
 
+    public static final String PROTOCOL = "v.systems";
+    public static final int API_VERSION = 1;
+
     private static final String TAG = "Winston";
     private static final String WALLET_VERSION = "1.0";
     private static final String AGENT_VERSION = "0.2.0";
