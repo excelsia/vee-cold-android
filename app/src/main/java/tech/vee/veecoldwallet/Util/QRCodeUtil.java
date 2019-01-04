@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -19,6 +21,8 @@ public class QRCodeUtil {
     //private static final String DOMAIN = "https://vee.tech";
     private static final String DOMAIN = "http://localhost:8080";
 
+    public static final String OP_CODE = "transaction";
+
     public static Bitmap generateQRCode(String message, int width) {
         Bitmap qrCode;
         try {
@@ -32,11 +36,39 @@ public class QRCodeUtil {
     }
 
     public static String generatePubKeyAddrStr(VEEAccount account) {
-        return DOMAIN + "/#cold/export?address=" + account.getAddress() + "&publicKey=" + account.getPubKey();
+
+        String OP_CODE = "account";
+        HashMap<String, Object> accountJson = new HashMap<>();
+
+        accountJson.put("protocol", VEEWallet.PROTOCOL);
+        accountJson.put("api", VEEWallet.API_VERSION);
+        accountJson.put("opc", OP_CODE);
+        accountJson.put("address",account.getAddress());
+        accountJson.put("publicKey",account.getPubKey());
+
+        try {
+            return new ObjectMapper().writeValueAsString(accountJson);
+        } catch (JsonProcessingException e) {
+            // not expected to ever happen
+            return null;
+        }
     }
 
     public static String generateSeedStr(VEEWallet wallet) {
-        return DOMAIN + "/#cold/export?seed=" + wallet.getSeed();
+        String OP_CODE = "seed";
+        HashMap<String,Object>seedJson = new HashMap<>();
+
+        seedJson.put("protocol",VEEWallet.PROTOCOL);
+        seedJson.put("api",VEEWallet.API_VERSION);
+        seedJson.put("opc",OP_CODE);
+        seedJson.put("seed",wallet.getSeed());
+
+        try {
+            return new ObjectMapper().writeValueAsString(seedJson);
+        } catch (JsonProcessingException e) {
+            //not expected to ever happen
+            return null;
+        }
     }
 
     public static Bitmap exportPubKeyAddr(VEEAccount account, int width){
