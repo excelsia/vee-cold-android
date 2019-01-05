@@ -259,8 +259,6 @@ public class ColdWalletActivity extends AppCompatActivity {
                     switch (txType) {
                         case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
                                 break;
-                        //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
-                        //        break;
                         case 3: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
                         case 4: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
@@ -356,9 +354,6 @@ public class ColdWalletActivity extends AppCompatActivity {
             else if (intent.getAction() == "CONFIRM_PASSWORD") {
                 password = intent.getStringExtra("PASSWORD");
                 Log.d(TAG, "Password " + password);
-                //LoadTask load = new LoadTask(activity, password, walletFilePath);
-                //load.execute();
-                //String seed = load.getSeed();
 
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {
