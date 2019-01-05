@@ -26,8 +26,8 @@ import tech.vee.veecoldwallet.Util.HashUtil;
 
 @JsonDeserialize(using = VEETransaction.Deserializer.class)
 public class VEETransaction {
+    public static final String WAVES = "WAVES";
     public static final String TAG = "Winston";
-    public static final String OP_CODE = "transaction";
 
     private final static Charset UTF8 = Charset.forName("UTF-8");
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -186,15 +186,31 @@ public class VEETransaction {
     public String getJson() {
         HashMap<String, Object> toJson = new HashMap<>();
 
-        toJson.put("protocol", VEEWallet.PROTOCOL);
-        toJson.put("api", VEEWallet.API_VERSION);
-        toJson.put("opc", OP_CODE);
-
         if (proofs.size() == 1) {
             // assume proof0 is a signature
             toJson.put("signature", proofs.get(0));
         }
 
+        try {
+            return new ObjectMapper().writeValueAsString(toJson);
+        } catch (JsonProcessingException e) {
+            // not expected to ever happen
+            return null;
+        }
+    }
+
+    /**
+     * Returns JSON-encoded transaction data.
+     * @return a JSON string
+     */
+    public String getFullJson() {
+        HashMap<String, Object> toJson = new HashMap<String, Object>(data);
+        toJson.put("id", id);
+        toJson.put("proofs", proofs);
+        if (proofs.size() == 1) {
+            // assume proof0 is a signature
+            toJson.put("signature", proofs.get(0));
+        }
         try {
             return new ObjectMapper().writeValueAsString(toJson);
         } catch (JsonProcessingException e) {

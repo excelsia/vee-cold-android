@@ -1,25 +1,40 @@
 package tech.vee.veecoldwallet.Activity;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -29,18 +44,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tech.vee.veecoldwallet.Fragment.SettingsFragment;
-import tech.vee.veecoldwallet.Fragment.WalletFragment;
-import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Receiver.NetworkReceiver;
+import tech.vee.veecoldwallet.Tasks.LoadTask;
 import tech.vee.veecoldwallet.Util.FileUtil;
-import tech.vee.veecoldwallet.Util.JsonUtil;
 import tech.vee.veecoldwallet.Util.NetworkUtil;
 import tech.vee.veecoldwallet.Util.PermissionUtil;
-import tech.vee.veecoldwallet.Util.QRCodeUtil;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
 import tech.vee.veecoldwallet.Wallet.VEEChain;
 import tech.vee.veecoldwallet.Wallet.VEETransaction;
+import tech.vee.veecoldwallet.R;
+import tech.vee.veecoldwallet.Fragment.SettingsFragment;
+import tech.vee.veecoldwallet.Fragment.WalletFragment;
+import tech.vee.veecoldwallet.Util.JsonUtil;
+import tech.vee.veecoldwallet.Util.QRCodeUtil;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ColdWalletActivity extends AppCompatActivity {
@@ -220,7 +237,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
         int val = QRCodeUtil.processQrContents(qrContents);
-        if (wallet != null && (val != 1 && val != 0 )) { val = 4; }
+        if (wallet != null && (val != 1 && val != 0)) { val = 4; }
 
         if(result != null) {
             switch (val) {
@@ -237,7 +254,7 @@ public class ColdWalletActivity extends AppCompatActivity {
 
                     if (jsonMap.containsKey("api")) {
                         byte api = Double.valueOf((double)jsonMap.get("api")).byteValue();
-                        if (api > VEEWallet.API_VERSION) {
+                        if (api > 1) {
                             UIUtil.createUpdateAppDialog(activity);
                             break;
                         }
@@ -259,6 +276,8 @@ public class ColdWalletActivity extends AppCompatActivity {
                     switch (txType) {
                         case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
                                 break;
+                        //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
+                        //        break;
                         case 3: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
                         case 4: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
@@ -266,29 +285,23 @@ public class ColdWalletActivity extends AppCompatActivity {
                     break;
 
                 case 2:
-                    HashMap<String,Object> coldseedMap = new HashMap<>();
-                    coldseedMap = JsonUtil.getJsonAsMap(qrContents);
-                    Object seedObject = coldseedMap.get("seed");
-                    String qrseed = seedObject.toString();
-
-                    String coldseedProtocol = (String) coldseedMap.get("protocol");
-                    byte coldseedApi = Double.valueOf((double)coldseedMap.get("api")).byteValue();
-
-                    if(VEEWallet.PROTOCOL.equals(coldseedProtocol) && coldseedApi == VEEWallet.API_VERSION){
+                    String seed = QRCodeUtil.parseSeed(qrContents);
+                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
-                        intent.putExtra("SEED", qrseed);
+                        intent.putExtra("SEED", seed);
                         startActivity(intent);
                     }
                     else {
-                        UIUtil.createForeignSeedDialog(activity, qrseed);
+                        UIUtil.createForeignSeedDialog(activity, seed);
                     }
                     break;
+
                 case 3:
                     UIUtil.createForeignSeedDialog(activity, qrContents);
 
                 case 4:
-                    //UIUtil.createWrongTransactionDialog(activity);
-                    Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
+                    UIUtil.createWrongTransactionDialog(activity);
+                    //Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
         }
         else {
@@ -354,6 +367,9 @@ public class ColdWalletActivity extends AppCompatActivity {
             else if (intent.getAction() == "CONFIRM_PASSWORD") {
                 password = intent.getStringExtra("PASSWORD");
                 Log.d(TAG, "Password " + password);
+                //LoadTask load = new LoadTask(activity, password, walletFilePath);
+                //load.execute();
+                //String seed = load.getSeed();
 
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {

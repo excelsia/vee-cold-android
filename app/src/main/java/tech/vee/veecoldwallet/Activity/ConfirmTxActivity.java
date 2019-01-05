@@ -1,23 +1,25 @@
 package tech.vee.veecoldwallet.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.google.gson.Gson;
-
-import java.util.Locale;
 
 import tech.vee.veecoldwallet.R;
 import tech.vee.veecoldwallet.Util.UIUtil;
 import tech.vee.veecoldwallet.Wallet.VEEAccount;
-import tech.vee.veecoldwallet.Wallet.VEETransaction;
 import tech.vee.veecoldwallet.Wallet.VEEWallet;
 
 public class ConfirmTxActivity extends AppCompatActivity {
@@ -43,30 +45,6 @@ public class ConfirmTxActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String senderStr;
         walletStr = intent.getStringExtra("WALLET");
-
-        String protocol = intent.getStringExtra("PROTOCOL");
-        if (!VEEWallet.PROTOCOL.equals(protocol)) {
-            Toast.makeText(activity, "Wrong QRCode is used. Invalid protocol: " + protocol, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        int api_version = intent.getIntExtra("API", 0);
-        if (VEEWallet.API_VERSION != api_version) {
-            String msg = String.format(
-                    Locale.ENGLISH,
-                    "Wrong API version: %d. Expected version: %d",
-                    api_version,
-                    VEEWallet.API_VERSION);
-            Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        String op_code = intent.getStringExtra("OPC");
-        if (!VEETransaction.OP_CODE.equals(op_code)) {
-            Toast.makeText(activity, "Wrong QRCode is used. This is not transaction", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
 
         switch (action) {
             case "PAYMENT":
