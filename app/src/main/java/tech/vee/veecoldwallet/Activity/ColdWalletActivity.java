@@ -220,7 +220,7 @@ public class ColdWalletActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         qrContents = result.getContents();
         int val = QRCodeUtil.processQrContents(qrContents);
-        if (wallet != null && (val != 1 && val != 0)) { val = 4; }
+        if (wallet != null && (val != 1 && val != 0 )) { val = 4; }
 
         if(result != null) {
             switch (val) {
@@ -259,30 +259,13 @@ public class ColdWalletActivity extends AppCompatActivity {
                     switch (txType) {
                         case 2: JsonUtil.checkPaymentTx(activity, jsonMap, accounts);
                                 break;
-                        //case 4: JsonUtil.checkTransferTx(activity, jsonMap, accounts);
-                        //        break;
                         case 3: JsonUtil.checkLeaseTx(activity, jsonMap, accounts);
                                 break;
                         case 4: JsonUtil.checkCancelLeaseTx(activity, jsonMap, accounts);
                     }
                     break;
 
-                case 2:
-                    String seed = QRCodeUtil.parseSeed(qrContents);
-                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
-                        Intent intent = new Intent(activity, SetPasswordActivity.class);
-                        intent.putExtra("SEED", seed);
-                        startActivity(intent);
-                    }
-                    else {
-                        UIUtil.createForeignSeedDialog(activity, seed);
-                    }
-                    break;
-
-                case 3:
-                    UIUtil.createForeignSeedDialog(activity, qrContents);
-
-                case 4:
+                default:
                     //UIUtil.createWrongTransactionDialog(activity);
                     Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
@@ -350,9 +333,6 @@ public class ColdWalletActivity extends AppCompatActivity {
             else if (intent.getAction() == "CONFIRM_PASSWORD") {
                 password = intent.getStringExtra("PASSWORD");
                 Log.d(TAG, "Password " + password);
-                //LoadTask load = new LoadTask(activity, password, walletFilePath);
-                //load.execute();
-                //String seed = load.getSeed();
 
                 String seed = FileUtil.load(password, walletFilePath);
                 if (seed != "" && seed != FileUtil.ERROR) {
