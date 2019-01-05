@@ -126,13 +126,19 @@ public class ImportSeedActivity extends AppCompatActivity {
 
                     byte seedmapApi = Double.valueOf((double)seedmap.get("api")).byteValue();
 
-                    if(VEEWallet.PROTOCOL.equals(seedmapProtocol) && seedmapApi == VEEWallet.API_VERSION){
+                    if(VEEWallet.PROTOCOL.equals(seedmapProtocol) && seedmapApi == VEEWallet.API_VERSION) {
+                        if (VEEWallet.validateSeedPhrase(activity, seed)) {
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
                         intent.putExtra("SEED", seed);
                         startActivity(intent);
+                        }
+                        else {
+                        UIUtil.createForeignSeedDialog(activity, seed);
+
+                        }
                     }
                     else {
-                        UIUtil.createForeignSeedDialog(activity, seed);
+                        Toast.makeText(activity, "Incorrect QR code format or too old version", Toast.LENGTH_LONG).show();
                     }
                     break;
 

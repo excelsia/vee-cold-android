@@ -265,28 +265,7 @@ public class ColdWalletActivity extends AppCompatActivity {
                     }
                     break;
 
-                case 2:
-                    HashMap<String,Object> coldseedMap = new HashMap<>();
-                    coldseedMap = JsonUtil.getJsonAsMap(qrContents);
-                    Object seedObject = coldseedMap.get("seed");
-                    String qrseed = seedObject.toString();
-
-                    String coldseedProtocol = (String) coldseedMap.get("protocol");
-                    byte coldseedApi = Double.valueOf((double)coldseedMap.get("api")).byteValue();
-
-                    if(VEEWallet.PROTOCOL.equals(coldseedProtocol) && coldseedApi == VEEWallet.API_VERSION){
-                        Intent intent = new Intent(activity, SetPasswordActivity.class);
-                        intent.putExtra("SEED", qrseed);
-                        startActivity(intent);
-                    }
-                    else {
-                        UIUtil.createForeignSeedDialog(activity, qrseed);
-                    }
-                    break;
-                case 3:
-                    UIUtil.createForeignSeedDialog(activity, qrContents);
-
-                case 4:
+                default:
                     //UIUtil.createWrongTransactionDialog(activity);
                     Toast.makeText(activity, "Incorrect transaction format", Toast.LENGTH_LONG).show();
             }
