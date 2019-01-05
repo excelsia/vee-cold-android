@@ -4,33 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.io.IOUtils;
-import org.bouncycastle.crypto.digests.SHA512Digest;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.params.KeyParameter;
-
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import tech.vee.veecoldwallet.Activity.ColdWalletActivity;
 import tech.vee.veecoldwallet.Activity.ConfirmTxActivity;
@@ -43,13 +24,18 @@ public class JsonUtil {
     @NonNull
     public static void checkTransferTx(Activity activity, HashMap<String, Object> jsonMap,
                                        ArrayList<VEEAccount> accounts) {
-        String senderPublicKey, recipient, attachment, assetId, feeAssetId;
+        String senderPublicKey, recipient, attachment, assetId, feeAssetId, op_code, protocol;
         long amount, fee, timestamp;
+        int api_version;
         String[] keys = {"senderPublicKey", "recipient", "attachment",
                 "assetId", "feeAssetId", "amount", "fee", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
+            protocol = (String) jsonMap.get("protocol");
+            api_version = Double.valueOf((double)jsonMap.get("api")).intValue();
+            op_code = (String) jsonMap.get("opc");
+
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             recipient = (String) jsonMap.get("recipient");
             attachment = (String) jsonMap.get("attachment");
@@ -71,6 +57,9 @@ public class JsonUtil {
                 VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
                 String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
+                intent.putExtra("PROTOCOL", protocol);
+                intent.putExtra("API", api_version);
+                intent.putExtra("OPC", op_code);
                 intent.putExtra("ACTION", "TRANSFER");
                 intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
@@ -100,13 +89,17 @@ public class JsonUtil {
     @NonNull
     public static void checkPaymentTx(Activity activity, HashMap<String, Object> jsonMap,
                                        ArrayList<VEEAccount> accounts) {
-        String senderPublicKey, recipient, attachment, assetId, feeAssetId;
+        String senderPublicKey, recipient, attachment, op_code, protocol;
+        int api_version;
         long amount, fee, timestamp;
         short feeScale;
         String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
+            protocol = (String) jsonMap.get("protocol");
+            api_version = Double.valueOf((double)jsonMap.get("api")).intValue();
+            op_code = (String) jsonMap.get("opc");
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
@@ -127,6 +120,9 @@ public class JsonUtil {
                 VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
                 String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
+                intent.putExtra("PROTOCOL", protocol);
+                intent.putExtra("API", api_version);
+                intent.putExtra("OPC", op_code);
                 intent.putExtra("ACTION", "PAYMENT");
                 intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
@@ -155,13 +151,18 @@ public class JsonUtil {
     @NonNull
     public static void checkLeaseTx(Activity activity, HashMap<String, Object> jsonMap,
                                        ArrayList<VEEAccount> accounts) {
-        String senderPublicKey, recipient;
+        String senderPublicKey, recipient, op_code, protocol;
+        int api_version;
         long amount, fee, timestamp;
         short feeScale;
         String[] keys = {"senderPublicKey", "recipient", "amount", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
+            protocol = (String) jsonMap.get("protocol");
+            api_version = Double.valueOf((double)jsonMap.get("api")).intValue();
+            op_code = (String) jsonMap.get("opc");
+
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             recipient = (String) jsonMap.get("recipient");
             amount = Double.valueOf((double)jsonMap.get("amount")).longValue();
@@ -181,6 +182,9 @@ public class JsonUtil {
                 VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
                 String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
+                intent.putExtra("PROTOCOL", protocol);
+                intent.putExtra("API", api_version);
+                intent.putExtra("OPC", op_code);
                 intent.putExtra("ACTION", "LEASE");
                 intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));
@@ -208,13 +212,18 @@ public class JsonUtil {
     @NonNull
     public static void checkCancelLeaseTx(Activity activity, HashMap<String, Object> jsonMap,
                                        ArrayList<VEEAccount> accounts) {
-        String senderPublicKey, txId;
+        String senderPublicKey, txId, op_code, protocol;
+        int api_version;
         long fee, timestamp;
         short feeScale;
         String[] keys = {"senderPublicKey", "txId", "fee", "feeScale", "timestamp"};
         VEEAccount senderAcc = null;
 
         if (JsonUtil.containsKeys(jsonMap, keys)){
+            protocol = (String) jsonMap.get("protocol");
+            api_version = Double.valueOf((double)jsonMap.get("api")).intValue();
+            op_code = (String) jsonMap.get("opc");
+
             senderPublicKey = (String) jsonMap.get("senderPublicKey");
             txId = (String) jsonMap.get("txId");
             fee = Double.valueOf((double)jsonMap.get("fee")).longValue();
@@ -233,6 +242,9 @@ public class JsonUtil {
                 VEEWallet wallet = ((ColdWalletActivity) activity).getWallet();
                 String walletStr = gson.toJson(wallet);
                 Intent intent = new Intent(activity, ConfirmTxActivity.class);
+                intent.putExtra("PROTOCOL", protocol);
+                intent.putExtra("API", api_version);
+                intent.putExtra("OPC", op_code);
                 intent.putExtra("ACTION", "CANCEL_LEASE");
                 intent.putExtra("WALLET", walletStr);
                 intent.putExtra("SENDER", gson.toJson(senderAcc));

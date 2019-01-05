@@ -25,6 +25,9 @@ public class VEEWallet {
     private String agent;
     private byte chainId;
 
+    public static final String PROTOCOL = "v.systems";
+    public static final int API_VERSION = 1;
+
     private static final String TAG = "Winston";
     private static final String WALLET_VERSION = "1.0";
     private static final String AGENT_VERSION = "0.2.0";
@@ -269,7 +272,6 @@ public class VEEWallet {
         if (seed != null && num > 0) {
             for(long i = 0; i < num; i++) {
                 accountSeed = generateAccountSeed(seed, i);
-                //accountSeed = generateAccountSeedOld(seed, i);
                 newAccountSeeds.add(accountSeed);
             }
             return new VEEWallet(chainId, seed, newAccountSeeds, num);
@@ -284,7 +286,6 @@ public class VEEWallet {
         if (num > 0) {
             for (long i = nonce; i < nonce + num; i++) {
                 accountSeed = generateAccountSeed(seed, i);
-                //accountSeed = generateAccountSeedOld(seed, i);
                 accountSeeds.add(accountSeed);
             }
             nonce += num;
