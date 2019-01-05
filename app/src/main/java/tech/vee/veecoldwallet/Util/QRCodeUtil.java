@@ -2,7 +2,6 @@ package tech.vee.veecoldwallet.Util;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,10 +108,6 @@ public class QRCodeUtil {
             }
             else return 1;
         }
-
-        /* priKey = QRCodeUtil.parseSeed(qrContents);
-        if (priKey != "") return 2;
-        */
         else return 3;
     }
 
