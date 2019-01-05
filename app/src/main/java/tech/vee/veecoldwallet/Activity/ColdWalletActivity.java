@@ -273,7 +273,10 @@ public class ColdWalletActivity extends AppCompatActivity {
                     Object seedObject = coldseedMap.get("seed");
                     String qrseed = seedObject.toString();
 
-                    if (VEEWallet.validateSeedPhrase(activity, qrseed)) {
+                    String coldseedProtocol = (String) coldseedMap.get("protocol");
+                    byte coldseedApi = Double.valueOf((double)coldseedMap.get("api")).byteValue();
+
+                    if(VEEWallet.PROTOCOL.equals(coldseedProtocol) && coldseedApi == VEEWallet.API_VERSION){
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
                         intent.putExtra("SEED", qrseed);
                         startActivity(intent);

@@ -122,7 +122,11 @@ public class ImportSeedActivity extends AppCompatActivity {
                     Object seedObject = seedmap.get("seed");
                     String seed = seedObject.toString();
 
-                    if (VEEWallet.validateSeedPhrase(activity, seed)) {
+                    String seedmapProtocol = (String)seedmap.get("protocol");
+
+                    byte seedmapApi = Double.valueOf((double)seedmap.get("api")).byteValue();
+
+                    if(VEEWallet.PROTOCOL.equals(seedmapProtocol) && seedmapApi == VEEWallet.API_VERSION){
                         Intent intent = new Intent(activity, SetPasswordActivity.class);
                         intent.putExtra("SEED", seed);
                         startActivity(intent);

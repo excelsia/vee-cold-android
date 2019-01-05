@@ -37,12 +37,12 @@ public class QRCodeUtil {
 
     public static String generatePubKeyAddrStr(VEEAccount account) {
 
-        String OP_CODE = "account";
+        String accountSeed = "account";
         HashMap<String, Object> accountJson = new HashMap<>();
 
         accountJson.put("protocol", VEEWallet.PROTOCOL);
         accountJson.put("api", VEEWallet.API_VERSION);
-        accountJson.put("opc", OP_CODE);
+        accountJson.put("opc", accountSeed);
         accountJson.put("address",account.getAddress());
         accountJson.put("publicKey",account.getPubKey());
 
@@ -55,12 +55,12 @@ public class QRCodeUtil {
     }
 
     public static String generateSeedStr(VEEWallet wallet) {
-        String OP_CODE = "seed";
+        String walletSeed = "seed";
         HashMap<String,Object>seedJson = new HashMap<>();
 
         seedJson.put("protocol",VEEWallet.PROTOCOL);
         seedJson.put("api",VEEWallet.API_VERSION);
-        seedJson.put("opc",OP_CODE);
+        seedJson.put("opc",walletSeed);
         seedJson.put("seed",wallet.getSeed());
 
         try {
@@ -102,11 +102,12 @@ public class QRCodeUtil {
 
         map = JsonUtil.getJsonAsMap(qrContents);
         if (map != null) {
-            if (map.containsKey("transactionType"))
+            String mapOpc = (String )map.get("opc");
+            if (mapOpc.equals("seed"))
             {
-                return 1;
+                return 2;
             }
-            else return 9;
+            else return 1;
         }
 
         /* priKey = QRCodeUtil.parseSeed(qrContents);
